@@ -26,8 +26,6 @@ public class Book extends BaseEntity {
 
     private String description;
 
-    private int subscribes;
-
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -36,10 +34,12 @@ public class Book extends BaseEntity {
     @OneToMany(mappedBy = "book")
     private List<Chapter> chapterList = new ArrayList<>();
 
-    public Book(String bookName, String description, int subscribes, Member member) {
+    @OneToMany(mappedBy = "book")
+    private List<Subscribe> subscribeList = new ArrayList<>();
+
+    public Book(String bookName, String description, Member member) {
         this.bookName = bookName;
         this.description = description;
-        this.subscribes = subscribes;
         this.member = member;
     }
 }
