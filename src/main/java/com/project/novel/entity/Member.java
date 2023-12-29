@@ -38,5 +38,4 @@ public class Member {
     @LastModifiedDate
     private LocalDateTime updatedAt;
     // 회원정보수정 날짜
-
 }
