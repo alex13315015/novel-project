@@ -30,4 +30,7 @@ public class MemberService {
     public int idCheck(String userId) {
         return memberRepository.checkDuplicatedId(userId);
     }
+    public int emailCheck(String email) {
+        return memberRepository.checkDuplicatedEmail(email);
+    }
 }
