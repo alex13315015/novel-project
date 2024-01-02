@@ -10,9 +10,12 @@ import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member,Integer> {
     Optional<Member> findByUserId(String userId);
-    @Query("SELECT COUNT(*) FROM Member m WHERE m.userId = :userId")
+    Optional<Member> findByEmail(String email);
+
+
+    /*@Query("SELECT COUNT(*) FROM Member m WHERE m.userId = :userId")
     int checkDuplicatedId(@Param("userId") String userId);
 
     @Query("SELECT COUNT(*) FROM Member m WHERE m.email = :email")
-    int checkDuplicatedEmail(@Param("email") String email);
+    int checkDuplicatedEmail(@Param("email") String email);*/
 }

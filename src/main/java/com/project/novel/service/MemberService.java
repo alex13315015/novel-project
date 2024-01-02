@@ -27,10 +27,21 @@ public class MemberService {
                 .build();
         return memberRepository.save(dbJoinMember);
     }
-    public int idCheck(String userId) {
+    /*public int idCheck(String userId) {
         return memberRepository.checkDuplicatedId(userId);
+    }*/
+    public int idCheck(String userId) {
+        Optional<Member> optionalMember = memberRepository.findByUserId(userId);
+        if(optionalMember.isEmpty()) {
+            return 0;
+        }
+        return 1;
     }
     public int emailCheck(String email) {
-        return memberRepository.checkDuplicatedEmail(email);
+        Optional<Member> optionalMember = memberRepository.findByEmail(email);
+        if(optionalMember.isEmpty()) {
+            return 0;
+        }
+        return 1;
     }
 }
