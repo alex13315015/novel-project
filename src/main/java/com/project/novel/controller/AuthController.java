@@ -21,7 +21,6 @@ import java.util.Map;
 @RequestMapping("/auth")
 public class AuthController {
     private final MemberService memberService;
-    private final MemberRepository memberRepository;
     @GetMapping("/login")
     public String login() {
         return "/auth/login";
@@ -44,5 +43,13 @@ public class AuthController {
             return -1;
         else
             return memberService.idCheck(dupId);
+    }
+    @GetMapping("/emailCheck")
+    @ResponseBody
+    public int emailCheck(String dupEmail) { // dupEmail은 유저로부터 입력받는 값
+        if(dupEmail == null || dupEmail.isEmpty())
+            return -1;
+        else
+            return memberService.emailCheck(dupEmail);
     }
 }
