@@ -38,7 +38,7 @@ public class AuthController {
     }
     @GetMapping("/idCheck")
     @ResponseBody
-    public int idCheck(String dupId) { // dupId는 유저로부터 입력받는 값
+    public int idCheck(String dupId) { // dupId -> 유저로부터 입력받는 값
         if(dupId == null || dupId.isEmpty())
             return -1;
         else
@@ -46,7 +46,7 @@ public class AuthController {
     }
     @GetMapping("/emailCheck")
     @ResponseBody
-    public int emailCheck(String dupEmail) { // dupEmail은 유저로부터 입력받는 값
+    public int emailCheck(String dupEmail) { // dupEmail -> 유저로부터 입력받는 값
         if(dupEmail == null || dupEmail.isEmpty())
             return -1;
         else
