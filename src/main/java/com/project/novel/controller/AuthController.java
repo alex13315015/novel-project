@@ -39,7 +39,7 @@ public class AuthController {
     }
     @GetMapping("/idCheck")
     @ResponseBody
-    public int idCheck(String dupId) {
+    public int idCheck(String dupId) { // dupId는 유저로부터 입력받는 값
         if(dupId == null || dupId.isEmpty())
             return -1;
         else
