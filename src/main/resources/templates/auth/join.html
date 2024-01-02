@@ -82,14 +82,15 @@
                         <input type="text" name="phoneNumber" id="phoneNumber" class="form-control" >
                     </div>
                     <div class="d-flex justify-content-center">
-                        <button class="btn btn-dark" type="button" id="btnJoin">가입하기</button>
+                        <button class="btn btn-dark" id="btnJoin" disabled>가입하기</button>
                     </div>
                 </div>
             </div>
         </form>
     </div>
     <script th:inline="javascript">
-        $("#btnJoin").attr("type", "button"); // 가입완료 버튼 타입 설정(중복여부 확인 후 변경)
+        let idCheck = 0;
+        let emailCheck = 0;
         $("#btnIdCheck").on("click",function (e) {
             console.log("아아디 중복체크");
             e.preventDefault(); // form 안에 버튼이라 submit 되는거 방지
@@ -101,22 +102,26 @@
                 },
                 success: function (data) {
                     console.log(data);
-                    if(data === 1) {
+                    if (data === 1) {
                         $("#messageId").text("이미 사용중인 아이디입니다.");
                         $("#messageId").addClass("isDup").removeClass("notDup");
                         $("#userId").focus();
+                        idCheck = 0;
                         // 아이디가 중복되었을 때, 처리
-                    }else {
+                    } else {
                         $("#messageId").text("사용가능한 아이디입니다.");
                         $("#messageId").addClass("notDup").removeClass("isDup");
-                        $("#btnIdCheck").append("success")
+                        $("#btnIdCheck").addClass("success");
                         $("#password").focus();
+                        idCheck = 1;
                         // 아이디가 중복되지 않았을 때, 처리
+                    }
+                    if(idCheck === 1 && emailCheck === 1) {
+                        $("#btnJoin").removeAttr("disabled"); // 아이디와 이메일이 중복이 아닐 때만 가입 활성화
                     }
                 }
             })
         });
-
         $("#btnEmailCheck").on("click",function (e) {
             console.log("이메일 중복체크");
             e.preventDefault();
@@ -128,28 +133,27 @@
                 },
                 success: function (data) {
                     console.log(data);
+
                     if(data === 1) {
                         $("#messageEmail").text("이미 사용중인 이메일입니다.");
                         $("#messageEmail").addClass("isDup").removeClass("notDup");
                         $("#email").focus();
+                        emailCheck = 0;
                         // 이메일이 중복되었을 때, 처리
                     }else {
                         $("#messageEmail").text("사용가능한 이메일입니다.");
                         $("#messageEmail").addClass("notDup").removeClass("isDup");
+                        $("#btnEmailCheck").addClass("success");
                         $("#email").focus();
+                        emailCheck = 1;
                         // 이메일이 중복되지 않았을 때, 처리
+                    }
+                    if(idCheck === 1 && emailCheck === 1) {
+                        $("#btnJoin").removeAttr("disabled"); // 아이디와 이메일이 중복이 아닐 때만 가입 활성화
                     }
                 }
             })
         });
-
-        $("btnJoin").on("click",function (e) {
-            console.log("가입완료");
-            e.preventDefault();
-            if() {
-                $("#btnJoin").attr("type","submit"); // 아이디와 이메일이 중복이 아닐 때만 가입 활성화
-            }
-        })
     </script>
 </div>
 </html>
