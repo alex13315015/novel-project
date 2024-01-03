@@ -2,17 +2,11 @@ a {
     font-size: 15px;
     color: #c4c8cb;
 }
-
-.isDup {
-    font-size: 15px;
-    color: red;
-}
-.notDup {
+.valid {
     font-size: 15px;
     color: green;
 }
-
-.valid {
+.invalid {
     font-size: 15px;
     color: red;
 }
