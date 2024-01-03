@@ -3,14 +3,13 @@ package com.project.novel.controller;
 import com.project.novel.dto.JoinDto;
 import com.project.novel.repository.MemberRepository;
 import com.project.novel.service.MemberService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,9 +31,15 @@ public class AuthController {
         return "/auth/join";
     }
     @PostMapping("/join")
-    public String joinProcess(JoinDto joinDto) {
+    public String joinProcess(@Valid @ModelAttribute JoinDto joinDto,
+                              BindingResult bindingResult,
+                              Model model) {
+        if(bindingResult.hasErrors()) {
+            model.addAttribute("joinDto",joinDto);
+            return "/auth/join";
+        }
         memberService.join(joinDto);
-        return "/auth/join";
+        return "redirect:/auth/login";
     }
     @GetMapping("/idCheck")
     @ResponseBody
