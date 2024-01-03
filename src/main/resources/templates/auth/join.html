@@ -25,7 +25,7 @@
                         <button class="btn btn-dark" id="btnIdCheck">중복확인</button>
                     </div>
                     <div class="col-auto">
-                    <span class="valid" id="messageId"></span>
+                    <span id="messageId"></span>
                     </div>
                 </div>
                 <div class="row g-3 align-items-center mb-2">
@@ -71,7 +71,7 @@
                         <button class="btn btn-dark" type="submit" id="btnEmailCheck">중복확인</button>
                     </div>
                     <div class="col-auto">
-                        <span class="valid" id="messageEmail"></span>
+                        <span id="messageEmail"></span>
                     </div>
                 </div>
                 <div class="row g-3 align-items-center mb-2">
@@ -104,18 +104,18 @@
                     console.log(data);
                     if(inputId === null || inputId === "") {
                         $("#messageId").text("아이디는 필수 입력사항입니다.");
+                        $("#messageId").addClass("invalid").removeClass("valid");
                         $("#userId").focus();
                     }
                     else if (data === 1) {
                         $("#messageId").text("이미 사용중인 아이디입니다.");
-                        $("#messageId").addClass("isDup").removeClass("notDup");
+                        $("#messageId").addClass("invalid").removeClass("valid");
                         $("#userId").focus();
                         idCheck = 0;
                         // 아이디가 중복되었을 때, 처리
                     } else {
                         $("#messageId").text("사용가능한 아이디입니다.");
-                        $("#messageId").addClass("notDup").removeClass("isDup");
-                        $("#btnIdCheck").addClass("success");
+                        $("#messageId").addClass("valid").removeClass("invalid");
                         $("#password").focus();
                         idCheck = 1;
                         // 아이디가 중복되지 않았을 때, 처리
@@ -139,18 +139,18 @@
                     console.log(data);
                     if(inputEmail === null || inputEmail === "") {
                         $("#messageEmail").text("이메일은 필수 입력사항입니다.");
+                        $("#messageEmail").addClass("invalid").removeClass("valid");
                         $("#email").focus();
                     }
                     else if(data === 1) {
                         $("#messageEmail").text("이미 사용중인 이메일입니다.");
-                        $("#messageEmail").addClass("isDup").removeClass("notDup");
+                        $("#messageEmail").addClass("invalid").removeClass("valid");
                         $("#email").focus();
                         emailCheck = 0;
                         // 이메일이 중복되었을 때, 처리
                     }else {
                         $("#messageEmail").text("사용가능한 이메일입니다.");
-                        $("#messageEmail").addClass("notDup").removeClass("isDup");
-                        $("#btnEmailCheck").addClass("success");
+                        $("#messageEmail").addClass("valid").removeClass("invalid");
                         $("#email").focus();
                         emailCheck = 1;
                         // 이메일이 중복되지 않았을 때, 처리
