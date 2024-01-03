@@ -57,4 +57,12 @@ public class AuthController {
         else
             return memberService.emailCheck(dupEmail);
     }
+    @GetMapping("/passwordCheck")
+    @ResponseBody
+    public int passwordCheck(String secondPW) { // secondPW => 유저로부터 입력받는 재입력 값
+        if(secondPW == null || secondPW.isEmpty())
+            return -1;
+        else
+            return memberService.passwordCheck(secondPW);
+    }
 }
