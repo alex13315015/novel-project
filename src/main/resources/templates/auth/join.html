@@ -11,7 +11,7 @@
 </head>
 <div class="main">
     <div class="container d-flex justify-content-center">
-        <form class="col-8" th:action="@{/auth/join}" method="post">
+        <form class="col-8" th:action="@{/auth/join}" method="post" th:object="${joinDto}">
             <div class="col-6">
                 <h2>회원가입</h2>
                 <div class="row g-3 align-items-center mb-2">
@@ -19,7 +19,8 @@
                         <label for="userId" class="col-form-label">아이디</label>
                     </div>
                     <div class="col-auto">
-                        <input type="text" name="userId" id="userId" class="form-control">
+                        <input type="text" name="userId" id="userId" class="form-control" th:field="*{userId}">
+                        <p class="error" th:if="${#fields.hasErrors('userId')}" th:errors="*{userId}"></p>
                     </div>
                     <div class="col-auto">
                         <button class="btn btn-dark" id="btnIdCheck">중복확인</button>
@@ -33,7 +34,8 @@
                         <label for="password" class="col-form-label">비밀번호</label>
                     </div>
                     <div class="col-auto">
-                        <input type="password" name="password" id="password" class="form-control" >
+                        <input type="password" name="password" id="password" class="form-control" th:field="*{password}">
+                        <p class="error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">여기에 오류메세지 띄워주세요.</p>
                     </div>
                 </div>
                 <div class="row g-3 align-items-center mb-2">
@@ -41,7 +43,8 @@
                         <label for="userName" class="col-form-label">이름</label>
                     </div>
                     <div class="col-auto">
-                        <input type="text" name="userName" id="userName" class="form-control" >
+                        <input type="text" name="userName" id="userName" class="form-control" th:field="*{userName}">
+                        <p class="error" th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></p>
                     </div>
                 </div>
                 <div class="row g-3 align-items-center mb-2">
@@ -49,7 +52,8 @@
                         <label for="nickName" class="col-form-label">닉네임</label>
                     </div>
                     <div class="col-auto">
-                        <input type="text" name="nickName" id="nickName" class="form-control" >
+                        <input type="text" name="nickName" id="nickName" class="form-control" th:field="*{nickName}">
+                        <p class="error" th:if="${#fields.hasErrors('nickName')}" th:errors="*{nickName}"></p>
                     </div>
                 </div>
                 <div class="row g-3 align-items-center mb-2">
@@ -89,8 +93,8 @@
         </form>
     </div>
     <script th:inline="javascript">
-        let idCheck = 0;
-        let emailCheck = 0;
+        let idCheck = 0; // 아이디 중복체크 결과 -> 중복이면 0, 아니면 1
+        let emailCheck = 0; // 이메일 중복체크 결과 -> 중복이면 0, 아니면 1
         $("#btnIdCheck").on("click",function (e) {
             console.log("아아디 중복체크");
             e.preventDefault(); // form 안에 버튼이라 submit 되는거 방지
