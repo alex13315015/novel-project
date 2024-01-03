@@ -11,6 +11,7 @@ import java.util.Optional;
 public interface MemberRepository extends JpaRepository<Member,Integer> {
     Optional<Member> findByUserId(String userId);
     Optional<Member> findByEmail(String email);
+    Optional<Member> findByPassword(String password);
 
 
     /*@Query("SELECT COUNT(*) FROM Member m WHERE m.userId = :userId")
