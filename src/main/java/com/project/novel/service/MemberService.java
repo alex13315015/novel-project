@@ -42,4 +42,12 @@ public class MemberService {
         }
         return 1;
     }
+
+    public int passwordCheck(String password) {
+        Optional<Member> optionalMember = memberRepository.findByPassword(password);
+        if(optionalMember.isEmpty()) {
+            return 0;
+        }
+        return 1;
+    }
 }
