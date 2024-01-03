@@ -1,5 +1,6 @@
 package com.project.novel.service;
 
+import com.project.novel.constant.Grade;
 import com.project.novel.dto.JoinDto;
 import com.project.novel.entity.Member;
 import com.project.novel.repository.MemberRepository;
@@ -23,13 +24,10 @@ public class MemberService {
                 .email(joinDto.getEmail())
                 .phoneNumber(joinDto.getPhoneNumber())
                 .age(joinDto.getAge())
-                .adminCheck(false)
+                .role(Grade.ROLE_USER)
                 .build();
         return memberRepository.save(dbJoinMember);
     }
-    /*public int idCheck(String userId) {
-        return memberRepository.checkDuplicatedId(userId);
-    }*/
     public int idCheck(String userId) {
         Optional<Member> optionalMember = memberRepository.findByUserId(userId);
         if(optionalMember.isEmpty()) {
