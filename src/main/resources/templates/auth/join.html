@@ -1,17 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="_csrf" th:content="${_csrf.token}"/>
-    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
-    <title>Title</title>
-    <link rel="stylesheet" href="/css/bootstrap.css"/>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"/>
-    <link rel="stylesheet" href="/css/layout.css"/>
-    <script src="/js/bootstrap.bundle.js"></script>
-    <script src="/js/jquery-3.7.1.min.js"></script>
-</head>
-<div class="main">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/layout}">
+<div layout:fragment="content" class="main">
     <div class="container d-flex justify-content-center">
         <form class="col-8" th:action="@{/auth/join}" method="post" th:object="${joinDto}">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
