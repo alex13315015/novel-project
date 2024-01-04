@@ -36,7 +36,8 @@ public class AuthController {
             model.addAttribute("joinDto",joinDto);
             return "/auth/join";
         }
-        memberService.join(joinDto);
+        //calculatedAge.convertRrn(joinDto.getRrnFront(),joinDto.getRrnBack());
+        authService.join(joinDto);
         return "redirect:/auth/login";
     }
     @GetMapping("/idCheck")
@@ -45,7 +46,7 @@ public class AuthController {
         if(dupId == null || dupId.isEmpty())
             return -1;
         else
-            return memberService.idCheck(dupId);
+            return authService.idCheck(dupId);
     }
     @GetMapping("/emailCheck")
     @ResponseBody
@@ -53,7 +54,7 @@ public class AuthController {
         if(dupEmail == null || dupEmail.isEmpty())
             return -1;
         else
-            return memberService.emailCheck(dupEmail);
+            return authService.emailCheck(dupEmail);
     }
     @GetMapping("/passwordCheck")
     @ResponseBody
@@ -61,6 +62,6 @@ public class AuthController {
         if(secondPW == null || secondPW.isEmpty())
             return -1;
         else
-            return memberService.passwordCheck(secondPW);
+            return authService.passwordCheck(secondPW);
     }
 }
