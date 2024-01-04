@@ -153,9 +153,6 @@
                         $("#btnJoin").removeAttr("disabled"); // 아이디와 이메일이 중복이 아닐 때만 가입 활성화
                     }
                 },
-                beforeSend : function(xhr) {
-                    xhr.setRequestHeader(header, token);
-                }
             })
         });
         $("#btnEmailCheck").on("click",function (e) {
