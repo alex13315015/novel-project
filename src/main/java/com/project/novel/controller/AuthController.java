@@ -1,8 +1,8 @@
 package com.project.novel.controller;
 
 import com.project.novel.dto.JoinDto;
-import com.project.novel.repository.MemberRepository;
-import com.project.novel.service.MemberService;
+import com.project.novel.service.AuthService;
+import com.project.novel.util.CalculatedAge;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +19,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 @RequestMapping("/auth")
 public class AuthController {
-    private final MemberService memberService;
+    private final AuthService authService;
+    private final CalculatedAge calculatedAge;
     @GetMapping("/login")
     public String login() {
         return "/auth/login";
