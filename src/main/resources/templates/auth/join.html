@@ -40,10 +40,12 @@
                     </div>
                     <div class="col-4">
                         <input type="password" name="password" id="passwordCheck" class="form-control">
-                        <span id="confirm"></span>
                     </div>
                     <div class="col-auto">
                         <button class="btn btn-dark" id="pwdCheck">비밀번호 확인</button>
+                    </div>
+                    <div class="col-auto">
+                        <span id="confirm"></span>
                     </div>
                 </div>
                 <div class="row g-3 align-items-center mb-2">
@@ -116,7 +118,6 @@
         const header = $("meta[name='_csrf_header']").attr("content");
         const name = $("#userName").val();*/
         // csrf 토큰 설정
-
         let idCheck = 0; // 아이디 중복체크 결과 -> 중복이면 0, 아니면 1
         let emailCheck = 0; // 이메일 중복체크 결과 -> 중복이면 0, 아니면 1
         $("#btnIdCheck").on("click",function (e) {
