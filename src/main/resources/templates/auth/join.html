@@ -120,11 +120,10 @@
         let idCheck = 0; // 아이디 중복체크 결과 -> 중복이면 0, 아니면 1
         let emailCheck = 0; // 이메일 중복체크 결과 -> 중복이면 0, 아니면 1
         $("#btnIdCheck").on("click",function (e) {
-            console.log("아아디 중복체크");
+            console.log("아이디 중복체크");
             e.preventDefault(); // form 안에 버튼이라 submit 되는거 방지
             const inputId = $("#userId").val(); // 아이디 입력란에 입력되는 값
             if(inputId === null || inputId === "") {
-                console.log("djkjfkjdskfjd");
                 $("#messageId").text("아이디는 필수 입력사항입니다.");
                 $("#messageId").addClass("invalid").removeClass("valid");
                 $("#userId").focus();
