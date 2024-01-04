@@ -4,8 +4,8 @@
       layout:decorate="~{/layout/layout}">
 <div layout:fragment="content" class="main">
     <div class="container d-flex justify-content-center">
-        <form class="col-8" th:action="@{/auth/join}" method="post" th:object="${joinDto}">
-            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+        <form class="col-auto join" th:action="@{/auth/join}" method="post" th:object="${joinDto}">
+            <!--<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">-->
             <div class="col-8">
                 <h2>회원가입</h2>
                 <div class="row g-3 align-items-center mb-2">
