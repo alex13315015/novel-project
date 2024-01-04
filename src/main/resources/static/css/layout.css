@@ -1,6 +1,9 @@
-a {
+.findPassword {
     font-size: 15px;
     color: #c4c8cb;
+}
+.join{
+    width: 1200px;
 }
 .valid {
     font-size: 15px;
