@@ -17,13 +17,13 @@ public class JoinDto {
     @Size(max = 20, message = "닉네임은 최대 20글자까지 가능합니다.")
     private String nickName;
 
-    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$",
-            message = "비밀번호는 문자,숫자,특수문자를 사용하여 최소 8~20글자여야 합니다.")
+
     private String password;
 
     private String email;
 
-    private int age;
+    private String rrnFront;
+    private String rrnBack;
 
     private String phoneNumber;
 
