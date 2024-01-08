@@ -31,11 +31,13 @@ public class SecurityConfig {
                             .logoutRequestMatcher(new AntPathRequestMatcher("/auth/logout"))
                             .logoutSuccessUrl("/auth/login")
                             .invalidateHttpSession(true)
-                    );
-        /*.csrf((csrf) -> csrf.disable()
-                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())*/
-
-
+                    )
+                .rememberMe((auth -> auth
+                        .rememberMeParameter("rememberUser")
+                        .key(UUID.randomUUID().toString())
+                        .userDetailsService(customUserDetailsService)
+                        .tokenValiditySeconds(60*60*24)
+                ));
         return httpSecurity.build();
 
     }
