@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+</head>
+<body class="text-center">
+<div th:replace="fragment/header :: header"></div>
+<div class="container-sm" style="width:300px">
+<main class="form-signin">
+
+  <form action="/auth/login1" method="post">
+    <img class="mb-4" src="/img/loginlogo.png" alt="" width="200" height="100">
+
+    <div class="form-floating">
+      <input type="text" name="loginId" class="form-control" id="loginId" placeholder="login id">
+      <label for="loginId">login id</label>
+    </div>
+    <div class="form-floating">
+      <input type="password" name="password" class="form-control" id="password" placeholder="Password">
+      <label for="password">Password</label>
+    </div>
+
+    <div class="checkbox mb-3">
+      <label>
+        <input type="checkbox" value="remember-me"> Remember me
+      </label>
+    </div>
+    <button class="w-100 btn btn-lg btn-dark" type="submit">Sign in</button>
+    <p class="mt-5 mb-3 text-muted">© 2017–2021</p>
+  </form>
+</main>
+</div>
+
+
+
+
+</body>
+</html>

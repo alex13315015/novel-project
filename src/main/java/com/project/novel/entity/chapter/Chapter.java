@@ -1,6 +1,7 @@
-package com.project.novel.entity.book;
+package com.project.novel.entity.chapter;
 
 import com.project.novel.entity.base.BaseEntity;
+import com.project.novel.entity.book.Book;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -18,27 +19,23 @@ public class Chapter extends BaseEntity {
     @Column(name = "chapter_id")
     private Long id;
 
-    private String title;
-
-    private String content;
-
-    private Long hit;
-
-    private Long likes;
-
-    private int price;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id")
     private Book book;
 
+    private String title;
 
-    public Chapter(String title, String content, Long hit, Long likes, int price, Book book) {
+    private String content;
+
+    private int price;
+
+    private Long hits;
+
+    public Chapter(Book book, String title, String content, int price, Long hits) {
+        this.book = book;
         this.title = title;
         this.content = content;
-        this.hit = hit;
-        this.likes = likes;
         this.price = price;
-        this.book = book;
+        this.hits = hits;
     }
 }

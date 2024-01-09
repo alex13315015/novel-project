@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>home</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+<body>
+<div th:replace="fragment/header :: header"></div>
+<div class="container">
+    <form>
+        <div class="m-auto">
+            <ul class="nav nav-underline">
+                <li class="nav-item">
+                    <a class="nav-link mb-2px fw-bolder fs-4 link-dark" th:href="@{/hello}">전체</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link mb-2px fw-bolder fs-4 link-dark" href="#">유료</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link mb-2px fw-bolder fs-4 link-dark" href="#">무료</a>
+                </li>
+            </ul>
+        </div>
+
+
+        <div class="mt-2">
+            <input class="form-control form-control-lg" type="text"
+                placeholder="제목 작가 검색 모두 가능합니다."
+                aria-label=".form-control-lg example">
+        </div>
+
+
+        <nav class="navbar m-3">
+            <div class="container-fluid justify-content-start">
+                <a th:href=@{/home(sortType=modifiedDate)}>
+                    <button class="btn btn-sm btn-outline-dark me-2" type="button">최신순</button>
+                </a>
+                <a th:href=@{/home(sortType=hit)}>
+                    <button class="btn btn-sm btn-outline-dark me-2" type="button">조회순</button>
+                </a>
+                <a th:href=@{/home(sortType=subscribes)}>
+                    <button class="btn btn-sm btn-outline-dark me-2" type="button">구독자순</button>
+                </a>
+                <a th:href=@{/home(sortType=likes)}>
+                    <button class="btn btn-sm btn-outline-dark me-2" type="button">좋아요순</button>
+                </a>
+            </div>
+        </nav>
+
+        <div class="">
+            <div class="mb-3" th:each="book: ${books}">
+                <div class="card">
+                    <div class="card-body d-flex flex-row align-items-center">
+                        <div class="col-2 me-5" style=""><img src="/img/blank-book.avif" style="width:100%;"></div>
+                        <div class="col-6" style="">
+                            <div>
+                                <div class="fs-2 fw-bolder mb-2" id="book-name" th:text="${book.bookName}">왕좌의 게임</div>
+                                <div class="fs-5 fw-bolder mb-4" th:text="${book.author}"></div>
+                                <div class="row">
+                                    <div class="col-5">
+                                        <div class="row mb-2">
+                                            <label class="col-sm-4" for="a" >장르</label>
+                                            <div class="col fw-bolder" id="a" th:text="${book.likes}"></div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <label class="col-sm-4" for="b" >제한</label>
+                                            <div class="col fw-bolder" id="b" th:text="${book.hit}"></div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <label class="col-sm-4" for="c" >회차</label>
+                                            <div class="col fw-bolder" id="c" th:text="${book.subscribes}"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col">
+                                        <div class="row mb-2">
+                                            <label class="col-sm-4" for="likes" >좋아요</label>
+                                            <div class="col fw-bolder" id="likes" th:text="${book.likes}"></div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <label class="col-sm-4" for="hit" >조회수</label>
+                                            <div class="col fw-bolder" id="hit" th:text="${book.hit}"></div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <label class="col-sm-4" for="subscribes" >구독자</label>
+                                            <div class="col fw-bolder" id="subscribes" th:text="${book.subscribes}"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col me-3">
+                            <div class="row-5">
+                                <div>이 이야기는 진모가 왕이 되는 이야기 이다.</div>
+                            </div>
+                            <div class="row text-center">
+                                <button type="button" class="btn btn-outline-secondary">더보러가기</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

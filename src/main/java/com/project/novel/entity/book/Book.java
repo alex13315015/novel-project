@@ -2,7 +2,9 @@ package com.project.novel.entity.book;
 
 
 import com.project.novel.entity.Member;
+import com.project.novel.entity.Subscribe;
 import com.project.novel.entity.base.BaseEntity;
+import com.project.novel.entity.chapter.Chapter;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -24,7 +26,13 @@ public class Book extends BaseEntity {
 
     private String bookName;
 
-    private String description;
+    private String bookIntro;
+
+    private int ageRating;
+
+    private String bookImage;
+
+    private String genre;
 
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -37,9 +45,13 @@ public class Book extends BaseEntity {
     @OneToMany(mappedBy = "book")
     private List<Subscribe> subscribeList = new ArrayList<>();
 
-    public Book(String bookName, String description, Member member) {
+
+    public Book(String bookName, String bookIntro, int ageRating, String bookImage, String genre, Member member) {
         this.bookName = bookName;
-        this.description = description;
+        this.bookIntro = bookIntro;
+        this.ageRating = ageRating;
+        this.bookImage = bookImage;
+        this.genre = genre;
         this.member = member;
     }
 }
