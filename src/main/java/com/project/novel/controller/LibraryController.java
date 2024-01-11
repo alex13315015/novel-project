@@ -1,7 +1,9 @@
 package com.project.novel.controller;
 
 import com.project.novel.dto.BookDto;
+import com.project.novel.entity.book.Book;
 import com.project.novel.service.BookService;
+import com.project.novel.util.FileStore;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,12 +23,7 @@ public class LibraryController {
     }
 
 
-    @GetMapping("/library")
-    public String homeController(@RequestParam(name = "sortType", defaultValue = "modifiedDate") String sortType, Model model){
 
-        List<BookDto> books = bookService.findAllBook(sortType);
-        System.out.println(books.size());
-        model.addAttribute("books", books);
-        return "library/home";
-    }
+
+
 }

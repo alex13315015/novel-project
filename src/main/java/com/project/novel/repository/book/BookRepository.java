@@ -20,8 +20,6 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 //    @Query("select b")
 //    List<BookDto> findAllSortBookList(@Param("sortType") String sortType, @Param("Search") String search);
 
-
-
-
-
+    @Query("select b from Book b")
+    List<Book> findAllBookList();
 }

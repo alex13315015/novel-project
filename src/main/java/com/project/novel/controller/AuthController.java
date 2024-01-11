@@ -21,12 +21,6 @@ public class AuthController {
         return "auth/login";
     }
 
-//    @PostMapping("login")
-//    public String loggedMember(){
-////        memberService.loginMember();
-//        return "library/home";
-//    }
-
     @GetMapping("/signup")
     public String addMember(){
         return "auth/signup";

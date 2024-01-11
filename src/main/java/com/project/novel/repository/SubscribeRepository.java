@@ -1,4 +1,4 @@
-package com.project.novel.repository.book;
+package com.project.novel.repository;
 
 import com.project.novel.entity.Subscribe;
 import org.springframework.data.jpa.repository.JpaRepository;

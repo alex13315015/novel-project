@@ -1,7 +1,6 @@
 package com.project.novel.dto;
 
 import com.project.novel.entity.Member;
-import com.project.novel.security.MyRole;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -59,5 +58,9 @@ public class CustomUserDetailsDto implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public Member getMember(){
+        return member;
     }
 }

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout :: head(~{::title})">
+    <meta charset="UTF-8">
+    <title>책만들기</title>
+</head>
+<body th:replace="layout/layout :: content(~{::content})">
+<content>
+    <div class="container">
+        <form action="/book/make" method="post" enctype="multipart/form-data">
+            <div class="m-1 d-flex justify-content-center">
+                <div class="">
+                    <div style="background-image: url('/img/makeBookLogo.png');
+                                            background-size: cover;
+                                            background-repeat: no-repeat;
+                                            background-position: center;
+                                            width:800px; height:900px">
+                        <div class="d-flex justify-content-center">
+                            <img src="/img/makeBookTitle.png">
+                        </div>
+
+                        <div class="d-flex justify-content-center">
+                            <div class="" style="width:50%">
+                                <div class="form-floating mb-3" style="border-bottom: 2px solid #000">
+                                    <div class="col-auto">
+                                        <label for="bookName" class="col-form-label fs-6 fw-bolder">제목</label>
+                                    </div>
+                                    <input type="text" class="form-control"
+                                       id="bookName" name="bookName"
+                                       style="border:none"></input>
+                                </div>
+
+                                <div class="form-floating mb-1" style="border-bottom: 2px solid #000">
+                                    <div class="col-auto">
+                                        <label for="bookIntro" class="col-form-label fs-6 fw-bolder">책소개</label>
+                                    </div>
+                                    <div class="col-auto">
+                                <textarea type="text" class="form-control"
+                                        id="bookIntro" name="bookIntro"
+                                        style="border:none; height:100px"></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3 row">
+                                    <div class="col m-2"  style="border-bottom: 2px solid #000">
+                                        <div class="col-auto">
+                                            <label for="genreSelect" class="col-form-label fs-6 fw-bolder">장르</label>
+                                        </div>
+                                        <div class="col-auto mb-3">
+                                            <select th:name="genre" id="genreSelect" class="form-select " aria-label="Default select example">
+                                                <option th:each="genre : ${genreList}" th:value="${genre.toString()}" th:text="${genre.getGenreName()}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col m-2"  style="border-bottom: 2px solid #000">
+                                        <div class="col-auto">
+                                            <label for="ageRating" class="col-form-label fs-6 fw-bolder">장르</label>
+                                        </div>
+                                        <div class="col-auto mb-3">
+                                            <select name="ageRating" id="ageRating" class="form-select " aria-label="Default select example">
+                                                <option value="0" >전체이용가</option>
+                                                <option value="19" >청소년 관람불가</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <input type="file" name="file" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="submit">전송</button>
+        </form>
+    </div>
+
+</content>
+</body>
+</html>

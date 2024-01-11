@@ -1,10 +1,9 @@
 package com.project.novel.dto;
 
 import com.project.novel.entity.Member;
-import com.project.novel.security.MyRole;
+import com.project.novel.enums.MyRole;
 import lombok.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Getter
 @Setter

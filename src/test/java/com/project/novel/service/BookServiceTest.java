@@ -2,8 +2,8 @@ package com.project.novel.service;
 
 import com.project.novel.repository.MemberRepository;
 import com.project.novel.repository.book.BookRepository;
-import com.project.novel.repository.book.ChapterRepository;
-import com.project.novel.repository.book.SubscribeRepository;
+import com.project.novel.repository.ChapterRepository;
+import com.project.novel.repository.SubscribeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;

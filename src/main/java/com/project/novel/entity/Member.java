@@ -1,14 +1,8 @@
 package com.project.novel.entity;
 
-import com.project.novel.security.MyRole;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import com.project.novel.enums.MyRole;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.validator.constraints.Length;
-
-import java.util.HashSet;
-import java.util.Set;
 
 
 @Entity

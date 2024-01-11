@@ -1,4 +1,4 @@
-package com.project.novel.security;
+package com.project.novel.enums;
 
 
 import lombok.Getter;
