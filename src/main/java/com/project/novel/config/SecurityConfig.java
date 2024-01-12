@@ -41,7 +41,8 @@ public class SecurityConfig {
                         .key(UUID.randomUUID().toString())
                         .userDetailsService(customUserDetailsService)
                         .tokenValiditySeconds(60*60*24)
-                ));
+                ))
+                .csrf((csrf) -> csrf.disable());
         return httpSecurity.build();
 
     }
