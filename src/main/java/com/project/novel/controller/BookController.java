@@ -1,13 +1,11 @@
 package com.project.novel.controller;
 
 
-import com.project.novel.dto.BookSaveDto;
-import com.project.novel.entity.book.Book;
+import com.project.novel.dto.book.BookSaveDto;
 import com.project.novel.enums.Genre;
 import com.project.novel.service.BookService;
 import com.project.novel.util.FileStore;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Controller;
@@ -17,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -27,8 +24,8 @@ public class BookController {
     private final BookService bookService;
     private final FileStore fileStore;
 
-    @Value("${file.dir}")
-    private String fileDir;
+//    @Value("${file.dir}")
+//    private String fileDir;
 
     @GetMapping("/make")
     public String makeBook(Model model){
@@ -50,15 +47,4 @@ public class BookController {
     public Resource downloadImage(@PathVariable String fileName) throws MalformedURLException {
         return new UrlResource("file:" + fileStore.getFilePath(fileName));
     }
-
-    @GetMapping("/library")
-    public String homeController(Model model){
-        List<Book> books = bookService.findAllBook();
-        System.out.println(books.size());
-        model.addAttribute("books", books);
-        return "library/home";
-    }
-
-
-
 }

@@ -3,6 +3,7 @@ package com.project.novel.entity.book;
 
 import com.project.novel.entity.Member;
 import com.project.novel.entity.base.BaseEntity;
+import com.project.novel.enums.Genre;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,14 +27,14 @@ public class Book extends BaseEntity {
 
     private String bookImage;
 
-    private String genre;
+    private Genre genre;
 
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
-    public Book(String bookName, String bookIntro, int ageRating, String bookImage, String genre, Member member) {
+    public Book(String bookName, String bookIntro, int ageRating, String bookImage, Genre genre, Member member) {
         this.bookName = bookName;
         this.bookIntro = bookIntro;
         this.ageRating = ageRating;

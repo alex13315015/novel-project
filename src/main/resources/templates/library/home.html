@@ -8,7 +8,7 @@
 <body>
 <div th:replace="fragment/header :: header"></div>
 <div class="container" style="width:70%">
-    <form>
+    <form action="/library">
         <div class="m-auto">
             <ul class="nav nav-underline">
                 <li class="nav-item">
@@ -25,7 +25,7 @@
 
 
         <div class="mt-2">
-            <input class="form-control form-control-lg" type="text"
+            <input class="form-control form-control-lg" id="bookSearch" name="bookSearch" type="text"
                 placeholder="제목 작가 검색 모두 가능합니다."
                 aria-label=".form-control-lg example">
         </div>
@@ -33,21 +33,14 @@
 
         <nav class="navbar m-3">
             <div class="container-fluid justify-content-start">
-                <a th:href=@{/home(sortType=modifiedDate)}>
-                    <button class="btn btn-sm btn-outline-dark me-2" type="button">최신순</button>
-                </a>
-                <a th:href=@{/home(sortType=hit)}>
-                    <button class="btn btn-sm btn-outline-dark me-2" type="button">조회순</button>
-                </a>
-                <a th:href=@{/home(sortType=subscribes)}>
-                    <button class="btn btn-sm btn-outline-dark me-2" type="button">구독자순</button>
-                </a>
-                <a th:href=@{/home(sortType=likes)}>
-                    <button class="btn btn-sm btn-outline-dark me-2" type="button">좋아요순</button>
-                </a>
+                <button class="btn btn-sm btn-outline-dark me-2" value="createdDateDesc" name="sortType" type="submit">최신순</button>
+                <button class="btn btn-sm btn-outline-dark me-2" value="createdDateAsc" name="sortType" type="submit">오래된순</button>
+                <button class="btn btn-sm btn-outline-dark me-2" value="hit" name="sortType" type="submit">조회순</button>
+                <button class="btn btn-sm btn-outline-dark me-2" value="subscribes" name="sortType" type="submit">구독자순</button>
+                <button class="btn btn-sm btn-outline-dark me-2" value="likes" name="sortType" type="submit">좋아요순</button>
             </div>
         </nav>
-
+    </form>
         <div class="">
             <div class="mb-3" th:each="book: ${books}">
                 <div class="card">
@@ -56,37 +49,37 @@
                         <div class="col-6" style="">
                             <div>
                                 <div class="fs-2 fw-bolder mb-2" id="book-name" th:text="${book.bookName}">왕좌의 게임</div>
-                                <div class="fs-5 fw-bolder mb-4" th:text="${book.member.name}"></div>
+                                <div class="fs-5 fw-bolder mb-4" th:text="${book.author}"></div>
                                 <div class="row">
                                     <div class="col-5">
                                         <div class="row mb-2">
                                             <label class="col-sm-4" for="a" >장르</label>
-                                            <div class="col fw-bolder" id="a" th:text="${book.genre}"></div>
+                                            <div class="col fw-bolder" id="a" th:text="${book.genre.getGenreName}"></div>
                                         </div>
                                         <div class="row mb-2">
                                             <label class="col-sm-4" for="b" >제한</label>
                                             <div class="col fw-bolder" id="b" th:text="${book.ageRating}"></div>
                                         </div>
-<!--                                        <div class="row mb-2">-->
-<!--                                            <label class="col-sm-4" for="c" >회차</label>-->
-<!--                                            <div class="col fw-bolder" id="c" th:text="${book.subscribes}"></div>-->
-<!--                                        </div>-->
+                                        <div class="row mb-2">
+                                            <label class="col-sm-4" for="c" >회차</label>
+                                            <div class="col fw-bolder" id="c" th:text="${book.subscribes}"></div>
+                                        </div>
                                     </div>
 
-<!--                                    <div class="col">-->
-<!--                                        <div class="row mb-2">-->
-<!--                                            <label class="col-sm-4" for="likes" >좋아요</label>-->
-<!--                                            <div class="col fw-bolder" id="likes" th:text="${book.likes}"></div>-->
-<!--                                        </div>-->
-<!--                                        <div class="row mb-2">-->
-<!--                                            <label class="col-sm-4" for="hit" >조회수</label>-->
-<!--                                            <div class="col fw-bolder" id="hit" th:text="${book.hit}"></div>-->
-<!--                                        </div>-->
-<!--                                        <div class="row mb-2">-->
-<!--                                            <label class="col-sm-4" for="subscribes" >구독자</label>-->
-<!--                                            <div class="col fw-bolder" id="subscribes" th:text="${book.subscribes}"></div>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
+                                    <div class="col">
+                                        <div class="row mb-2">
+                                            <label class="col-sm-4" for="likes" >좋아요</label>
+                                            <div class="col fw-bolder" id="likes" th:text="${book.likes}"></div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <label class="col-sm-4" for="hit" >조회수</label>
+                                            <div class="col fw-bolder" id="hit" th:text="${book.hit}"></div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <label class="col-sm-4" for="subscribes" >구독자</label>
+                                            <div class="col fw-bolder" id="subscribes" th:text="${book.subscribes}"></div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -102,8 +95,78 @@
                 </div>
             </div>
         </div>
-    </form>
 </div>
 
+
 </body>
+<!--<script>-->
+<!--    window.addEventListener('DOMContentLoaded', function() {-->
+<!--        const urlParams = new URLSearchParams(window.location.search);-->
+<!--        const searchKeyword = urlParams.get('bookSearch');-->
+<!--        const searchInput = document.getElementById('bookSearch');-->
+
+<!--        if (searchKeyword) {-->
+<!--            searchInput.value = searchKeyword;-->
+<!--        }-->
+<!--    });-->
+<!--</script>-->
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const sortButtons = document.querySelectorAll('[name="sortType"]');
+        const searchInput = document.getElementById('bookSearch');
+
+        // URL에서 검색어 및 정렬 유형을 읽어오는 함수
+        function readQueryParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const searchKeyword = urlParams.get('bookSearch');
+            const sortType = urlParams.get('sortType');
+
+            // 이전에 저장된 정렬 유형이 있다면 해당 버튼을 활성화
+            if (sortType) {
+                const selectedButton = document.querySelector(`[value="${sortType}"]`);
+                if (selectedButton) {
+                    selectedButton.classList.add('active');
+                }
+            } else {
+                // 이전에 저장된 정렬 유형이 없다면 디폴트로 최신순 활성화
+                const defaultButton = document.querySelector('[value="createdDateDesc"]');
+                if (defaultButton) {
+                    defaultButton.classList.add('active');
+                }
+            }
+
+            // 검색어도 함께 표시
+            if (searchKeyword) {
+                searchInput.value = searchKeyword;
+            }
+        }
+
+        // 각 버튼에 클릭 이벤트 리스너 추가
+        sortButtons.forEach(function(button) {
+            button.addEventListener('click', function() {
+                // 선택한 정렬 유형을 URL에 추가
+                const selectedSortType = button.value;
+                const urlParams = new URLSearchParams(window.location.search);
+                urlParams.set('sortType', selectedSortType);
+
+                // 검색어 추가
+                const searchKeyword = searchInput.value;
+                urlParams.set('bookSearch', searchKeyword);
+
+                // URL 업데이트
+                window.history.pushState({}, '', `${window.location.pathname}?${urlParams}`);
+
+                // 검색어와 함께 폼 제출
+                const form = document.querySelector('form');
+                form.submit();
+            });
+        });
+
+        // 페이지 로드 시에 URL에서 읽어오기
+        readQueryParams();
+    });
+</script>
+
+
 </html>

@@ -1,7 +1,7 @@
 package com.project.novel.service;
 
-import com.project.novel.dto.BookDto;
-import com.project.novel.dto.BookSaveDto;
+import com.project.novel.dto.book.BookDto;
+import com.project.novel.dto.book.BookSaveDto;
 import com.project.novel.dto.CustomUserDetailsDto;
 import com.project.novel.entity.book.Book;
 import com.project.novel.repository.book.BookRepository;
@@ -27,8 +27,8 @@ public class BookService {
         bookRepository.save(bookSaveDto.toEntity(userDetails.getMember()));
     }
 
-    public List<Book> findAllBook(){
-        return bookRepository.findAllBookList();
+    public List<BookDto> findAllBook(String sortType, String bookSearch){
+        return bookRepository.findAllBookList(bookSearch, sortType);
     }
 
 
