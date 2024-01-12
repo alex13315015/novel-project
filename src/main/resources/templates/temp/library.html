@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/layout}">
+<div layout:fragment="content" class="main">
+    <div class="d-flex justify-content-center">
+        <div class="book">
+            <ul>
+                <li>
+                    <a class="d-flex align-items-center" href="">
+                        <div class="info_list">
+                            <p th:text="${bookInfo.getBook_name()}"></p>
+                            <p th:text="${bookInfo.getBook_genre()}"></p>
+                            <p th:text="${bookInfo.getBook_image()}"></p>
+                            <p th:text="${bookInfo.getBook_intro()}"></p>
+                            <p th:text="${bookInfo.getAge_rating()}"></p>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <button class="btn btn-dark" id="btnSubscribe" th:data-idx="${bookInfo.getId()}" data-subscribe="confirm">구독하기</button>
+    </div>
+    <script th:inline="javascript">
+        $("#btnSubscribe").on("click",function () {
+            const subscribe = $(this).data("subscribe");
+            const _this = $(this);
+            const id = $(this).data("idx");
+            if(subscribe === "confirm") {
+                $.ajax({
+                    url: "/api/subscribe/" + id,
+                    method: "POST",
+                    success: function (response) {
+                        console.log(response);
+                        _this.data("subscribe","cancel");
+                        _this.text("구독취소");
+                    }
+                })
+            }else {
+                $.ajax({
+                    url: "/api/subscribe/" + id,
+                    method: "DELETE",
+                    success: function (response) {
+                        console.log(response);
+                        _this.data("subscribe","confirm");
+                        _this.text("구독하기");
+                    }
+                })
+            }
+        });
+    </script>
+</div>
+</html>
