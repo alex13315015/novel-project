@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<div layout:fragment="content" class="main">
+    <div class="container">
+        <div class="d-flex mt-2 mb-2">
+            <img style="width: 200px; height: 276px" class="mx-3 rounded border border-opacity-25" src="/images/book.png" alt="" th:src="@{|/upload/${bookInfo.bookImage}|}">
+            <div class="d-flex flex-column mx-3">
+                <h2 class="mt-2" th:text="${bookInfo.bookName}"></h2>
+                <div class="d-flex">
+                    <span class="mt-2 p-2 border-end border-opacity-25" th:text="${bookInfo.bookGenre}"></span>
+                    <span class="mt-2 p-2" th:text="${bookInfo.bookIntro}"></span>
+                </div>
+                <a th:href="@{|/chapter/write/${bookInfo.id}|}" class="btn btn-outline-primary mt-3">회차 쓰기</a>
+            </div>
+        </div>
+        <div class="chapter-list border-top">
+            <h3 class="mt-2 pt-3 pb-3" th:text="'회차 ('+${bookInfo.chapterList.size()}+')'"></h3>
+            <ul>
+                <th:block th:each="item:${bookInfo.chapterList}">
+                    <li class="mt-2 mb-2">
+                        <a th:href="@{|/chapter/read/${item.id}|}" th:text="${item.title}" class="subj"></a>
+                        <div class="d-flex mt-2 border-bottom border-opacity-25" style="font-weight: lighter; color: #4d5154">
+                            <span class="pe-3" th:text="'조회 ' + ${item.hits}"></span>
+                            <span class="pe-3" th:text="${item.createdAt}"></span>
+                        </div>
+                    </li>
+                </th:block>
+            </ul>
+        </div>
+    </div>
+</div>
+</html>

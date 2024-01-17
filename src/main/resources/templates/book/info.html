@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<div layout:fragment="content" class="main">
+    <div class="container">
+        <div class="book-info">
+            <div class="d-flex mt-2 mb-2">
+                <img style="width: 200px; height: 276px" class="mx-3 rounded border border-opacity-25" src="/images/book.png" alt="" th:src="@{|/upload/${bookInfo.bookImage}|}">
+                <div class="d-flex flex-column mx-3">
+                    <div class="info-top">
+                        <h2 class="mt-2" th:text="${bookInfo.bookName}"></h2>
+                        <div class="d-flex">
+                            <span class="px-2 border-end border-opacity-25" th:text="${bookInfo.bookGenre}"></span>
+                            <span class="px-2 mb-1" th:text="${bookInfo.writer}"></span>
+                        </div>
+                    </div>
+                    <div class="info-bottom">
+                        <p style="font-weight: lighter" th:text="${bookInfo.bookIntro}"></p>
+                        <a href="#" class="btn btn-outline-primary">첫회 보기</a>
+                    </div>
+                </div>
+                <div class="info-right d-flex">
+                    <div class="d-flex flex-column align-items-center mt-2 ms-5">
+                        <span class="likeIcon" th:attr="like-state=${bookInfo.likeState ? 'liked' : 'not-liked'}">
+                            <i th:class="${bookInfo.likeState ? 'bi bi-heart-fill' : 'bi bi-heart'}"></i>
+                        </span>
+                        <span th:text="${bookInfo.likeCount}"></span>
+                    </div>
+                    <div class="d-flex flex-column align-items-center mt-2 ms-4">
+                        <span class="subscribeIcon" th:attr="subscribe-state=${bookInfo.subscribeState ? 'subscribed' : 'not-subscribed'}">
+                            <i th:class="${bookInfo.subscribeState ? 'bi bi-check-circle' : 'bi bi-plus-circle'}"></i>
+                        </span>
+                        <span th:text="'구독 ' + ${bookInfo.subscribeCount}">구독 수</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="chapter-list border-top">
+            <div class="d-flex justify-content-between align-items-center">
+                <h3 class="mt-2 pt-3 pb-3" th:text="'작품 회차 ('+${bookInfo.chapterList.size()}+')'"></h3>
+                <div style="text-decoration: none">
+                    <a class="h3 p-3 border-end border-opacity-25" th:href="@{|/book/library/${bookInfo.id}?order=Update|}">최신화부터</a>
+                    <a class="h3 p-3" th:href="@{|/book/library/${bookInfo.id}?order=Oldest|}">1화부터</a>
+                </div>
+            </div>
+            <ul>
+                <th:block th:each="item:${bookInfo.chapterList}">
+                    <li class="mt-2 mb-2">
+                        <a th:href="@{|/chapter/read/${item.id}|}" th:text="${item.title}" class="subj"></a>
+                        <div class="d-flex mt-2 border-bottom border-opacity-25" style="font-weight: lighter; color: #4d5154">
+                            <span class="pe-3" th:text="'조회 ' + ${item.hits}"></span>
+                            <span class="pe-3" th:text="${item.createdAt}"></span>
+                        </div>
+                    </li>
+                </th:block>
+            </ul>
+        </div>
+    </div>
+    <script th:inline="javascript">
+        const bookId = [[${bookInfo.id}]];
+
+        $(document).ready(function () {
+            $('.likeIcon').click(function () {
+                const likeState = $(this).attr('like-state');
+                const likeCountElement = $(this).next(); // 좋아요 수를 표시하는 요소
+
+                if (likeState === 'liked') {
+                    $(this).find('i').removeClass('bi bi-heart-fill').addClass('bi bi-heart');
+                    $(this).attr('like-state', 'not-liked');
+
+                    // 좋아요 취소 처리를 위한 AJAX 호출
+                    $.ajax({
+                        url: '/api/book/' + bookId + '/like',
+                        type: 'DELETE',
+                        success: function(response) {
+                            likeCountElement.text(response.likeCount); // 좋아요 수 업데이트
+                        },
+                        error: function(error) {
+                            console.log(error);
+                        }
+                    });
+                } else {
+                    $(this).find('i').removeClass('bi bi-heart').addClass('bi bi-heart-fill');
+                    $(this).attr('like-state', 'liked');
+
+                    // 좋아요 처리를 위한 AJAX 호출
+                    $.ajax({
+                        url: '/api/book/' + bookId + '/like',
+                        type: 'POST',
+                        success: function(response) {
+                            likeCountElement.text(response.likeCount); // 좋아요 수 업데이트
+                        },
+                        error: function(error) {
+                            console.log(error);
+                        }
+                    });
+                }
+            });
+
+            $('.subscribeIcon').click(function () {
+                const subscribeState = $(this).attr('subscribe-state');
+                const subscribeCountElement = $(this).next(); // 구독 수를 표시하는 요소
+
+                if (subscribeState === 'subscribed') {
+                    $(this).find('i').removeClass('bi bi-check-circle').addClass('bi bi-plus-circle');
+                    $(this).attr('subscribe-state', 'not-subscribed');
+
+                    // 구독 취소 처리를 위한 AJAX 호출
+                    $.ajax({
+                        url: '/api/book/' + bookId + '/subscribe',
+                        type: 'DELETE',
+                        success: function(response) {
+                            subscribeCountElement.text("구독 " + response.subscribeCount); // 구독 수 업데이트
+                        },
+                        error: function(error) {
+                            console.log(error);
+                        }
+                    });
+                } else {
+                    $(this).find('i').removeClass('bi bi-plus-circle').addClass('bi bi-check-circle');
+                    $(this).attr('subscribe-state', 'subscribed');
+
+                    // 구독 처리를 위한 AJAX 호출
+                    $.ajax({
+                        url: '/api/book/' + bookId + '/subscribe',
+                        type: 'POST',
+                        success: function(response) {
+                            subscribeCountElement.text("구독 " + response.subscribeCount); // 구독 수 업데이트
+                        },
+                        error: function(error) {
+                            console.log(error);
+                        }
+                    });
+                }
+            });
+
+        });
+    </script>
+</div>
+</html>
