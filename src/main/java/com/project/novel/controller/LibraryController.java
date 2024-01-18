@@ -5,6 +5,7 @@ import com.project.novel.entity.book.Book;
 import com.project.novel.service.BookService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,9 +22,18 @@ public class LibraryController {
 
     @GetMapping("/library")
     public String homeController(@RequestParam(value = "sortType", required = false, defaultValue = "createdDateDesc") String sortType,
-                                 @RequestParam(value = "bookSearch", required = false, defaultValue = "") String bookSearch, Model model){
-        List<BookDto> books = bookService.findAllBook(sortType, bookSearch);
+                                 @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
+                                 @RequestParam(value = "page", required = false, defaultValue = "1") int page, Model model){
+
+
+
+
+
+        List<BookDto> books = bookService.test(sortType, keyword, page, model);
         model.addAttribute("books", books);
-        return "library/home";
+        model.addAttribute("sortType", sortType);
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("page", page);
+        return "library/library";
     }
 }

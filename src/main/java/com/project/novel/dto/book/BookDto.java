@@ -1,5 +1,6 @@
 package com.project.novel.dto.book;
 
+import com.project.novel.entity.book.Book;
 import com.project.novel.enums.Genre;
 import lombok.*;
 
@@ -21,17 +22,17 @@ public class BookDto {
     private String bookImage;
     private LocalDateTime createdDate;
 
-    public BookDto(Long id, String bookName, Genre genre, String author, Integer ageRating, String bookIntro, Long subscribes, Long hit, Long likes, String bookImage, LocalDateTime createdDate) {
-        this.id = id;
-        this.bookName = bookName;
-        this.genre = genre;
-        this.author = author;
-        this.ageRating = ageRating;
-        this.bookIntro = bookIntro;
+    public BookDto(Book book, Long hit, Long likes, Long subscribes, String author){
+        this.id = book.getId();
+        this.bookName = book.getBookName();
+        this.genre = book.getGenre();
+        this.bookIntro = book.getBookIntro();
+        this.ageRating = book.getAgeRating();
+        this.bookImage = book.getBookImage();
+        this.createdDate = book.getCreatedDate();
         this.subscribes = subscribes;
         this.hit = hit;
         this.likes = likes;
-        this.bookImage = bookImage;
-        this.createdDate = createdDate;
+        this.author = author;
     }
 }

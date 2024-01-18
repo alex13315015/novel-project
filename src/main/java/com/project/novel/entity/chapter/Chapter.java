@@ -12,7 +12,6 @@ import lombok.ToString;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(of = {"id", "title", "content", "price"})
 public class Chapter extends BaseEntity {
 
     @Id @GeneratedValue
@@ -27,15 +26,12 @@ public class Chapter extends BaseEntity {
 
     private String content;
 
-    private int price;
-
     private Long hits;
 
-    public Chapter(Book book, String title, String content, int price, Long hits) {
+    public Chapter(Book book, String title, String content,Long hits) {
         this.book = book;
         this.title = title;
         this.content = content;
-        this.price = price;
         this.hits = hits;
     }
 }

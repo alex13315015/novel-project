@@ -2,8 +2,16 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>home</title>
+    <title>library</title>
     <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <style>
+        .current-page{
+            background-color: yellow;
+        }
+
+    </style>
+
 </head>
 <body>
 <div th:replace="fragment/header :: header"></div>
@@ -12,20 +20,17 @@
         <div class="m-auto">
             <ul class="nav nav-underline">
                 <li class="nav-item">
-                    <a class="nav-link mb-2px fw-bolder fs-4 link-dark" th:href="@{/hello}">전체</a>
+                    <span class="mb-2px fw-bolder fs-4">전체</span>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link mb-2px fw-bolder fs-4 link-dark" href="#">유료</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link mb-2px fw-bolder fs-4 link-dark" href="#">무료</a>
+                    <span class="mb-2px fw-bolder fs-4" th:text="${pageDto.totalRecordCount}">유료</span>
                 </li>
             </ul>
         </div>
 
 
         <div class="mt-2">
-            <input class="form-control form-control-lg" id="bookSearch" name="bookSearch" type="text"
+            <input class="form-control form-control-lg" id="keyword" name="keyword" type="text"
                 placeholder="제목 작가 검색 모두 가능합니다."
                 aria-label=".form-control-lg example">
         </div>
@@ -35,7 +40,7 @@
             <div class="container-fluid justify-content-start">
                 <button class="btn btn-sm btn-outline-dark me-2" value="createdDateDesc" name="sortType" type="submit">최신순</button>
                 <button class="btn btn-sm btn-outline-dark me-2" value="createdDateAsc" name="sortType" type="submit">오래된순</button>
-                <button class="btn btn-sm btn-outline-dark me-2" value="hit" name="sortType" type="submit">조회순</button>
+                <button class="btn btn-sm btn-outline-dark me-2" value="hits" name="sortType" type="submit">조회순</button>
                 <button class="btn btn-sm btn-outline-dark me-2" value="subscribes" name="sortType" type="submit">구독자순</button>
                 <button class="btn btn-sm btn-outline-dark me-2" value="likes" name="sortType" type="submit">좋아요순</button>
             </div>
@@ -95,31 +100,43 @@
                 </div>
             </div>
         </div>
+
+    <div class="d-flex justify-content-center">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Previous" th:if="${pageDto.existPrevPage}" th:href="@{/library(sortType=${sortType},keyword=${keyword},page=${page - 1})}">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li th:each="pageNumber : ${pageDto.existNextPage ? #numbers.sequence(pageDto.startPage, pageDto.endPage) : {}}"  class="page-item">
+                    <a class="page-link" th:text="${pageNumber}" th:href="@{/library(sortType=${sortType},keyword=${keyword},page=${pageNumber})}" th:classappend="${pageNumber == page} ? 'current-page' : ''"></a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Next" th:if="${pageDto.existNextPage}"  th:href="@{/library(sortType=${sortType},keyword=${keyword},page=${page + 1})}">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+
 </div>
 
 
 </body>
-<!--<script>-->
-<!--    window.addEventListener('DOMContentLoaded', function() {-->
-<!--        const urlParams = new URLSearchParams(window.location.search);-->
-<!--        const searchKeyword = urlParams.get('bookSearch');-->
-<!--        const searchInput = document.getElementById('bookSearch');-->
 
-<!--        if (searchKeyword) {-->
-<!--            searchInput.value = searchKeyword;-->
-<!--        }-->
-<!--    });-->
-<!--</script>-->
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const sortButtons = document.querySelectorAll('[name="sortType"]');
-        const searchInput = document.getElementById('bookSearch');
+        const searchInput = document.getElementById('keyword');
 
         // URL에서 검색어 및 정렬 유형을 읽어오는 함수
         function readQueryParams() {
             const urlParams = new URLSearchParams(window.location.search);
-            const searchKeyword = urlParams.get('bookSearch');
+            const searchKeyword = urlParams.get('keyword');
             const sortType = urlParams.get('sortType');
 
             // 이전에 저장된 정렬 유형이 있다면 해당 버튼을 활성화
@@ -155,7 +172,7 @@
                 urlParams.set('bookSearch', searchKeyword);
 
                 // URL 업데이트
-                window.history.pushState({}, '', `${window.location.pathname}?${urlParams}`);
+                window.history.pushState({}, '', `${window.location.pathname}?sortType=${selectedSortType}&bookSearch=${searchKeyword}`);
 
                 // 검색어와 함께 폼 제출
                 const form = document.querySelector('form');
