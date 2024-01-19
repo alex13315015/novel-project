@@ -22,7 +22,7 @@ public class ChapterUploadDto {
     @NotNull(message = "가격을 입력해주세요.")
     private Integer price;
 
-    public Chapter toEntity(String title, String contents, Integer price, Book book) {
+    public Chapter toEntity(Book book) {
         return Chapter.builder()
                 .title(title)
                 .contents(contents)

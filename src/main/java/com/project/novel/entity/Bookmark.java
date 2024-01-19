@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ChapterLikes {
+public class Bookmark {
 
     @Id @GeneratedValue
     private Long id;

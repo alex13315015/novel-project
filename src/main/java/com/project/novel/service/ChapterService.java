@@ -1,6 +1,5 @@
 package com.project.novel.service;
 
-import com.project.novel.dto.BookDto;
 import com.project.novel.dto.ChapterDetailDto;
 import com.project.novel.dto.ChapterDto;
 import com.project.novel.dto.ChapterUploadDto;
@@ -23,15 +22,11 @@ public class ChapterService {
     private final ChapterRepository chapterRepository;
     private final BookRepository bookRepository;
 
-    public void write(ChapterUploadDto chapterUploadDto, Long bookId) {
+    public void writeChapter(ChapterUploadDto chapterUploadDto, Long bookId) {
         Book book = bookRepository.findById(bookId).orElseThrow(
                 () -> new IllegalArgumentException("해당하는 책을 찾을 수 없습니다.")
         );
-        Chapter chapter = chapterUploadDto.toEntity(
-                chapterUploadDto.getTitle(),
-                chapterUploadDto.getContents(),
-                chapterUploadDto.getPrice(),
-                book);
+        Chapter chapter = chapterUploadDto.toEntity(book);
         chapterRepository.save(chapter);
     }
 
@@ -52,6 +47,7 @@ public class ChapterService {
         String formattedCreatedAt = chapter.getCreatedAt().format(formatter);
         return ChapterDetailDto.builder()
                 .chapterId(chapter.getId())
+                .bookId(chapter.getBook().getId())
                 .title(chapter.getTitle())
                 .contents(chapter.getContents())
                 .hits(chapter.getHits())

@@ -23,7 +23,7 @@
                         <a th:href="@{|/chapter/read/${item.id}|}" th:text="${item.title}" class="subj"></a>
                         <div class="d-flex mt-2 border-bottom border-opacity-25" style="font-weight: lighter; color: #4d5154">
                             <span class="pe-3" th:text="'조회 ' + ${item.hits}"></span>
-                            <span class="pe-3" th:text="${item.createdAt}"></span>
+                            <span class="pe-3 mb-2" th:text="${item.createdAt}"></span>
                         </div>
                     </li>
                 </th:block>

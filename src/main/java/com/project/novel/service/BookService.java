@@ -108,7 +108,6 @@ public class BookService {
 
         List<ChapterDto> chapterDtoList = chapterService.getAllChapter(bookId, order);
 
-        log.info("member 서치 하나???");
         return BookDto.builder()
                 .id(bookId)
                 .bookName(book.getBookName())

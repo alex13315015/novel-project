@@ -30,7 +30,7 @@ public class ChapterController {
     private final ViewService viewService;
 
     @GetMapping("/write/{bookId}")
-    public String write(@PathVariable(name="bookId") Long bookId, Model model,
+    public String writeChapter(@PathVariable(name="bookId") Long bookId, Model model,
                         @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         // 책을 쓴 유저가 아니라면 글을 쓸 수 없게 조건 달기
         if (customUserDetails.getLoggedMember().getId() != bookRepository.findById(bookId).get().getMember().getId()) {
@@ -52,17 +52,18 @@ public class ChapterController {
             redirectAttributes.addFlashAttribute("errors", bindingResult.getFieldErrors());
             return "redirect:/chapter/write/" + bookId;
         }
-        chapterService.write(chapterUploadDto, bookId);
+        chapterService.writeChapter(chapterUploadDto, bookId);
         return "redirect:/member/myBookList/" + bookId;
     }
 
 
     @GetMapping("/read/{chapterId}")
-    public String read(@PathVariable(name="chapterId") Long chapterId,
+    public String readChapter(@PathVariable(name="chapterId") Long chapterId,
                        @AuthenticationPrincipal CustomUserDetails customUserDetails,
                        Model model) {
         viewService.updateView(customUserDetails.getLoggedMember().getId(), chapterId);
-        model.addAttribute("chapterDetailDto", chapterService.getChapterDetail(chapterId));
+        ChapterDetailDto chapterDetailDto = chapterService.getChapterDetail(chapterId);
+        model.addAttribute("chapterDetailDto", chapterDetailDto);
         return "chapter/read";
     }
 

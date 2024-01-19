@@ -32,8 +32,12 @@ public class BookController {
                                BindingResult bindingResult,
                                @AuthenticationPrincipal CustomUserDetails customUserDetails,
                                Model model) {
-        if(bindingResult.hasErrors()) {
+        if(bindingResult.hasErrors() || bookUploadDto.getBookImage().isEmpty()) {
             model.addAttribute("bookUploadDto", bookUploadDto);
+            // 이미지 파일이 없을 경우
+            if (bookUploadDto.getBookImage().isEmpty()) {
+                model.addAttribute("imageError", "책 이미지를 선택해주세요.");
+            }
             return "book/write";
         }
 

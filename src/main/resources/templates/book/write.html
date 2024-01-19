@@ -33,6 +33,7 @@
                     <div class="mb-3">
                         <label for="file" class="form-label">표지 이미지</label>
                         <input class="form-control" type="file" id="file" name="bookImage" th:field="*{bookImage}">
+                        <div class="form-text text-danger" th:text="${imageError}"></div>
                     </div>
 
                     <div class="mb-3">

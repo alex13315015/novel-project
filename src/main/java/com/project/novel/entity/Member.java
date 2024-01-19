@@ -62,7 +62,5 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<Book> bookList;
 
-    @OneToMany(mappedBy = "member")
-    private List<ChapterReview> chapterReviewList;
 
 }

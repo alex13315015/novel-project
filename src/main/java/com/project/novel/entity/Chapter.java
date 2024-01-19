@@ -1,15 +1,12 @@
 package com.project.novel.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Getter
@@ -32,8 +29,6 @@ public class Chapter {
 
     private Long hits;
 
-    @OneToMany(mappedBy = "chapter")
-    private List<ChapterReview> chapterReviewList;
 
     @CreatedDate
     private LocalDateTime createdAt;

@@ -40,3 +40,12 @@ ul {
     margin-bottom: 10px;
     padding-top: 40px;
 }
+
+.custom-link {
+    color: #000000;
+    text-decoration: none;
+}
+
+.custom-link:hover {
+    text-decoration: underline;
+}
