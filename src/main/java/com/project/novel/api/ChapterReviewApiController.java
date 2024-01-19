@@ -24,17 +24,16 @@ public class ChapterReviewApiController {
 
     @PostMapping("/chapter/{chapterId}/review")
     public void createChapterReview(ChapterReviewUploadDto chapterReviewUploadDto,
-                                             @PathVariable(name="chapterId") Long chapterId,
-                                             @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+                                    @PathVariable(name="chapterId") Long chapterId,
+                                    @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
-        log.info("chapterReviewUploadDto.toString() = " + chapterReviewUploadDto.getComments());
         chapterReviewService.createChapterReview(chapterReviewUploadDto, chapterId, customUserDetails.getLoggedMember().getId());
     }
 
     @GetMapping("/chapter/{chapterId}/review")
     public Page<ChapterReviewDto> getChapterReview(@PathVariable(name="chapterId") Long chapterId,
                                                    @AuthenticationPrincipal CustomUserDetails customUserDetails,
-                                                   @PageableDefault(size = 5, sort="id", direction = Sort.Direction.ASC) Pageable pageable) {
+                                                   @PageableDefault(size = 5, sort="id", direction = Sort.Direction.DESC) Pageable pageable) {
         return chapterReviewService.getChapterReviewList(chapterId, pageable);
     }
 

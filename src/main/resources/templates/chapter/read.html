@@ -79,7 +79,9 @@
                 success: function (response) {
                     console.log(response);
                     $('#commentText').val('');
-                    loadReviewList(chapterId, 1);
+                    let reviewUl = $('#review');
+                    reviewUl.empty();
+                    loadReviewList(chapterId, 0);
                 },
                 error: function () {
                     alert('리뷰 작성에 실패했습니다.');
