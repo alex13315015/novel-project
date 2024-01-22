@@ -1,6 +1,9 @@
 package com.project.novel.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -21,14 +24,18 @@ public class Chapter {
     @JoinColumn(name = "book_id")
     private Book book;
 
+    @Size(min = 1, max = 30, message = "1자 이상 30자 이하로 입력해주세요.")
+    @NotBlank(message = "제목을 입력해주세요.")
     private String title;
 
+    @Lob
+    @NotBlank(message = "내용을 입력해주세요.")
     private String contents;
 
+    @NotNull(message = "가격을 입력해주세요.")
     private Integer price;
 
     private Long hits;
-
 
     @CreatedDate
     private LocalDateTime createdAt;

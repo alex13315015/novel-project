@@ -38,6 +38,7 @@
 
     </div>
     <script th:inline="javascript">
+        const loggedId = [[${#authentication.principal.loggedMember.id}]];
         const chapterId = [[${chapterDetailDto.chapterId}]];
         let loadPage = 0;
         let totalPages = 0;
@@ -99,6 +100,10 @@
         });
 
         function reviewToHtml(review) {
+            let deleteButton = '';
+            if (review.memberId === loggedId) {
+                deleteButton = '<button class="delete-review mt-2" data-id="'+review.id+'"><i class="bi bi-x-lg"></i></button>';
+            }
             return `
                 <li class="review-item border-bottom border-opacity-25 mt-2 mb-2">
                     <div class="d-flex justify-content-between">
@@ -107,10 +112,32 @@
                             <span class="mt-1">${review.comments}</span>
                             <span class="mb-3" style="font-weight: lighter; color: #4d5154; font-size: small">${review.createdAt}</span>
                         </div>
+                        <div>
+                            ${deleteButton}
+                        </div>
                     </div>
                 </li>
             `;
-        }
+        }ㅛ
+
+        $(document).on('click', '.delete-review', function() {
+            let reviewId = $(this).data('id');
+            console.log(reviewId)
+            if (confirm('댓글을 삭제하시겠습니까?')) {
+                $.ajax({
+                    type: 'DELETE',
+                    url: '/api/review/' + reviewId,
+                    success: function() {
+                        let reviewUl = $('#review');
+                        reviewUl.empty();
+                        loadReviewList(chapterId, 0);
+                    },
+                    error: function() {
+                        alert('댓글 삭제에 실패했습니다.');
+                    }
+                });
+            }
+        });
 
     </script>
 </div>

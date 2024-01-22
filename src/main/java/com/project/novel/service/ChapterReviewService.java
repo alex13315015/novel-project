@@ -13,6 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 
 @Service
 @RequiredArgsConstructor
@@ -38,5 +40,14 @@ public class ChapterReviewService {
     public Page<ChapterReviewDto> getChapterReviewList(Long chapterId, Pageable pageable) {
         return chapterReviewRepository.findAllByChapterId(chapterId, pageable);
 
+    }
+
+    public void deleteChapterReview(Long reviewId, Long loggedId) {
+        ChapterReview chapterReview = chapterReviewRepository.findById(reviewId).orElseThrow(
+                () -> new IllegalArgumentException("해당하는 리뷰를 찾을 수 없습니다."));
+        if (!Objects.equals(chapterReview.getMember().getId(), loggedId)) {
+            throw new IllegalArgumentException("해당 리뷰를 삭제할 권한이 없습니다.");
+        }
+        chapterReviewRepository.delete(chapterReview);
     }
 }

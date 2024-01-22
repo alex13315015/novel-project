@@ -32,9 +32,14 @@ public class ChapterReviewApiController {
 
     @GetMapping("/chapter/{chapterId}/review")
     public Page<ChapterReviewDto> getChapterReview(@PathVariable(name="chapterId") Long chapterId,
-                                                   @AuthenticationPrincipal CustomUserDetails customUserDetails,
                                                    @PageableDefault(size = 5, sort="id", direction = Sort.Direction.DESC) Pageable pageable) {
         return chapterReviewService.getChapterReviewList(chapterId, pageable);
+    }
+
+    @DeleteMapping("/review/{reviewId}")
+    public void deleteChapterReview(@PathVariable(name="reviewId") Long reviewId,
+                                    @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        chapterReviewService.deleteChapterReview(reviewId, customUserDetails.getLoggedMember().getId());
     }
 
 }

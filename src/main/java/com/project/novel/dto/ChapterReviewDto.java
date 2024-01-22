@@ -14,12 +14,14 @@ import java.time.format.DateTimeFormatter;
 public class ChapterReviewDto {
 
     private Long id;
+    private Long memberId;
     private String nickname;
     private String comments;
     private LocalDateTime createdAt;
 
-    public ChapterReviewDto(Long id, String nickname, String comments, LocalDateTime createdAt) {
+    public ChapterReviewDto(Long id, Long memberId, String nickname, String comments, LocalDateTime createdAt) {
         this.id = id;
+        this.memberId = memberId;
         this.nickname = nickname;
         this.comments = comments;
         this.createdAt = createdAt;

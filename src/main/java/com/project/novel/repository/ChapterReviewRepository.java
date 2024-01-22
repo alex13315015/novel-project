@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ChapterReviewRepository extends JpaRepository<ChapterReview, Long> {
 
-    @Query("SELECT new com.project.novel.dto.ChapterReviewDto(cr.id, cr.member.nickname, cr.comments, cr.createdAt) FROM ChapterReview cr WHERE cr.chapter.id = :chapterId")
+    @Query("SELECT new com.project.novel.dto.ChapterReviewDto(cr.id, cr.member.id, cr.member.nickname, cr.comments, cr.createdAt) FROM ChapterReview cr WHERE cr.chapter.id = :chapterId")
     Page<ChapterReviewDto> findAllByChapterId(@Param("chapterId") Long chapterId, Pageable pageable);
 
 }
