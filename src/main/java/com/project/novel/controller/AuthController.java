@@ -2,7 +2,6 @@ package com.project.novel.controller;
 
 import com.project.novel.dto.JoinDto;
 import com.project.novel.service.AuthService;
-import com.project.novel.util.CalculatedAge;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final AuthService authService;
-//    private final CalculatedAge calculatedAge;
 
     @GetMapping("/login")
     public String login() {
@@ -46,7 +44,7 @@ public class AuthController {
 
     @GetMapping("/idCheck")
     @ResponseBody
-    public int idCheck(String dupId) { // dupId => 유저로부터 입력받는 값
+    public int idCheck(@RequestParam(name="dupId") String dupId) { // dupId => 유저로부터 입력받는 값
         if(dupId == null || dupId.isEmpty())
             return -1;
         else
@@ -55,7 +53,7 @@ public class AuthController {
 
     @GetMapping("/emailCheck")
     @ResponseBody
-    public int emailCheck(String dupEmail) { // dupEmail => 유저로부터 입력받는 값
+    public int emailCheck(@RequestParam(name="dupEmail") String dupEmail) { // dupEmail => 유저로부터 입력받는 값
         if(dupEmail == null || dupEmail.isEmpty())
             return -1;
         else
@@ -64,10 +62,10 @@ public class AuthController {
 
     @GetMapping("/passwordCheck")
     @ResponseBody
-    public int passwordCheck(String secondPW) { // secondPW => 유저로부터 입력받는 재입력 값
-        if(secondPW == null || secondPW.isEmpty())
+    public int passwordCheck(@RequestParam(name="secondPw") String secondPw) { // secondPW => 유저로부터 입력받는 재입력 값
+        if(secondPw == null || secondPw.isEmpty())
             return -1;
         else
-            return authService.passwordCheck(secondPW);
+            return authService.passwordCheck(secondPw);
     }
 }

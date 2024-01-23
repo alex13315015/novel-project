@@ -23,6 +23,7 @@ import java.util.List;
 public class Member {
 
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "member_id")
     private Long id;
 
     @Column(unique = true, nullable = false)

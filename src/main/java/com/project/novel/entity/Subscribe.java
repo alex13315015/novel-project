@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class Subscribe {
 
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "subscribe_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

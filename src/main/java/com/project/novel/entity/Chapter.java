@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 public class Chapter {
 
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "chapter_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

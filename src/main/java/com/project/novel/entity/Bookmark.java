@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 public class Bookmark {
 
     @Id @GeneratedValue
+    @Column(name = "bookmark_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

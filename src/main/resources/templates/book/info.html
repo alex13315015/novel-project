@@ -5,22 +5,22 @@
 <div layout:fragment="content" class="main">
     <div class="container">
         <div class="book-info">
-            <div class="d-flex mt-2 mb-2">
+            <div class="d-flex mt-4 mb-2 align-items-flex-end" style="position: relative;">
                 <img style="width: 200px; height: 276px" class="mx-3 rounded border border-opacity-25" src="/images/book.png" alt="" th:src="@{|/upload/${bookInfo.bookImage}|}">
-                <div class="d-flex flex-column mx-3">
+                <div class="d-flex flex-column mx-3" style="height: 100%;">
                     <div class="info-top">
-                        <h2 class="mt-2" th:text="${bookInfo.bookName}"></h2>
+                        <h3 class="mt-2" th:text="${bookInfo.bookName}"></h3>
                         <div class="d-flex">
                             <span class="px-2 border-end border-opacity-25" th:text="${bookInfo.bookGenre}"></span>
                             <span class="px-2 mb-1" th:text="${bookInfo.writer}"></span>
                         </div>
                     </div>
-                    <div class="info-bottom">
-                        <p style="font-weight: lighter" th:text="${bookInfo.bookIntro}"></p>
-                        <a href="#" class="btn btn-outline-primary">첫회 보기</a>
+                    <div class="info-bottom" style="position: absolute; bottom: 0;">
+                        <p style="color: #4d5154; font-size: x-small; word-wrap: break-word; overflow-wrap: break-word; word-break: break-all;"  th:text="${bookInfo.bookIntro}"></p>
+                        <a href="#" style="min-width: 100px; max-width: 200px;" class="btn btn-outline-primary">첫회 보기</a>
                     </div>
                 </div>
-                <div class="info-right d-flex">
+                <div class="info-right d-flex" style="height: 100%;">
                     <div class="d-flex flex-column align-items-center mt-2 ms-5">
                         <span class="likeIcon" th:attr="like-state=${bookInfo.likeState ? 'liked' : 'not-liked'}">
                             <i th:class="${bookInfo.likeState ? 'bi bi-heart-fill' : 'bi bi-heart'}"></i>

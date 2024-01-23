@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
@@ -17,9 +18,11 @@ import java.time.LocalDateTime;
         @Index(name = "index_chapter", columnList = "chapter_id")
 })
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
+@EntityListeners(AuditingEntityListener.class)
 public class Views {
 
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "views_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

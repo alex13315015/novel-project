@@ -57,7 +57,12 @@ public class BookService {
                     .toFile(new File(uploadFolder + thumbnailImageFileName));
 
             // 원본 이미지 파일 삭제
-            originalImageFile.delete();
+            boolean delete = originalImageFile.delete();
+            if (delete) {
+                log.info("원본 이미지 파일 삭제 성공");
+            } else {
+                log.info("원본 이미지 파일 삭제 실패");
+            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -107,6 +112,7 @@ public class BookService {
         );
 
         List<ChapterDto> chapterDtoList = chapterService.getAllChapter(bookId, order);
+        int subscribeCount = subscribeService.subscribeCount(bookId);
 
         return BookDto.builder()
                 .id(bookId)
@@ -116,6 +122,7 @@ public class BookService {
                 .bookImage(book.getBookImage())
                 .bookGenre(book.getBookGenre())
                 .ageRating(book.getAgeRating())
+                .subscribeCount(subscribeCount)
                 .chapterList(chapterDtoList)
                 .build();
     }

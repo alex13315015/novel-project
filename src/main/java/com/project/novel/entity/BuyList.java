@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 public class BuyList {
 
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "buy_list_id")
     private Long id;
 
     @ManyToOne

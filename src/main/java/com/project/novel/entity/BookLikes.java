@@ -9,6 +9,7 @@ import lombok.*;
 public class BookLikes {
 
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "book_likes_id")
     private Long id;
 
     @ManyToOne

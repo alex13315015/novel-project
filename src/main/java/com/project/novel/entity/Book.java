@@ -19,6 +19,7 @@ import java.util.List;
 public class Book {
 
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "book_id")
     private Long id;
 
     @Size(min = 1, max = 30, message = "1자 이상 30자 이하로 입력해주세요.")
