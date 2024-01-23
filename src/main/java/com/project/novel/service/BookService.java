@@ -8,6 +8,7 @@ import com.project.novel.repository.BookLikesRepository;
 import com.project.novel.repository.BookRepository;
 import com.project.novel.repository.MemberRepository;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnails;
@@ -20,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -36,9 +38,16 @@ public class BookService {
     private final SubscribeService subscribeService;
 
 
-    public void write(BookUploadDto bookUploadDto, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+    public void write(@Valid BookUploadDto bookUploadDto,
+                      @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
         String originalFileName = bookUploadDto.getBookImage().getOriginalFilename();
+        String fileExtension = Objects.requireNonNull(originalFileName).substring(originalFileName.lastIndexOf(".") + 1).toLowerCase();
+
+        if (!fileExtension.equals("jpg") && !fileExtension.equals("jpeg") && !fileExtension.equals("png")) {
+            throw new IllegalArgumentException("Invalid file type. Only jpg, jpeg, and png files are allowed.");
+        }
+
         UUID uuid = UUID.randomUUID();
         String imageFileName = uuid + "_" + originalFileName;
         String thumbnailImageFileName = "thumb_" + imageFileName;

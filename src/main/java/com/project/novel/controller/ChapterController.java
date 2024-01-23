@@ -31,8 +31,7 @@ public class ChapterController {
 
     @GetMapping("/write/{bookId}")
     public String writeChapter(@PathVariable(name="bookId") Long bookId, Model model,
-                        @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        // 책을 쓴 유저가 아니라면 글을 쓸 수 없게 조건 달기
+                               @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         if (customUserDetails.getLoggedMember().getId() != bookRepository.findById(bookId).get().getMember().getId()) {
             JOptionPane.showMessageDialog(null, customUserDetails.getUsername() + "의 소설이 아닙니다.","권한 오류", JOptionPane.WARNING_MESSAGE);
             return "redirect:/member/myBookList";
@@ -46,8 +45,7 @@ public class ChapterController {
     public String writeProcess(@Valid @ModelAttribute ChapterUploadDto chapterUploadDto,
                                BindingResult bindingResult,
                                @PathVariable(name="bookId") Long bookId,
-                               RedirectAttributes redirectAttributes,
-                               Model model) {
+                               RedirectAttributes redirectAttributes) {
         if(bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("errors", bindingResult.getFieldErrors());
             return "redirect:/chapter/write/" + bookId;
@@ -59,8 +57,8 @@ public class ChapterController {
 
     @GetMapping("/read/{chapterId}")
     public String readChapter(@PathVariable(name="chapterId") Long chapterId,
-                       @AuthenticationPrincipal CustomUserDetails customUserDetails,
-                       Model model) {
+                              @AuthenticationPrincipal CustomUserDetails customUserDetails,
+                              Model model) {
         viewService.updateView(customUserDetails.getLoggedMember().getId(), chapterId);
         ChapterDetailDto chapterDetailDto = chapterService.getChapterDetail(chapterId);
         model.addAttribute("chapterDetailDto", chapterDetailDto);

@@ -56,8 +56,8 @@ public class Chapter {
         this.hits = hits;
     }
 
-    public void incrementHits() {
-        this.hits++;
+    public void updateHits(Long hits) {
+        this.hits = hits;
     }
 
 }

@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 
 @Repository
 public interface ViewRepository extends JpaRepository<Views, Long> {
@@ -14,4 +16,5 @@ public interface ViewRepository extends JpaRepository<Views, Long> {
     Views findByMemberIdAndChapterId(@Param("memberId") Long memberId, @Param("chapterId") Long chapterId);
 
 
+    List<Views> findAllByMemberId(Long loggedId);
 }

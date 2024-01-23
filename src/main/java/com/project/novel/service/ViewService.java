@@ -7,6 +7,8 @@ import com.project.novel.repository.ViewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ViewService {
@@ -29,6 +31,8 @@ public class ViewService {
         }
     }
 
-
+    public List<Views> recentViewList(Long loggedId) {
+        return viewRepository.findAllByMemberId(loggedId);
+    }
 
 }

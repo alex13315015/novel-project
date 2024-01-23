@@ -3,7 +3,6 @@ package com.project.novel.controller;
 import com.project.novel.dto.BookDto;
 import com.project.novel.dto.CustomUserDetails;
 import com.project.novel.service.BookService;
-import com.project.novel.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Slf4j
 public class MemberController {
 
-    private final MemberService memberService;
     private final BookService bookService;
 
     @GetMapping("/myBookList")
