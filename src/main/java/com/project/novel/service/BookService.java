@@ -45,7 +45,7 @@ public class BookService {
         String fileExtension = Objects.requireNonNull(originalFileName).substring(originalFileName.lastIndexOf(".") + 1).toLowerCase();
 
         if (!fileExtension.equals("jpg") && !fileExtension.equals("jpeg") && !fileExtension.equals("png")) {
-            throw new IllegalArgumentException("Invalid file type. Only jpg, jpeg, and png files are allowed.");
+            throw new IllegalArgumentException("확장자 타입은 jpg, jpeg, png 만 가능합니다.");
         }
 
         UUID uuid = UUID.randomUUID();

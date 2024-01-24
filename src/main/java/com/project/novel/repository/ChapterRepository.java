@@ -1,9 +1,10 @@
 package com.project.novel.repository;
 
 import com.project.novel.dto.ChapterDto;
-import com.project.novel.entity.Book;
 import com.project.novel.entity.Chapter;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -20,4 +21,8 @@ public interface ChapterRepository extends JpaRepository<Chapter, Long> {
     List<ChapterDto> findAllByBookId(@Param("bookId") Long bookId, @Param("order") String order);
 
 
+    @Modifying
+    @Transactional
+    @Query("update Chapter c set c.hits = c.hits + :hits where c.id = :chapterId")
+    void updateHits(@Param("chapterId") Long chapterId, @Param("hits") Long hits);
 }

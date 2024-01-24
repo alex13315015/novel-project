@@ -60,7 +60,7 @@ public class ChapterController {
                               @AuthenticationPrincipal CustomUserDetails customUserDetails,
                               Model model) {
         viewService.updateView(customUserDetails.getLoggedMember().getId(), chapterId);
-        ChapterDetailDto chapterDetailDto = chapterService.getChapterDetail(chapterId);
+        ChapterDetailDto chapterDetailDto = chapterService.getChapterDetail(chapterId, customUserDetails.getLoggedMember().getUserId());
         model.addAttribute("chapterDetailDto", chapterDetailDto);
         return "chapter/read";
     }
