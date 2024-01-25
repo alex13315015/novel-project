@@ -9,6 +9,7 @@ import lombok.*;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @ToString
 public class ChapterUploadDto {
 
@@ -22,6 +23,16 @@ public class ChapterUploadDto {
     @NotNull(message = "가격을 입력해주세요.")
     private Integer price;
 
+    private Long bookId;
+
+    @Builder
+    public ChapterUploadDto(String title, String contents, Integer price, Long bookId) {
+        this.title = title;
+        this.contents = contents;
+        this.price = price;
+        this.bookId = bookId;
+    }
+
     public Chapter toEntity(Book book) {
         return Chapter.builder()
                 .title(title)
@@ -30,7 +41,5 @@ public class ChapterUploadDto {
                 .book(book)
                 .build();
     }
-
-
 
 }

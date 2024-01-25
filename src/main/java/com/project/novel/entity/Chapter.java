@@ -10,6 +10,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -38,11 +39,16 @@ public class Chapter {
 
     private Long hits;
 
+    @OneToMany(mappedBy = "chapter", cascade = CascadeType.ALL)
+    private List<ChapterReview> chapterReviewList;
+
     @CreatedDate
     private LocalDateTime createdAt;
 
     @LastModifiedDate
     private LocalDateTime updatedAt;
+
+    private boolean isActive;
 
     @Builder
     public Chapter(Book book, String title, String contents, Integer price, Long hits) {
@@ -54,10 +60,16 @@ public class Chapter {
             hits=0L;
         }
         this.hits = hits;
+        this.isActive = true;
     }
 
-    public void updateHits(Long hits) {
-        this.hits = hits;
+    public void deactivate() {
+        this.isActive = false;
     }
 
+    public void update(String title, String contents, int price) {
+        this.title = title;
+        this.contents = contents;
+        this.price = price;
+    }
 }

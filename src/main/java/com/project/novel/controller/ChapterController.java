@@ -65,4 +65,35 @@ public class ChapterController {
         return "chapter/read";
     }
 
+    @PostMapping("/delete/{chapterId}")
+    public String deactivateChapter(@PathVariable(name="chapterId") Long chapterId,
+                                    @AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                    @RequestParam(name="bookId") Long bookId) {
+        chapterService.deactivateChapter(chapterId, customUserDetails.getLoggedMember().getId());
+        return "redirect:/member/myBookList/" + bookId;
+    }
+
+    @GetMapping("/modify/{chapterId}")
+    public String modifyChapter(@PathVariable(name="chapterId") Long chapterId,
+                                @AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                Model model) {
+        ChapterUploadDto chapterUploadDto = chapterService.modifyChapter(chapterId, customUserDetails.getLoggedMember().getId());
+        model.addAttribute("chapterUploadDto", chapterUploadDto);
+        model.addAttribute("chapterId", chapterId);
+        return "chapter/modify";
+    }
+
+    @PostMapping("/modify/{chapterId}")
+    public String modifyProcess(@Valid @ModelAttribute ChapterUploadDto chapterUploadDto,
+                                BindingResult bindingResult,
+                                @PathVariable(name="chapterId") Long chapterId,
+                                RedirectAttributes redirectAttributes) {
+        if(bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("errors", bindingResult.getFieldErrors());
+            return "redirect:/chapter/modify/" + chapterId;
+        }
+        chapterService.updateChapter(chapterUploadDto, chapterId);
+        return "redirect:/member/myBookList/" + chapterUploadDto.getBookId();
+    }
+
 }

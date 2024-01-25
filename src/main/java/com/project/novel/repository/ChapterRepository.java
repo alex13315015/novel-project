@@ -15,7 +15,7 @@ import java.util.List;
 public interface ChapterRepository extends JpaRepository<Chapter, Long> {
 
     @Query("SELECT new com.project.novel.dto.ChapterDto(c.id, c.title, c.createdAt, c.hits) " +
-            "FROM Chapter c WHERE c.book.id = :bookId " +
+            "FROM Chapter c WHERE c.book.id = :bookId AND c.isActive = true " +
             "ORDER BY CASE WHEN :order = 'Oldest' THEN c.createdAt END ASC, " +
             "CASE WHEN :order = 'Update' THEN c.createdAt END DESC")
     List<ChapterDto> findAllByBookId(@Param("bookId") Long bookId, @Param("order") String order);
@@ -25,4 +25,7 @@ public interface ChapterRepository extends JpaRepository<Chapter, Long> {
     @Transactional
     @Query("update Chapter c set c.hits = c.hits + :hits where c.id = :chapterId")
     void updateHits(@Param("chapterId") Long chapterId, @Param("hits") Long hits);
+
+    @Query("SELECT c FROM Chapter c WHERE c.isActive = false")
+    List<Chapter> findByIsActive();
 }

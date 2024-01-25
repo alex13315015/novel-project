@@ -6,7 +6,7 @@
     <div class="container justify-content-center d-flex" >
         <div class="col-8">
             <h1>회차 쓰기</h1>
-            <form method="post" th:action="@{|/chapter/write/${bookId}|}" th:object="${chapterUploadDto}">
+            <form method="post" th:action="@{|/chapter/modify/${chapterId}|}" th:object="${chapterUploadDto}">
                 <div class="mb-3">
                     <label for="title" class="form-label"></label>
                     <input type="text" class="form-control" id="title" name="title" th:field="*{title}" placeholder="제목을 입력하세요">
@@ -22,7 +22,7 @@
                         <option value="1">유료</option>
                     </select>
                 </div>
-                <input type="hidden" id="bookId" name="bookId" th:field="*{bookId}" th:value="${bookId}">
+                <input type="hidden" id="bookId" name="bookId" th:field="*{bookId}" th:value="${chapterUploadDto.bookId}">
                 <div class="mt-5 d-grid">
                     <button class="btn btn-primary" type="submit">작성</button>
                 </div>

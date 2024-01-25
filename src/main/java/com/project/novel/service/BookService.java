@@ -37,10 +37,24 @@ public class BookService {
     private final ChapterService chapterService;
     private final SubscribeService subscribeService;
 
-
+    @Transactional
     public void write(@Valid BookUploadDto bookUploadDto,
                       @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
+        String thumbnailImageFileName = processImageFile(bookUploadDto);
+
+        Book book = bookUploadDto.toEntity(
+                bookUploadDto.getBookName(),
+                bookUploadDto.getBookIntro(),
+                thumbnailImageFileName,
+                bookUploadDto.getBookGenre(),
+                bookUploadDto.getAgeRating(),
+                customUserDetails.getLoggedMember()
+        );
+        bookRepository.save(book);
+    }
+
+    private String processImageFile(BookUploadDto bookUploadDto) {
         String originalFileName = bookUploadDto.getBookImage().getOriginalFilename();
         String fileExtension = Objects.requireNonNull(originalFileName).substring(originalFileName.lastIndexOf(".") + 1).toLowerCase();
 
@@ -76,18 +90,10 @@ public class BookService {
             throw new RuntimeException(e);
         }
 
-        Book book = bookUploadDto.toEntity(
-                bookUploadDto.getBookName(),
-                bookUploadDto.getBookIntro(),
-                thumbnailImageFileName,
-                bookUploadDto.getBookGenre(),
-                bookUploadDto.getAgeRating(),
-                customUserDetails.getLoggedMember()
-        );
-        bookRepository.save(book);
+        return thumbnailImageFileName;
     }
 
-    @Transactional
+    @Transactional // 일반 사용자가 책 정보를 가져올 때 사용
     public BookDto getBook(Long bookId, Long loggedId, String order) {
         Book book = bookRepository.findById(bookId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 책입니다.")
@@ -115,6 +121,7 @@ public class BookService {
                 .build();
     }
 
+    // 작성자가 책 정보를 가져올 때 사용
     public BookDto getBook(Long bookId, String order) {
         Book book = bookRepository.findById(bookId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 책입니다.")
@@ -182,4 +189,46 @@ public class BookService {
         return bookLikesRepository.existsByBookIdAndMemberId(bookId, loggedId);
     }
 
+    @Transactional
+    public void deactivateBook(Long bookId, Long loggedId) {
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 책은 존재하지 않습니다."));
+        // 해당 책을 작성한 사람인지 예외 처리
+        if (book.getMember().getId().equals(loggedId)) {
+            book.deactivate();
+        } else {
+            throw new IllegalArgumentException("해당 책의 작성자가 아닙니다.");
+        }
+    }
+
+    // 책 정보 수정을 위해 책 정보를 가져옴
+    @Transactional
+    public BookUploadDto getModifiedBook(Long bookId, Long loggedId) {
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 책은 존재하지 않습니다."));
+        if(book.getMember().getId().equals(loggedId)) {
+            return BookUploadDto.builder()
+                    .bookName(book.getBookName())
+                    .bookIntro(book.getBookIntro())
+                    .bookGenre(book.getBookGenre())
+                    .ageRating(book.getAgeRating())
+                    .build();
+        } else {
+            throw new IllegalArgumentException("해당 책의 작성자가 아닙니다.");
+        }
+    }
+
+    @Transactional
+    public void updateBook(BookUploadDto bookUploadDto, Long bookId) {
+        Book book = bookRepository.findById(bookId).orElseThrow(()
+                -> new IllegalArgumentException("해당 책은 존재하지 않습니다."));
+
+        String thumbnailImageFileName = processImageFile(bookUploadDto);
+        book.update(bookUploadDto.getBookName(),
+                thumbnailImageFileName,
+                bookUploadDto.getBookIntro(),
+                bookUploadDto.getBookGenre(),
+                bookUploadDto.getAgeRating());
+        bookRepository.save(book);
+    }
 }

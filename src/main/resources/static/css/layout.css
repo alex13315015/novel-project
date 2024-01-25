@@ -49,3 +49,38 @@ ul {
 .custom-link:hover {
     text-decoration: underline;
 }
+
+.chapter-list ul li:not(:last-child) {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+
+.custom-dropdown-item {
+    text-decoration: none;
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.custom-dropdown-item:hover {
+    color: #0b5ed7;
+}
+
+.dropdown-menu li {
+    display: block;
+    box-sizing: border-box;
+    padding: 0 2px;
+    margin: 0;
+}
+
+.delete-book a {
+    color: black;
+    text-decoration: none;
+}
+
+.delete-book a:hover {
+    color: red;
+    text-decoration: underline;
+}
+

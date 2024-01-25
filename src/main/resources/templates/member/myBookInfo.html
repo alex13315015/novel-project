@@ -12,25 +12,65 @@
                     <span th:text="'구독 ' + ${bookInfo.subscribeCount}"></span>
                 </div>
                 <div class="info-bottom" style="position: absolute; bottom: 0;">
-                    <p class="mt-2" style="color: #4d5154; font-size: 13px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-all;" th:text="${bookInfo.bookIntro}"></p>
-                    <a th:href="@{|/chapter/write/${bookInfo.id}|}" style="min-width: 100px; max-width: 200px;" class="btn btn-outline-primary">회차 쓰기</a>
+                    <p class="mt-2" style="color: #2b3035; font-size: 13px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-all;" th:text="${bookInfo.bookIntro}"></p>
+                    <a th:href="@{|/chapter/write/${bookInfo.id}|}" style="min-width: 100px; max-width: 200px;" class="btn btn-outline-dark">회차 쓰기</a>
+                    <a th:href="@{|/book/modify/${bookInfo.id}|}" style="min-width: 100px; max-width: 200px;" class="btn btn-outline-dark">작품 정보 수정</a>
                 </div>
             </div>
         </div>
         <div class="chapter-list border-top">
-            <h3 class="mt-2 pt-3 pb-3" th:text="'회차 ('+${bookInfo.chapterList.size()}+')'"></h3>
+            <p class="mt-2" style="font-size: x-large" th:text="'회차 ('+${bookInfo.chapterList.size()}+')'"></p>
             <ul>
                 <th:block th:each="item:${bookInfo.chapterList}">
-                    <li class="mt-2 mb-2">
-                        <a th:href="@{|/chapter/read/${item.id}|}" th:text="${item.title}" class="subj"></a>
-                        <div class="d-flex mt-2 border-bottom border-opacity-25" style="font-weight: lighter; color: #4d5154">
-                            <span class="pe-3" th:text="'조회 ' + ${item.hits}"></span>
-                            <span class="pe-3 mb-2" th:text="${item.createdAt}"></span>
+                    <li>
+                        <div class="d-flex justify-content-between">
+                            <div class="mt-4 mb-4">
+                                <a th:href="@{|/chapter/read/${item.id}|}" th:text="${item.title}" class="subj"></a>
+                                <div class="d-flex mt-1" style="font-weight: lighter; color: #4d5154">
+                                    <span class="pe-3" th:text="'조회 ' + ${item.hits}"></span>
+                                    <span th:text="${item.createdAt}"></span>
+                                </div>
+                            </div>
+                            <div class="dropdown mt-4">
+                                <i class="bi bi-three-dots-vertical" style="font-size: 20px; font-weight: lighter" role="button" tabindex="0" data-bs-toggle="dropdown" aria-expanded="false"></i>
+                                <ul class="dropdown-menu align-items-center" aria-labelledby="dropdownMenuButton">
+                                    <li><a class="custom-dropdown-item mb-1" th:href="@{|/chapter/modify/${item.id}|}">수정</a></li>
+                                    <li><a class="custom-dropdown-item delete-chapter mt-1" th:href="@{|/chapter/delete/${item.id}?bookId=${bookInfo.id}|}">삭제</a></li>
+                                </ul>
+                            </div>
                         </div>
                     </li>
                 </th:block>
             </ul>
         </div>
     </div>
+    <script th:inline="javascript">
+        document.querySelectorAll('.delete-chapter').forEach(function(item) {
+            item.addEventListener('click', function(event) {
+                event.preventDefault();
+                var url = new URL(this.getAttribute('href'), window.location.href).href;
+
+                var confirmed = confirm('선택하신 챕터를 삭제하시겠습니까?' +
+                    '\n삭제된 챕터는 복구할 수 없습니다.');
+                if (!confirmed) {
+                    return;
+                }
+
+                fetch(url, {
+                    method: 'POST',
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            var bookId = new URL(url).searchParams.get("bookId");
+                            console.log(bookId)
+                            window.location.href = '/member/myBookList/' + bookId;
+                        } else {
+                            alert('Error: ' + response.statusText);
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+            });
+        });
+    </script>
 </div>
 </html>

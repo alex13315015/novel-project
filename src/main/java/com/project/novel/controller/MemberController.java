@@ -30,12 +30,13 @@ public class MemberController {
     @GetMapping("/myBookList/{bookId}")
     public String myBookList(@PathVariable(name="bookId") Long bookId, Model model,
                              @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        // 해당 bookId를 작성한 사람인지 예외 처리
-        if(!bookService.isMyBook(bookId, customUserDetails.getLoggedMember().getId())) {
+        // 해당 book 작성한 사람인지 확인
+        if(bookService.isMyBook(bookId, customUserDetails.getLoggedMember().getId())) {
+            BookDto bookDto = bookService.getBook(bookId,"Update");
+            model.addAttribute("bookInfo", bookDto);
+        } else {
             throw new IllegalArgumentException("해당 책을 작성한 사람만 접근 가능합니다.");
         }
-        BookDto bookDto = bookService.getBook(bookId,"Update");
-        model.addAttribute("bookInfo", bookDto);
 
         return "member/myBookInfo";
     }

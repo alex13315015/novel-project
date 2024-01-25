@@ -5,14 +5,15 @@ import com.project.novel.entity.Member;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
 @ToString
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class BookUploadDto {
 
     @Size(min = 1, max = 30, message = "1자 이상 30자 이하로 입력해주세요.")
@@ -32,16 +33,15 @@ public class BookUploadDto {
     private Integer ageRating;
 
     public Book toEntity(String bookName, String bookIntro,
-                             String bookImage, String bookGenre,
-                             Integer ageRating, Member member)
-    {
-        return Book.builder()
-                .bookName(bookName)
-                .bookIntro(bookIntro)
-                .bookImage(bookImage)
-                .bookGenre(bookGenre)
-                .ageRating(ageRating)
-                .member(member)
-                .build();
+                         String bookImage, String bookGenre,
+                         Integer ageRating, Member member) {
+            return Book.builder()
+                    .bookName(bookName)
+                    .bookIntro(bookIntro)
+                    .bookImage(bookImage)
+                    .bookGenre(bookGenre)
+                    .ageRating(ageRating)
+                    .member(member)
+                    .build();
     }
 }

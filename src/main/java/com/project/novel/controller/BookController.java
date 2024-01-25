@@ -61,4 +61,33 @@ public class BookController {
 
         return "book/info";
     }
+
+    @GetMapping("/modify/{bookId}")
+    public String modifyBook(@PathVariable(name="bookId") Long bookId, Model model,
+                             @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        BookUploadDto bookUploadDto = bookService.getModifiedBook(bookId, customUserDetails.getLoggedMember().getId());
+        model.addAttribute("bookUploadDto", bookUploadDto);
+        model.addAttribute("bookId", bookId);
+        return "book/modify";
+    }
+
+    @PostMapping("/modify/{bookId}")
+    public String modifyProcess(@Valid @ModelAttribute BookUploadDto bookUploadDto,
+                                BindingResult bindingResult,
+                                @PathVariable(name="bookId") Long bookId,
+                                Model model) {
+        if(bindingResult.hasErrors()) {
+            model.addAttribute("bookUploadDto", bookUploadDto);
+            return "redirect:/book/modify" + bookId;
+        }
+        bookService.updateBook(bookUploadDto, bookId);
+        return "redirect:/member/myBookList";
+    }
+
+    @GetMapping("/delete/{bookId}")
+    public String deactivateBook(@PathVariable(name="bookId") Long bookId,
+                                 @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        bookService.deactivateBook(bookId, customUserDetails.getLoggedMember().getId());
+        return "redirect:/member/myBookList";
+    }
 }

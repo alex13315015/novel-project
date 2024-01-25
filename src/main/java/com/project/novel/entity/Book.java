@@ -43,17 +43,22 @@ public class Book {
     @NotNull(message = "연령 등급을 선택해주세요.")
     private Integer ageRating;
 
-    @OneToMany(mappedBy = "book")
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
     private List<Chapter> chapterList;
 
-    @OneToMany(mappedBy = "book")
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
     private List<BookLikes> bookLikesList;
+
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
+    private List<Subscribe> subscribeList;
 
     @CreatedDate
     private LocalDateTime createdAt;
 
     @LastModifiedDate
     private LocalDateTime updatedAt;
+
+    private boolean isActive;
 
     @Builder
     public Book(String bookName, String bookImage, Member member, String bookIntro, String bookGenre, Integer ageRating) {
@@ -63,6 +68,19 @@ public class Book {
         this.bookIntro = bookIntro;
         this.bookGenre = bookGenre;
         this.ageRating = ageRating;
+        this.isActive = true;
     }
 
+    public void deactivate() {
+        this.isActive = false;
+    }
+
+    // 책 정보 수정
+    public void update(String bookName, String bookImage, String bookIntro, String bookGenre, Integer ageRating) {
+        this.bookName = bookName;
+        this.bookImage = bookImage;
+        this.bookIntro = bookIntro;
+        this.bookGenre = bookGenre;
+        this.ageRating = ageRating;
+    }
 }
