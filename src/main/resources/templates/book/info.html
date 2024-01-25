@@ -38,7 +38,7 @@
         </div>
         <div class="chapter-list border-top">
             <div class="d-flex justify-content-between align-items-center">
-                <h3 class="mt-2 pt-3 pb-3" th:text="'작품 회차 ('+${bookInfo.chapterList.size()}+')'"></h3>
+                <p class="mt-2" style="font-size: x-large" th:text="'회차 ('+${bookInfo.chapterList.size()}+')'"></p>
                 <div style="text-decoration: none">
                     <a class="h3 p-3 border-end border-opacity-25" th:href="@{|/book/library/${bookInfo.id}?order=Update|}">최신화부터</a>
                     <a class="h3 p-3" th:href="@{|/book/library/${bookInfo.id}?order=Oldest|}">1화부터</a>
@@ -46,11 +46,13 @@
             </div>
             <ul>
                 <th:block th:each="item:${bookInfo.chapterList}">
-                    <li class="mt-2 mb-2">
-                        <a th:href="@{|/chapter/read/${item.id}|}" th:text="${item.title}" class="subj"></a>
-                        <div class="d-flex mt-2 border-bottom border-opacity-25" style="font-weight: lighter; color: #4d5154">
-                            <span class="pe-3" th:text="'조회 ' + ${item.hits}"></span>
-                            <span class="pe-3 mb-2" th:text="${item.createdAt}"></span>
+                    <li>
+                        <div class="mt-4 mb-4">
+                            <a th:href="@{|/chapter/read/${item.id}|}" th:text="${item.title}" class="subj"></a>
+                            <div class="d-flex mt-1" style="font-weight: lighter; color: #4d5154">
+                                <span class="pe-3" th:text="'조회 ' + ${item.hits}"></span>
+                                <span th:text="${item.createdAt}"></span>
+                            </div>
                         </div>
                     </li>
                 </th:block>
