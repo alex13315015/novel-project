@@ -33,6 +33,7 @@ public class ChapterService {
         Book book = bookRepository.findById(bookId).orElseThrow(
                 () -> new IllegalArgumentException("해당하는 책을 찾을 수 없습니다.")
         );
+        book.chapterUpdated();
         Chapter chapter = chapterUploadDto.toEntity(book);
         chapterRepository.save(chapter);
     }

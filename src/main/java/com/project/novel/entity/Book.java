@@ -83,4 +83,8 @@ public class Book {
         this.bookGenre = bookGenre;
         this.ageRating = ageRating;
     }
+
+    public void chapterUpdated() {
+        this.updatedAt = LocalDateTime.now();
+    }
 }
