@@ -32,7 +32,7 @@ public class ChapterReviewApiController {
 
     @GetMapping("/chapter/{chapterId}/review")
     public Page<ChapterReviewDto> getChapterReview(@PathVariable(name="chapterId") Long chapterId,
-                                                   @PageableDefault(size = 5, sort="id", direction = Sort.Direction.DESC) Pageable pageable) {
+                                                   @PageableDefault(size = 5) Pageable pageable) {
         return chapterReviewService.getChapterReviewList(chapterId, pageable);
     }
 
