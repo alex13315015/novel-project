@@ -42,6 +42,9 @@ public class Chapter {
     @OneToMany(mappedBy = "chapter", cascade = CascadeType.ALL)
     private List<ChapterReview> chapterReviewList;
 
+    @OneToMany(mappedBy = "chapter", cascade = CascadeType.ALL)
+    private List<Views> viewsList;
+
     @CreatedDate
     private LocalDateTime createdAt;
 

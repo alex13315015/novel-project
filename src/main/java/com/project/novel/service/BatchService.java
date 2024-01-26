@@ -24,7 +24,6 @@ public class BatchService {
     private final ChapterRepository chapterRepository;
     private final RedisTemplate<String, Object> redisTemplate;
 
-    // 1분 마다 비활성화된 책 삭제
     @Scheduled(cron = "0 0/1 * * * *")
     public void deleteDeactivatedBooks() {
         log.info("deleteDeactivatedBooks() 실행");
