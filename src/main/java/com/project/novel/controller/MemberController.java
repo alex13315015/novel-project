@@ -25,7 +25,7 @@ public class MemberController {
 
     @GetMapping("/myBookList")
     public String mypage(@AuthenticationPrincipal CustomUserDetails customUserDetails, Model model,
-                         @PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+                         @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
 
         model.addAttribute("myBookList", bookService.getAllMyBook(customUserDetails.getLoggedMember().getId(), pageable));
         return "member/myBookList";
