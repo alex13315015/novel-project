@@ -1,6 +1,6 @@
 package com.project.novel.controller;
 
-import com.project.novel.dto.book.BookInfoDto;
+import com.project.novel.dto.BookInfoDto;
 import com.project.novel.service.LibraryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

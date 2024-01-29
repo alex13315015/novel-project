@@ -1,16 +1,12 @@
 package com.project.novel.service;
 
 
-import com.project.novel.dto.book.BookInfoDto;
-import com.project.novel.dto.book.BookSummaryDto;
-import com.project.novel.entity.View;
-import com.project.novel.entity.book.Book;
-import com.project.novel.repository.ViewRepository;
-import com.project.novel.repository.book.BookRepository;
+import com.project.novel.dto.BookSummaryDto;
+import com.project.novel.entity.Book;
+import com.project.novel.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -26,7 +22,7 @@ public class IndexService {
         LocalDateTime sevenDaysAgo = LocalDateTime.now().minusDays(7);
         Page<Book> books = bookRepository.findByCreatedDateAfter(sevenDaysAgo,
                 PageRequest.of(0, 5));
-        
+
         return toSummaryDto(books);
     }
 

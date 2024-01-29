@@ -1,7 +1,6 @@
 package com.project.novel.dto;
 
 
-import com.project.novel.entity.book.Book;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.domain.Page;

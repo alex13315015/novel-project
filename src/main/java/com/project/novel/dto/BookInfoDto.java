@@ -1,6 +1,6 @@
-package com.project.novel.dto.book;
+package com.project.novel.dto;
 
-import com.project.novel.entity.book.Book;
+import com.project.novel.entity.Book;
 import com.project.novel.enums.AgeRating;
 import com.project.novel.enums.Genre;
 import lombok.*;

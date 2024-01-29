@@ -1,6 +1,6 @@
 package com.project.novel.controller;
 
-import com.project.novel.dto.book.BookSummaryDto;
+import com.project.novel.dto.BookSummaryDto;
 import com.project.novel.service.IndexService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;

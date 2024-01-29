@@ -1,6 +1,5 @@
 package com.project.novel.entity;
 
-import com.project.novel.entity.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 

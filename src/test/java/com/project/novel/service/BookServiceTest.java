@@ -2,13 +2,13 @@ package com.project.novel.service;
 
 import com.project.novel.entity.Member;
 import com.project.novel.entity.View;
-import com.project.novel.entity.book.Book;
+import com.project.novel.entity.Book;
 import com.project.novel.entity.Chapter;
 import com.project.novel.enums.AgeRating;
 import com.project.novel.enums.Genre;
 import com.project.novel.repository.MemberRepository;
 import com.project.novel.repository.ViewRepository;
-import com.project.novel.repository.book.BookRepository;
+import com.project.novel.repository.BookRepository;
 import com.project.novel.repository.ChapterRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

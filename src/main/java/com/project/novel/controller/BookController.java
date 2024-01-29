@@ -1,7 +1,7 @@
 package com.project.novel.controller;
 
 
-import com.project.novel.dto.book.BookSaveDto;
+import com.project.novel.dto.BookSaveDto;
 import com.project.novel.enums.AgeRating;
 import com.project.novel.enums.Genre;
 import com.project.novel.service.BookService;

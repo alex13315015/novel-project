@@ -1,12 +1,9 @@
 package com.project.novel.entity;
 
-import com.project.novel.entity.base.BaseEntity;
-import com.project.novel.entity.book.Book;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 
 @Entity

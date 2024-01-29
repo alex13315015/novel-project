@@ -1,9 +1,6 @@
-package com.project.novel.entity.book;
+package com.project.novel.entity;
 
 
-import com.project.novel.dto.book.BookSummaryDto;
-import com.project.novel.entity.Member;
-import com.project.novel.entity.base.BaseEntity;
 import com.project.novel.enums.AgeRating;
 import com.project.novel.enums.Genre;
 import jakarta.persistence.*;

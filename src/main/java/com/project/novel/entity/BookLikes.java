@@ -1,6 +1,5 @@
-package com.project.novel.entity.book;
+package com.project.novel.entity;
 
-import com.project.novel.entity.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

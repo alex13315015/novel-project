@@ -1,9 +1,9 @@
 package com.project.novel.service;
 
 import com.project.novel.dto.LibraryPageDto;
-import com.project.novel.dto.book.BookInfoDto;
-import com.project.novel.entity.book.Book;
-import com.project.novel.repository.book.BookRepository;
+import com.project.novel.dto.BookInfoDto;
+import com.project.novel.entity.Book;
+import com.project.novel.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

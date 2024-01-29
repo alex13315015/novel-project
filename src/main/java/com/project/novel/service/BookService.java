@@ -1,8 +1,8 @@
 package com.project.novel.service;
 
-import com.project.novel.dto.book.BookSaveDto;
+import com.project.novel.dto.BookSaveDto;
 import com.project.novel.dto.CustomUserDetailsDto;
-import com.project.novel.repository.book.BookRepository;
+import com.project.novel.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;

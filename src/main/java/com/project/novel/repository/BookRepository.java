@@ -1,6 +1,6 @@
-package com.project.novel.repository.book;
+package com.project.novel.repository;
 
-import com.project.novel.entity.book.Book;
+import com.project.novel.entity.Book;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
