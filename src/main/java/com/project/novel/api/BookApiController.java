@@ -1,9 +1,13 @@
 package com.project.novel.api;
 
 import com.project.novel.dto.BookLikesDto;
+import com.project.novel.dto.BookListDto;
 import com.project.novel.dto.CustomUserDetails;
 import com.project.novel.service.BookService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,5 +42,10 @@ public class BookApiController {
                 .build();
     }
 
+    @GetMapping("/book/{memberId}/bookList")
+    public Page<BookListDto> getMyBookList(@PathVariable(name="memberId") Long memberId,
+                                           @PageableDefault Pageable pageable) {
+        return bookService.getAllMyBook(memberId, pageable);
+    }
 
 }
