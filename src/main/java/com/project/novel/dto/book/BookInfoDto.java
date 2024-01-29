@@ -1,6 +1,7 @@
 package com.project.novel.dto.book;
 
 import com.project.novel.entity.book.Book;
+import com.project.novel.enums.AgeRating;
 import com.project.novel.enums.Genre;
 import lombok.*;
 
@@ -9,12 +10,12 @@ import java.time.LocalDateTime;
 @Data
 @Getter @Setter
 @ToString
-public class BookDto {
+public class BookInfoDto {
     private Long id;
     private String bookName;
     private Genre genre;
     private String author;
-    private Integer ageRating;
+    private AgeRating ageRating;
     private String bookIntro;
     private Long subscribes;
     private Long hit;
@@ -22,7 +23,7 @@ public class BookDto {
     private String bookImage;
     private LocalDateTime createdDate;
 
-    public BookDto(Book book, Long hit, Long likes, Long subscribes, String author){
+    public BookInfoDto(Book book, Long hit, Long likes, Long subscribes, String author){
         this.id = book.getId();
         this.bookName = book.getBookName();
         this.genre = book.getGenre();

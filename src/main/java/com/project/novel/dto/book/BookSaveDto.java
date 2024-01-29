@@ -2,6 +2,7 @@ package com.project.novel.dto.book;
 
 import com.project.novel.entity.Member;
 import com.project.novel.entity.book.Book;
+import com.project.novel.enums.AgeRating;
 import com.project.novel.enums.Genre;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -17,7 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 @Builder
 public class BookSaveDto {
-    private Long id;
+//    private Long id;
 
     private String bookName;
 
@@ -25,7 +26,7 @@ public class BookSaveDto {
 
     private String bookImg;
 
-    private int ageRating;
+    private AgeRating ageRating;
 
     private Genre genre;
 

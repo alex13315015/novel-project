@@ -57,9 +57,8 @@
                                             <label for="ageRating" class="col-form-label fs-6 fw-bolder">장르</label>
                                         </div>
                                         <div class="col-auto mb-3">
-                                            <select name="ageRating" id="ageRating" class="form-select " aria-label="Default select example">
-                                                <option value="0" >전체이용가</option>
-                                                <option value="19" >청소년 관람불가</option>
+                                            <select th:name="ageRating" id="ageRating" class="form-select " aria-label="Default select example">
+                                                <option th:each="ageRating : ${ageRating}" th:value="${ageRating.toString()}" th:text="${ageRating.getRatingName()}"></option>
                                             </select>
                                         </div>
                                     </div>

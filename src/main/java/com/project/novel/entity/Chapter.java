@@ -1,4 +1,4 @@
-package com.project.novel.entity.chapter;
+package com.project.novel.entity;
 
 import com.project.novel.entity.base.BaseEntity;
 import com.project.novel.entity.book.Book;
@@ -28,7 +28,7 @@ public class Chapter extends BaseEntity {
 
     private Long hits;
 
-    public Chapter(Book book, String title, String content,Long hits) {
+    public Chapter(Book book, String title, String content, Long hits) {
         this.book = book;
         this.title = title;
         this.content = content;

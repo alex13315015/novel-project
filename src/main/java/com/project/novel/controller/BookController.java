@@ -2,6 +2,7 @@ package com.project.novel.controller;
 
 
 import com.project.novel.dto.book.BookSaveDto;
+import com.project.novel.enums.AgeRating;
 import com.project.novel.enums.Genre;
 import com.project.novel.service.BookService;
 import com.project.novel.util.FileStore;
@@ -30,6 +31,7 @@ public class BookController {
     @GetMapping("/make")
     public String makeBook(Model model){
         model.addAttribute("genreList", Genre.values());
+        model.addAttribute("ageRating", AgeRating.values());
         model.addAttribute("selectedGenre", Genre.NOVEL); // 기본 선택 값 설정
         return "book/makebook";
     }
