@@ -2,21 +2,16 @@ package com.project.novel.entity;
 
 import com.project.novel.constant.Grade;
 import jakarta.persistence.*;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -24,21 +19,17 @@ import java.time.LocalDateTime;
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "memberId")
-    private int id;
+    private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String userId;
 
-    @Column(nullable = false)
     private String userName;
 
-    private String nickName;
+    private String nickname;
 
-    @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false, unique = true)
     @Email
     private String email;
 
@@ -53,6 +44,8 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private Grade role;
     // 등급에 따른 role 부여하는 컬럼
+
+    private String profileImage;
 
     @CreatedDate
     private LocalDateTime createdAt;

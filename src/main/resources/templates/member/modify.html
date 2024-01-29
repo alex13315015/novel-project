@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/layout}">
+<div layout:fragment="content" class="main">
+    <div class="container">
+        <form class="col-auto join" th:action="@{|/member/modify/${#authentication.principal.loggedMember.id}|}"
+              method="post" th:object="${getMemberInfo}">
+            <div class="col-10">
+                <input type="hidden" th:value="${#authentication.principal.loggedMember.id}">
+                <h2 class="title mt-3 mb-3">정보수정</h2>
+                <div class="row g-3 align-items-center mb-3">
+                    <div class="col-2">
+                        <label for="userId" class="col-form-label">아이디</label>
+                    </div>
+                    <div class="col-4">
+                        <input type="text" name="userId" id="userId" class="form-control"
+                               th:value="${getMemberInfo.userId}" readonly>
+                    </div>
+                </div>
+                <div class="row g-3 align-items-center mb-3">
+                    <div class="col-2">
+                        <label for="password" class="col-form-label">비밀번호</label>
+                    </div>
+                    <div class="col-4">
+                        <input type="password" name="password" id="password" class="form-control"
+                               placeholder="ex) abc13!@#">
+                    </div>
+                    <div class="col-auto">
+                        <span id="pwConfirm"></span>
+                        <p class="error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
+                    </div>
+                </div>
+                <div class="row g-3 align-items-center mb-3">
+                    <div class="col-2">
+                        <label for="passwordCheck" class="col-form-label visually-hidden">비밀번호 확인</label>
+                    </div>
+                    <div class="col-4">
+                        <input type="password" id="passwordCheck" class="form-control">
+                    </div>
+                    <div class="col-3">
+                        <button class="btn btn-dark" id="pwdCheck">비밀번호 확인</button>
+                    </div>
+                    <div class="col-auto">
+                        <span id="pwCheckConfirm"></span>
+                    </div>
+                </div>
+                <div class="row g-3 align-items-center mb-2">
+                    <div class="col-2">
+                        <label for="userName" class="col-form-label">이름</label>
+                    </div>
+                    <div class="col-4">
+                        <input type="text" name="userName" id="userName" class="form-control"
+                               th:value="${getMemberInfo.userName}" th:field="*{userName}">
+                    </div>
+                    <div class="col-auto">
+                        <p class="error" th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></p>
+                    </div>
+                </div>
+                <div class="row g-3 align-items-center mb-2">
+                    <div class="col-2">
+                        <label for="nickname" class="col-form-label">닉네임</label>
+                    </div>
+                    <div class="col-4">
+                        <input type="text" name="nickname" id="nickname" class="form-control"
+                               th:value="${getMemberInfo.nickname}" th:field="*{nickname}">
+                    </div>
+                    <div class="col-auto">
+                        <p class="error" th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}"></p>
+                    </div>
+                </div>
+                <div class="row g-3 align-items-center mb-2">
+                    <div class="col-2">
+                        <label for="age" class="col-form-label">나이</label>
+                    </div>
+                    <div class="col-4">
+                        <input type="text" name="age" id="age" th:value="${getMemberInfo.age}" class="form-control">
+                    </div>
+                </div>
+                <div class="row g-3 align-items-center mb-2">
+                    <div class="col-2">
+                        <label for="email" class="col-form-label">이메일</label>
+                    </div>
+                    <div class="col-4">
+                        <input type="email" name="email" id="email" class="form-control"
+                               placeholder="example@test.com" th:value="${getMemberInfo.email}">
+                    </div>
+                    <div class="col-2">
+                        <button class="btn btn-dark" type="submit" id="btnEmailCheck">중복확인</button>
+                    </div>
+                    <div class="col-auto">
+                        <p class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+                        <span id="messageEmail"></span>
+                    </div>
+                </div>
+                <div class="row g-3 align-items-center mb-2">
+                    <div class="col-2">
+                        <label for="phoneNumber" class="col-form-label">H.P</label>
+                    </div>
+                    <div class="col-4">
+                        <input type="text" name="phoneNumber" id="phoneNumber" class="form-control"
+                               placeholder="010-0000-0000" th:value="${getMemberInfo.phoneNumber}">
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center mt-5">
+                    <button class="btn btn-dark" id="btnModify">수정하기</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script th:inline="javascript">
+        $("#btnEmailCheck").on("click",function (e) {
+            console.log("이메일 중복체크");
+            e.preventDefault();
+            const inputEmail = $("#email").val(); // 이메일 입력란에 입력되는 값
+            if(inputEmail === null || inputEmail === "") {
+                $("#messageEmail").text("이메일은 필수 입력사항입니다.");
+                $("#messageEmail").addClass("invalid").removeClass("valid");
+                $("#email").focus();
+                return false;
+            }
+            $.ajax({
+                url: "/auth/emailCheck",
+                data: {
+                    dupEmail : inputEmail // 입력된 값을 dupEmail 변수에 담기
+                },
+                success: function (data) {
+                    console.log(data);
+                    if(data === 1) {
+                        $("#messageEmail").text("이미 사용중인 이메일입니다.");
+                        $("#messageEmail").addClass("invalid").removeClass("valid");
+                        $("#email").focus();
+                        emailCheck = 0;
+                        // 이메일이 중복되었을 때, 처리
+                    }else {
+                        $("#messageEmail").text("사용가능한 이메일입니다.");
+                        $("#messageEmail").addClass("valid").removeClass("invalid");
+                        $("#email").focus();
+                        emailCheck = 1;
+                        // 이메일이 중복되지 않았을 때, 처리
+                    }
+                }
+            })
+        });
+        $("#pwdCheck").on("click",function (e) {
+            console.log("비밀번호 확인");
+            e.preventDefault();
+            let firstPW = $("#password").val();
+            const pwdCheck = $("#passwordCheck").val();
+            if(firstPW === null || firstPW === "") {
+                $("#pwConfirm").text("비밀번호는 필수 입력사항입니다.");
+                $("#pwConfirm").addClass("invalid").removeClass("valid");
+                $("#password").focus();
+                return false;
+            }
+            $.ajax({
+                url: "/auth/passwordCheck",
+                data: {
+                    secondPw : pwdCheck
+                },
+                success:function (data) {
+                    console.log(data);
+                    if(firstPW !== pwdCheck) {
+                        $("#pwCheckConfirm").text("비밀번호가 일치하지 않습니다.");
+                        $("#pwCheckConfirm").addClass("invalid").removeClass("valid");
+                        $("#passwordCheck").focus();
+                        passwordCheck = 0;
+                        return false;
+                    } else {
+                        $("#pwCheckConfirm").text("비밀번호가 일치합니다.")
+                        $("#pwCheckConfirm").addClass("valid").removeClass("invalid");
+                        passwordCheck = 1;
+                    }
+                }
+            })
+        });
+    </script>
+</div>
+</html>
