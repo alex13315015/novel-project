@@ -7,6 +7,8 @@ import com.project.novel.service.BookService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -54,9 +56,10 @@ public class BookController {
     @GetMapping("/library/{bookId}")
     public String getBookById(@PathVariable(name="bookId") Long bookId, Model model,
                               @AuthenticationPrincipal CustomUserDetails customUserDetails,
-                              @RequestParam(name="order", defaultValue = "Update") String order) {
+                              @RequestParam(name="order", defaultValue = "DESC") String order,
+                              @PageableDefault(size = 5) Pageable pageable) {
 
-        BookDto bookDto = bookService.getBook(bookId, customUserDetails.getLoggedMember().getId(), order);
+        BookDto bookDto = bookService.getBook(bookId, customUserDetails.getLoggedMember().getId(), order, pageable);
         model.addAttribute("bookInfo", bookDto);
 
         return "book/info";

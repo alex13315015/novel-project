@@ -1,11 +1,11 @@
 package com.project.novel.dto;
 
 import lombok.*;
+import org.springframework.data.domain.Page;
 
-import java.util.List;
 
 @Getter
-@Builder
+@Builder(toBuilder = true)
 public class BookDto {
 
     private Long id;
@@ -19,6 +19,6 @@ public class BookDto {
     private boolean likeState;
     private Integer subscribeCount;
     private boolean subscribeState;
-    private List<ChapterDto> chapterList;
+    private Page<ChapterDto> chapterList;
 
 }

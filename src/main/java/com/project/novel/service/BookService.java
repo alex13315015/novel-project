@@ -13,6 +13,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +24,6 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -93,27 +96,16 @@ public class BookService {
         return thumbnailImageFileName;
     }
 
-    @Transactional // 일반 사용자가 책 정보를 가져올 때 사용
-    public BookDto getBook(Long bookId, Long loggedId, String order) {
-        Book book = bookRepository.findById(bookId).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 책입니다.")
-        );
-
-        List<ChapterDto> chapterDtoList = chapterService.getAllChapter(bookId, order);
+    // 일반 사용자가 책 정보를 가져올 때
+    @Transactional
+    public BookDto getBook(Long bookId, Long loggedId, String order, Pageable pageable) {
+        BookDto bookDto = getBookDetails(bookId, order, pageable);
         int likeCount = likeCount(bookId);
         boolean likeState = isLikedByUser(bookId, loggedId);
         int subscribeCount = subscribeService.subscribeCount(bookId);
         boolean subscribeState = subscribeService.isSubscribed(bookId, loggedId);
 
-        return BookDto.builder()
-                .id(bookId)
-                .bookName(book.getBookName())
-                .writer(book.getMember().getNickname())
-                .bookIntro(book.getBookIntro())
-                .bookImage(book.getBookImage())
-                .bookGenre(book.getBookGenre())
-                .ageRating(book.getAgeRating())
-                .chapterList(chapterDtoList)
+        return bookDto.toBuilder()
                 .likeCount(likeCount)
                 .likeState(likeState)
                 .subscribeCount(subscribeCount)
@@ -121,14 +113,25 @@ public class BookService {
                 .build();
     }
 
-    // 작성자가 책 정보를 가져올 때 사용
-    public BookDto getBook(Long bookId, String order) {
+    // 작가가 책 정보를 가져올 때
+    @Transactional
+    public BookDto getBook(Long bookId, String order, Pageable pageable) {
+        BookDto bookDto = getBookDetails(bookId, order, pageable);
+        int subscribeCount = subscribeService.subscribeCount(bookId);
+
+        return bookDto.toBuilder()
+                .subscribeCount(subscribeCount)
+                .build();
+    }
+
+    private BookDto getBookDetails(Long bookId, String order, Pageable pageable) {
         Book book = bookRepository.findById(bookId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 책입니다.")
         );
+        Sort sort = Sort.by(Sort.Direction.fromString(order), "createdAt");
+        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
 
-        List<ChapterDto> chapterDtoList = chapterService.getAllChapter(bookId, order);
-        int subscribeCount = subscribeService.subscribeCount(bookId);
+        Page<ChapterDto> chapterDtoList = chapterService.getChapterList(bookId, pageable);
 
         return BookDto.builder()
                 .id(bookId)
@@ -138,13 +141,12 @@ public class BookService {
                 .bookImage(book.getBookImage())
                 .bookGenre(book.getBookGenre())
                 .ageRating(book.getAgeRating())
-                .subscribeCount(subscribeCount)
                 .chapterList(chapterDtoList)
                 .build();
     }
 
-    public List<BookListDto> getAllMyBook(Long loggedId, String order) {
-        return bookRepository.findAllByMemberId(loggedId, order);
+    public Page<BookListDto> getAllMyBook(Long loggedId, Pageable pageable) {
+        return bookRepository.findAllByMemberId(loggedId, pageable);
     }
 
     public boolean isMyBook(Long bookId, Long loggedId) {

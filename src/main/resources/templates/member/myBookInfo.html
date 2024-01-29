@@ -19,12 +19,12 @@
             </div>
         </div>
         <div class="chapter-list border-top">
-            <p class="mt-2" style="font-size: x-large" th:text="'회차 ('+${bookInfo.chapterList.size()}+')'"></p>
+            <p class="mt-2" style="font-size: x-large" th:text="'회차 ('+${bookInfo.chapterList.getTotalElements()}+')'"></p>
             <ul>
                 <th:block th:each="item:${bookInfo.chapterList}">
                     <li>
                         <div class="d-flex justify-content-between">
-                            <div class="mt-4 mb-4">
+                            <div class="mt-2 mb-2">
                                 <a th:href="@{|/chapter/read/${item.id}|}" th:text="${item.title}" class="subj"></a>
                                 <div class="d-flex mt-1" style="font-weight: lighter; color: #4d5154">
                                     <span class="pe-3" th:text="'조회 ' + ${item.hits}"></span>
@@ -42,13 +42,88 @@
                     </li>
                 </th:block>
             </ul>
+            <div>
+                <button class="btn btn-outline-primary mt-5 btn-more">더보기</button>
+            </div>
         </div>
     </div>
     <script th:inline="javascript">
-        document.querySelectorAll('.delete-chapter').forEach(function(item) {
-            item.addEventListener('click', function(event) {
+
+        const bookId = [[${bookInfo.id}]];
+        let loadPage = 0; // 첫 번째 페이지는 뷰에서 렌더링하므로 1로 초기화
+        let totalPages = [[${bookInfo.chapterList.totalPages}]];
+        let sort = 'desc'
+
+        $(".btn-more").on("click", function () {
+            if(loadPage>=totalPages) {
+                $(this).hide();
+            } else {
+                loadPage++; // 페이지 번호 증가
+                loadChapterList(bookId, loadPage);
+            }
+        });
+
+        function loadChapterList(bookId, loadPage) {
+            $.ajax({
+                type: 'GET',
+                url: '/api/book/'+bookId+`/chapters?page=${loadPage}&sort=createdAt,${sort}`,
+                success: function (response) {
+                    console.log(response);
+                    totalPages = response.totalPages;
+                    let chapterUl = $('.chapter-list ul');
+
+                    // 챕터 목록 추가
+                    for (let chapter of response.content) {
+                        chapterUl.append(chapterToHtml(chapter));
+                    }
+                },
+                error: function (){
+                    alert('챕터 목록을 불러오는데 실패했습니다.');
+                }
+            })
+        }
+
+        function escapeHtml(unsafe) {
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function chapterToHtml(chapter) {
+            let title = escapeHtml(chapter.title);
+            let hits = escapeHtml(chapter.hits.toString());
+            let createdAt = escapeHtml(chapter.createdAt);
+
+            return `
+                <li>
+                    <div class="d-flex justify-content-between">
+                        <div class="mt-2 mb-2">
+                            <a href="/chapter/read/${chapter.id}" class="subj">${title}</a>
+                            <div class="d-flex mt-1" style="font-weight: lighter; color: #4d5154">
+                                <span class="pe-3">조회 ${hits}</span>
+                                <span>${createdAt}</span>
+                            </div>
+                        </div>
+                        <div class="dropdown mt-4">
+                            <i class="bi bi-three-dots-vertical" style="font-size: 20px; font-weight: lighter" role="button" tabindex="0" data-bs-toggle="dropdown" aria-expanded="false"></i>
+                            <ul class="dropdown-menu align-items-center" aria-labelledby="dropdownMenuButton">
+                                <li><a class="custom-dropdown-item mb-1" href="/chapter/modify/${chapter.id}">수정</a></li>
+                                <li><a class="custom-dropdown-item delete-chapter mt-1" href="/chapter/delete/${chapter.id}?bookId=${bookId}">삭제</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+            `;
+        }
+
+        document.querySelector('.chapter-list').addEventListener('click', function(event) {
+            var item = event.target;
+            if (item.classList.contains('delete-chapter')) {
                 event.preventDefault();
-                var url = new URL(this.getAttribute('href'), window.location.href).href;
+                var url = new URL(item.getAttribute('href'), window.location.href).href;
 
                 var confirmed = confirm('선택하신 챕터를 삭제하시겠습니까?' +
                     '\n삭제된 챕터는 복구할 수 없습니다.');
@@ -69,7 +144,7 @@
                         }
                     })
                     .catch(error => console.error('Error:', error));
-            });
+            }
         });
     </script>
 </div>

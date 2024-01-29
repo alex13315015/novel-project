@@ -3,6 +3,7 @@ package com.project.novel.dto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -10,6 +11,7 @@ import java.time.format.DateTimeFormatter;
 
 @Getter
 @Setter
+@ToString
 public class ChapterDto {
 
     private Long id;

@@ -38,16 +38,16 @@
         </div>
         <div class="chapter-list border-top">
             <div class="d-flex justify-content-between align-items-center">
-                <p class="mt-2" style="font-size: x-large" th:text="'회차 ('+${bookInfo.chapterList.size()}+')'"></p>
-                <div style="text-decoration: none">
-                    <a class="h3 p-3 border-end border-opacity-25" th:href="@{|/book/library/${bookInfo.id}?order=Update|}">최신화부터</a>
-                    <a class="h3 p-3" th:href="@{|/book/library/${bookInfo.id}?order=Oldest|}">1화부터</a>
+                <p class="mt-2" style="font-size: x-large" th:text="'회차 ('+${bookInfo.chapterList.getTotalElements()}+')'"></p>
+                <div class="custom-order">
+                    <a class="p-3 " th:href="@{|/book/library/${bookInfo.id}?order=DESC|}">최신화부터</a>
+                    <a class="p-2" th:href="@{|/book/library/${bookInfo.id}?order=ASC|}">1화부터</a>
                 </div>
             </div>
             <ul>
                 <th:block th:each="item:${bookInfo.chapterList}">
                     <li>
-                        <div class="mt-4 mb-4">
+                        <div class="mt-2 mb-2">
                             <a th:href="@{|/chapter/read/${item.id}|}" th:text="${item.title}" class="subj"></a>
                             <div class="d-flex mt-1" style="font-weight: lighter; color: #4d5154">
                                 <span class="pe-3" th:text="'조회 ' + ${item.hits}"></span>
@@ -57,10 +57,125 @@
                     </li>
                 </th:block>
             </ul>
+            <div>
+                <button class="btn btn-outline-primary mt-5 btn-more">더보기</button>
+            </div>
         </div>
     </div>
     <script th:inline="javascript">
         const bookId = [[${bookInfo.id}]];
+        let loadPage = 0; // 첫 번째 페이지는 뷰에서 렌더링하므로 1로 초기화
+        let totalPages = [[${bookInfo.chapterList.totalPages}]];
+        let sort = 'desc'
+
+        $(".btn-more").on("click", function () {
+            if(loadPage>=totalPages) {
+                $(this).hide();
+            } else {
+                loadPage++; // 페이지 번호 증가
+                loadChapterList(bookId, loadPage);
+            }
+        });
+
+        $("a[href*='order=ASC']").on("click", function (event) {
+            event.preventDefault(); // 기본 이벤트 동작을 막습니다, 즉, a 태그의 링크를 클릭해도 페이지가 이동하지 않습니다.
+            sort = 'asc';
+            loadPage = 0; // 페이지 번호를 초기화합니다.
+
+            $('.chapter-list ul').empty();
+
+            loadChapterList(bookId, loadPage); // 챕터 목록을 다시 로드
+
+            $("a[href*='order=ASC']").css('color', 'blue');
+            $("a[href*='order=DESC']").css('color', 'black');
+        });
+
+        $("a[href*='order=DESC']").on("click", function (event) {
+            event.preventDefault(); // 기본 이벤트 동작을 막습니다.
+            sort = 'desc';
+            loadPage = 0; // 페이지 번호를 초기화합니다.
+
+            $('.chapter-list ul').empty();
+
+            loadChapterList(bookId, loadPage); // 챕터 목록을 다시 로드
+
+            // "최신화부터" 링크의 색상을 파란색으로 변경하고, "1화부터" 링크의 색상을 검은색으로 변경합니다.
+            $("a[href*='order=DESC']").css('color', 'blue');
+            $("a[href*='order=ASC']").css('color', 'black');
+        });
+
+        function loadChapterList(bookId, loadPage) {
+            $.ajax({
+                type: 'GET',
+                url: '/api/book/'+bookId+`/chapters?page=${loadPage}&sort=createdAt,${sort}`,
+                success: function (response) {
+                    console.log(response);
+                    totalPages = response.totalPages;
+                    let chapterUl = $('.chapter-list ul');
+
+                    // 챕터 목록 추가
+                    for (let chapter of response.content) {
+                        chapterUl.append(chapterToHtml(chapter));
+                    }
+                },
+                error: function (){
+                    alert('챕터 목록을 불러오는데 실패했습니다.');
+                }
+            })
+        }
+
+        function escapeHtml(unsafe) {
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function chapterToHtml(chapter) {
+            let title = escapeHtml(chapter.title);
+            let hits = escapeHtml(chapter.hits.toString());
+            let createdAt = escapeHtml(chapter.createdAt);
+
+            return `
+                <li>
+                    <div class="d-flex justify-content-between">
+                        <div class="mt-2 mb-2">
+                            <a href="/chapter/read/${chapter.id}" class="subj">${title}</a>
+                            <div class="d-flex mt-1" style="font-weight: lighter; color: #4d5154">
+                                <span class="pe-3">조회 ${hits}</span>
+                                <span>${createdAt}</span>
+                            </div>
+                        </div>
+                        <div class="dropdown mt-4">
+                            <i class="bi bi-three-dots-vertical" style="font-size: 20px; font-weight: lighter" role="button" tabindex="0" data-bs-toggle="dropdown" aria-expanded="false"></i>
+                            <ul class="dropdown-menu align-items-center" aria-labelledby="dropdownMenuButton">
+                                <li><a class="custom-dropdown-item mb-1" href="/chapter/modify/${chapter.id}">수정</a></li>
+                                <li><a class="custom-dropdown-item delete-chapter mt-1" href="/chapter/delete/${chapter.id}?bookId=${bookId}">삭제</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+            `;
+        }
+
+        $(document).ready(function () {
+            // 현재 페이지의 URL을 가져옵니다.
+            var url = window.location.href;
+
+            // URL에 'order=DESC' 또는 'order=ASC'가 포함되어 있는지 확인합니다.
+            if (url.includes('order=ASC')) {
+                // 'order=ASC'가 포함되어 있으면, 해당 링크에 파란색을 적용합니다.
+                $("a[href*='order=ASC']").css('color', 'blue');
+                sort = 'asc';
+            } else {
+                // 'order=DESC'가 포함되어 있거나 'order' 파라미터가 없으면, 해당 링크에 파란색을 적용합니다.
+                $("a[href*='order=DESC']").css('color', 'blue');
+                sort = 'desc';
+            }
+        });
+
 
         $(document).ready(function () {
             $('.likeIcon').click(function () {

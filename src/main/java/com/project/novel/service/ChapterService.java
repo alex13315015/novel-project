@@ -11,6 +11,8 @@ import com.project.novel.repository.ChapterRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
@@ -39,9 +41,8 @@ public class ChapterService {
     }
 
 
-    public List<ChapterDto> getAllChapter(Long bookId, String order) {
-
-        return chapterRepository.findAllByBookId(bookId, order);
+    public Page<ChapterDto> getChapterList(Long bookId, Pageable pageable) {
+        return chapterRepository.findAllByBookId(bookId, pageable);
     }
 
     @Transactional
