@@ -1,0 +1,105 @@
+.findPassword {
+    font-size: 15px;
+    color: #c4c8cb;
+}
+.join{
+    width: 1200px;
+}
+.valid {
+    font-size: 15px;
+    color: forestgreen;
+}
+.invalid {
+    font-size: 15px;
+    color: red;
+}
+.error {
+    font-size: 15px;
+    color: red;
+}
+
+ul {
+    list-style-type: none;
+}
+
+
+.subj {
+    text-decoration: none;
+}
+
+.subj:hover {
+    text-decoration: underline;
+}
+
+.info-top {
+    margin-bottom: 20px;
+}
+
+.info-bottom {
+    margin-top: 50px;
+    margin-bottom: 10px;
+    padding-top: 40px;
+}
+
+.custom-link {
+    color: #000000;
+    text-decoration: none;
+}
+
+.custom-link:hover {
+    text-decoration: underline;
+}
+
+.chapter-list ul li:not(:last-child) {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+
+.custom-dropdown-item {
+    text-decoration: none;
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.custom-dropdown-item:hover {
+    color: #0b5ed7;
+}
+
+.dropdown-menu li {
+    display: block;
+    box-sizing: border-box;
+    padding: 0 2px;
+    margin: 0;
+}
+
+.delete-book a {
+    color: black;
+    text-decoration: none;
+}
+
+.delete-book a:hover {
+    color: red;
+    text-decoration: underline;
+}
+
+a.btn-sort {
+    text-decoration: none;
+    color: dimgrey;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+a.btn-sort.active {
+    text-decoration: none;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: black;
+}
+
+.custom-order a {
+    text-decoration: none;
+    color: black;
+    font-size: x-large;
+}

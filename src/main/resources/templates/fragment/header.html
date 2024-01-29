@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th= "http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+<div class="container" th:fragment="headerFragment">
+    <header class="d-flex flex-wrap justify-content-center align-items-center py-3 border-bottom">
+        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+            <i class="bi bi-house" style="font-size: 3rem"></i>
+        </a>
+        <div sec:authorize="!isAuthenticated()">
+            <div class="nav nav-fill">
+                <a th:href="@{/auth/join}" class="fs-3 mx-2 text-dark">
+                    <i class="bi bi-person-plus-fill" style="font-size: 3rem"></i>
+                </a>
+                <a th:href="@{/auth/login}" class="fs-3 mx-2 text-dark">
+                    <i class="bi bi-person-fill-lock" style="font-size: 3rem"></i>
+                </a>
+            </div>
+        </div>
+        <div sec:authorize="isAuthenticated()">
+            <div class="nav nav-fill">
+                <a th:href="@{/member/myBookList}" class="fs-3 mx-2 text-dark">
+                    <i class="bi bi-collection" style="font-size: 3rem"></i>
+                </a>
+                <a th:href="@{/book/write}" class="fs-3 mx-2 text-dark">
+                    <i class="bi bi-pen" style="font-size: 3rem"></i>
+                </a>
+                <a th:href="@{/book/library}" class="fs-3 mx-2 text-dark">
+                    <i class="bi bi-book" style="font-size: 3rem"></i>
+                </a>
+                <a th:href="@{/auth/logout}" class="fs-3 mx-2 text-dark">
+                    <i class="bi bi-door-open" style="font-size: 3rem"></i>
+                </a>
+
+            </div>
+        </div>
+    </header>
+</div>
+</html>
