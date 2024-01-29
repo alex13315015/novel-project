@@ -1,9 +1,25 @@
-.findPassword {
-    font-size: 15px;
+.main {
+    height: 600px;
+}
+.title {
+    font-weight: bold;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+.findMember {
+    font-size: 18px;
     color: #c4c8cb;
+    text-decoration: none;
+}
+.F_P {
+    width: 600px;
+}
+.vr {
+    height: 30px;
 }
 .join{
-    width: 1200px;
+    display: flex;
+    justify-content: center;
 }
 .valid {
     font-size: 15px;
@@ -16,4 +32,102 @@
 .error {
     font-size: 15px;
     color: red;
+}
+.gnb_li a {
+    text-decoration: none;
+}
+.gnb_bdr {
+    opacity: 0.1;
+}
+.gnb_txt {
+    color: #b4b4b4;
+    font-size: 17px;
+    font-weight: bold;
+}
+.memberProfileImg {
+    font-size: 17px;
+    color: #b4b4b4;
+}
+.search-box {
+    width: 300px;
+    color: #b4b4b4;
+    font-size: 17px;
+}
+#searchKeyword {
+    width: 300px;
+    height: 43px;
+}
+.searchBtn {
+    height: 40px;
+}
+.section li {
+    list-style: none;
+}
+.default_msg {
+    font-size: 20px;
+    font-weight: bold;
+    color: black;
+}
+.section {
+    padding: 10px 0 0 0;
+}
+.sub_link {
+    padding: 9px 0 0 0;
+    text-decoration: none;
+}
+.sub_text {
+    display: block;
+    position: relative;
+    padding: 8px 14px;
+    background-color: yellowgreen;
+    border-radius: 36px;
+    font-size: 25px;
+    color: white; !important;
+}
+.recent_area li{
+    list-style: none;
+}
+.book_image {
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+}
+.info_list {
+    width: 300px;
+    display: inline-block;
+}
+.info_list p {
+    color: black;
+}
+.concern_book li {
+    list-style: none;
+}
+.book_list a {
+    text-decoration: none;
+}
+.novel_subject {
+    color: black;
+}
+.sub-title {
+    color: #b4b4b4;
+}
+.read {
+    color: #b4b4b4;
+}
+.naver_login {
+    height: 40px;
+    width: 300px;
+}
+.myId {
+    border: 3px solid black;
+    font-size: 20px;
+    font-weight: normal;
+}
+.authBtn {
+    width: 200px;
+    height: 40px;
+}
+.changePassword {
+    width: 600px;
+    height: 200px;
 }
