@@ -103,3 +103,13 @@ a.btn-sort.active {
     color: black;
     font-size: x-large;
 }
+
+.book-list ul {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.book-item {
+    width: calc(50% - 10px); /* 50% 너비에 양쪽 마진 10px을 뺀 값 */
+}

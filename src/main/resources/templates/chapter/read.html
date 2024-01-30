@@ -3,23 +3,27 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/layout}">
 <div layout:fragment="content" class="main">
+    <div id="navbar" class="navbar">
+        <button id="prevChapter" class="btn btn-outline-primary mt-2">이전 장</button>
+        <button id="nextChapter" class="btn btn-outline-primary mt-2">다음 장</button>
+    </div>
     <div class="container">
         <div class="d-flex justify-content-center">
             <div class="col-8">
-                <h1><a class="custom-link" th:href="@{|/book/library/${chapterDetailDto.bookId}?order=DESC|}" th:text="${chapterDetailDto.title}"></a></h1>
+                <h1><a class="custom-link" id="chapter-title" th:href="@{|/book/library/${chapterDetailDto.bookId}?order=DESC|}" th:text="${chapterDetailDto.title}"></a></h1>
                 <div class="d-flex justify-content-between">
                     <div class="d-flex">
                         <div>
                             <i class="bi bi-calendar3"></i>
-                            <span th:text="${chapterDetailDto.createdAt}"></span>
+                            <span id="chapter-createdAt" th:text="${chapterDetailDto.createdAt}"></span>
                         </div>
                     </div>
                     <div>
                         <i class="bi bi-eye"></i>
-                        <span th:text="${chapterDetailDto.hits}"></span>
+                        <span id="chapter-hits" th:text="${chapterDetailDto.hits}"></span>
                     </div>
                 </div>
-                <div class="mt-5" th:utext="${chapterDetailDto.contents}"></div>
+                <div class="mt-5" id="chapter-contents" th:utext="${chapterDetailDto.contents}"></div>
             </div>
         </div>
         <div class="border-bottom border-opacity-25 mt-5 mb-5"></div>
@@ -43,7 +47,8 @@
     </div>
     <script th:inline="javascript">
         const loggedId = [[${#authentication.principal.loggedMember.id}]];
-        const chapterId = [[${chapterDetailDto.chapterId}]];
+        const bookId = [[${chapterDetailDto.bookId}]];
+        let chapterId = [[${chapterDetailDto.chapterId}]];
         let loadPage = 0;
         let totalPages = 0;
         let sort = 'desc'
@@ -55,7 +60,7 @@
                 url: '/api/chapter/'+chapterId+`/review?page=${loadPage}&sort=createdAt,${sort}`,
                 success: function (response) {
                     console.log(response);
-                    console.log(loadPage);
+
                     totalPages = response.totalPages;
                     let reviewUl = $('#review');
 
@@ -72,7 +77,6 @@
         }
 
         $('.btn-comment').click(function () {
-            let chapterId = [[${chapterDetailDto.chapterId}]];
             let commentText = $('#commentText').val();
             let sendData = {
                 comments: commentText
@@ -153,6 +157,68 @@
             }
         });
 
+        $('#nextChapter').click(function () {
+            $.ajax({
+                type: 'GET',
+                url: '/api/book/'+bookId+'/chapter/'+chapterId+'/next',
+                success: function (response) {
+                    console.log(response);
+                    // 세부 정보 업데이트
+                    let chapterTitle = $('#chapter-title');
+                    chapterTitle.text(response.title);
+                    chapterTitle.attr('href', '/book/library/' + response.bookId + '?order=DESC');
+                    $('#chapter-createdAt').text(response.createdAt);
+                    $('#chapter-hits').text(response.hits);
+                    $('#chapter-contents').html(response.contents);
+
+                    chapterId = response.chapterId;
+                    chapterDetailDto = response;
+
+                    // 리뷰 목록 업데이트
+                    let reviewUl = $('#review');
+                    reviewUl.empty();
+                    loadReviewList(chapterId, 0);
+
+                    // 브라우저의 주소창 업데이트
+                    window.history.pushState({}, '', '/chapter/read/' + chapterId);
+
+                },
+                error: function (){
+                    alert('다음 장을 불러오는데 실패했습니다.');
+                }
+            });
+        });
+
+        $('#prevChapter').click(function () {
+            $.ajax({
+                type: 'GET',
+                url: '/api/book/'+bookId+'/chapter/'+chapterId+'/prev',
+                success: function (response) {
+                    console.log(response);
+                    // 세부 정보 업데이트
+                    let chapterTitle = $('#chapter-title');
+                    chapterTitle.text(response.title);
+                    chapterTitle.attr('href', '/book/library/' + response.bookId + '?order=DESC');
+                    $('#chapter-createdAt').text(response.createdAt);
+                    $('#chapter-hits').text(response.hits);
+                    $('#chapter-contents').html(response.contents);
+
+                    chapterId = response.chapterId;
+                    chapterDetailDto = response;
+
+                    // 리뷰 목록을 업데이트
+                    let reviewUl = $('#review');
+                    reviewUl.empty();
+                    loadReviewList(chapterId, 0);
+
+                    // 브라우저의 주소창 업데이트
+                    window.history.pushState({}, '', '/chapter/read/' + chapterId);
+                },
+                error: function (){
+                    alert('이전 장을 불러오는데 실패했습니다.');
+                }
+            });
+        });
     </script>
 </div>
 </html>

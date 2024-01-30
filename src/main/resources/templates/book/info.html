@@ -64,7 +64,7 @@
     </div>
     <script th:inline="javascript">
         const bookId = [[${bookInfo.id}]];
-        let loadPage = 0; // 첫 번째 페이지는 뷰에서 렌더링하므로 1로 초기화
+        let loadPage = 0;
         let totalPages = [[${bookInfo.chapterList.totalPages}]];
         let sort = 'desc'
 

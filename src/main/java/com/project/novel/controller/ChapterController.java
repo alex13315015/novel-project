@@ -3,12 +3,14 @@ package com.project.novel.controller;
 import com.project.novel.dto.ChapterDetailDto;
 import com.project.novel.dto.ChapterUploadDto;
 import com.project.novel.dto.CustomUserDetails;
+import com.project.novel.entity.Book;
 import com.project.novel.repository.BookRepository;
 import com.project.novel.service.ChapterService;
 import com.project.novel.service.ViewService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
-import javax.swing.*;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/chapter")
@@ -32,9 +34,9 @@ public class ChapterController {
     @GetMapping("/write/{bookId}")
     public String writeChapter(@PathVariable(name="bookId") Long bookId, Model model,
                                @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        if (customUserDetails.getLoggedMember().getId() != bookRepository.findById(bookId).get().getMember().getId()) {
-            JOptionPane.showMessageDialog(null, customUserDetails.getUsername() + "의 소설이 아닙니다.","권한 오류", JOptionPane.WARNING_MESSAGE);
-            return "redirect:/member/myBookList";
+        Optional<Book> Book = bookRepository.findById(bookId);
+        if (Book.isEmpty() || !customUserDetails.getLoggedMember().getId().equals(Book.get().getMember().getId())) {
+            throw new AccessDeniedException(customUserDetails.getUsername() + "의 소설이 아닙니다.");
         }
         model.addAttribute("bookId", bookId);
         model.addAttribute("chapterUploadDto", new ChapterUploadDto());
@@ -77,7 +79,7 @@ public class ChapterController {
     public String modifyChapter(@PathVariable(name="chapterId") Long chapterId,
                                 @AuthenticationPrincipal CustomUserDetails customUserDetails,
                                 Model model) {
-        ChapterUploadDto chapterUploadDto = chapterService.modifyChapter(chapterId, customUserDetails.getLoggedMember().getId());
+        ChapterUploadDto chapterUploadDto = chapterService.getChapter(chapterId, customUserDetails.getLoggedMember().getId());
         model.addAttribute("chapterUploadDto", chapterUploadDto);
         model.addAttribute("chapterId", chapterId);
         return "chapter/modify";
@@ -92,7 +94,7 @@ public class ChapterController {
             redirectAttributes.addFlashAttribute("errors", bindingResult.getFieldErrors());
             return "redirect:/chapter/modify/" + chapterId;
         }
-        chapterService.updateChapter(chapterUploadDto, chapterId);
+        chapterService.modifyChapter(chapterUploadDto, chapterId);
         return "redirect:/member/myBookList/" + chapterUploadDto.getBookId();
     }
 
