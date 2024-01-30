@@ -1,5 +1,36 @@
 <!DOCTYPE html>
-<html lang="en"
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+<body>
+<header class="p-3 mb-3" style="border-bottom: 2px solid #000" th:fragment="header">
+  <div class="container">
+    <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+      <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 me-5 text-white text-decoration-none">
+        <img class="bi" width="150"  role="img" src="/img/logo2.png">
+      </a>
+
+      <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+        <li><a href="/book/make" class="nav-link px-2 me-2 text-black fw-bolder fs-4">책만들기</a></li>
+        <li><a href="/library" class="nav-link px-2 me-2 text-black fw-bolder fs-4">서점</a></li>
+        <li><a href="#" class="nav-link px-2 me-2 text-black fw-bolder fs-4">커뮤니티</a></li>
+      </ul>
+
+      <div class="text-end">
+        <span sec:authentication="name"></span>
+        <a href="/auth/login"><button type="button" class="btn btn-outline-dark me-2" sec:authorize="isAnonymous()">로그인</button></a>
+        <a href="/auth/signup"><button type="button" class="btn btn-dark" sec:authorize="isAnonymous()">회원가입</button></a>
+        <a href="/auth/logout"><button type="button" class="btn btn-outline-dark me-2" sec:authorize="isAuthenticated()">로그아웃</button></a>
+      </div>
+    </div>
+  </div>
+</header>
+</body>
+<!-- <html lang="en"
       xmlns:th= "http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
 >
@@ -36,5 +67,5 @@
             </div>
         </div>
     </header>
-</div>
+</div> -->
 </html>

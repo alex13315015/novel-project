@@ -1,5 +1,7 @@
 package com.project.novel.entity;
 
+import com.project.novel.enums.AgeRating;
+import com.project.novel.enums.Genre;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <title th:replace="${title}">Title</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+<body th:fragment="content(content)">
+    <div th:replace="~{fragment/header :: header}"></div>
+    <div th:replace="${content}"></div>
+<!--       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -13,7 +22,7 @@
 </head>
 <body>
 <div th:replace="~{fragment/header :: headerFragment}"></div>
-<div layout:fragment="content"></div> <!-- 각각의 페이지에서 채워질 부분 -->
-<div th:replace="~{fragment/footer :: footerFragment}"></div>
+<div layout:fragment="content"></div> <!-- 각각의 페이지에서 채워질 부분 
+<div th:replace="~{fragment/footer :: footerFragment}"></div> --> 
 </body>
 </html>

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>library</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <style>
+        .current-page{
+            background-color: yellow;
+        }
+
+    </style>
+
+</head>
+<body>
+<div th:replace="fragment/header :: header"></div>
+<div class="container" style="width:70%">
+    <form action="/library">
+        <div class="m-auto">
+            <ul class="nav nav-underline">
+                <li class="nav-item">
+                    <span class="mb-2px fw-bolder fs-4">전체</span>
+                </li>
+                <li class="nav-item">
+                    <span class="mb-2px fw-bolder fs-4" th:text="${pageDto.totalRecordCount}">유료</span>
+                </li>
+            </ul>
+        </div>
+
+
+        <div class="mt-2">
+            <input class="form-control form-control-lg" id="keyword" name="keyword" type="text"
+                placeholder="제목 작가 검색 모두 가능합니다."
+                aria-label=".form-control-lg example">
+        </div>
+
+
+        <nav class="navbar m-3">
+            <div class="container-fluid justify-content-start">
+                <button class="btn btn-sm btn-outline-dark me-2" value="createdDateDesc" name="sortType" type="submit">최신순</button>
+                <button class="btn btn-sm btn-outline-dark me-2" value="createdDateAsc" name="sortType" type="submit">오래된순</button>
+                <button class="btn btn-sm btn-outline-dark me-2" value="hits" name="sortType" type="submit">조회순</button>
+                <button class="btn btn-sm btn-outline-dark me-2" value="subscribes" name="sortType" type="submit">구독자순</button>
+                <button class="btn btn-sm btn-outline-dark me-2" value="likes" name="sortType" type="submit">좋아요순</button>
+            </div>
+        </nav>
+    </form>
+        <div class="">
+            <div class="mb-3 " th:each="book: ${books}">
+                <div class="card">
+                    <div class="card-body d-flex flex-row align-items-center ">
+                        <div class="col-2 me-5" style=""><img th:src="|/book/images/${book.bookImage}|" onerror="this.src='/img/blank-book.avif'" style="width:100%;"></div>
+                        <div class="col-6" style="">
+                            <div class="">
+                                <div class="fs-2 fw-bolder mb-2" id="book-name" th:text="${book.bookName}">왕좌의 게임</div>
+                                <div class="fs-5 fw-bolder mb-4" th:text="${book.author}"></div>
+                                <div class="row">
+                                    <div class="col-5">
+                                        <div class="row mb-2">
+                                            <label class="col-sm-4" for="a" >장르</label>
+                                            <div class="col fw-bolder" id="a" th:text="${book.genre.getGenreName}"></div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <label class="col-sm-4" for="b" >제한</label>
+                                            <div class="col fw-bolder" id="b" th:text="${book.ageRating.getRatingName}"></div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <label class="col-sm-4" for="c" >회차</label>
+                                            <div class="col fw-bolder" id="c" th:text="${book.subscribes}"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col">
+                                        <div class="row mb-2">
+                                            <label class="col-sm-4" for="likes" >좋아요</label>
+                                            <div class="col fw-bolder" id="likes" th:text="${book.likes}"></div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <label class="col-sm-4" for="hit" >조회수</label>
+                                            <div class="col fw-bolder" id="hit" th:text="${book.hit}"></div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <label class="col-sm-4" for="subscribes" >구독자</label>
+                                            <div class="col fw-bolder" id="subscribes" th:text="${book.subscribes}"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col d-flex align-items-end text-center flex-column me-3" style="height: 200px">
+                            <div class="mx-auto">
+                                <div th:text="${book.bookIntro}">이 이야기는 진모가 왕이 되는 이야기 이다.</div>
+                            </div>
+                            <div class="mt-auto  mx-auto">
+                                <button type="button" class="btn btn-outline-secondary">더보러가기</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <div class="d-flex justify-content-center">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Previous" th:if="${pageDto.existPrevPage}" th:href="@{/library(sortType=${sortType},keyword=${keyword},page=${pageDto.page - 1})}">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li th:each="pageNumber : ${#numbers.sequence(pageDto.startPage, pageDto.endPage)}"  class="page-item">
+                    <a class="page-link" th:text="${pageNumber}" th:href="@{/library(sortType=${sortType},keyword=${keyword},page=${pageNumber})}" th:classappend="${pageNumber == pageDto.page} ? 'current-page' : ''"></a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Next" th:if="${pageDto.existNextPage}"  th:href="@{/library(sortType=${sortType},keyword=${keyword},page=${pageDto.page + 1})}">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+
+</div>
+
+
+</body>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const sortButtons = document.querySelectorAll('[name="sortType"]');
+        const searchInput = document.getElementById('keyword');
+
+        // URL에서 검색어 및 정렬 유형을 읽어오는 함수
+        function readQueryParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const searchKeyword = urlParams.get('keyword');
+            const sortType = urlParams.get('sortType');
+
+            // 이전에 저장된 정렬 유형이 있다면 해당 버튼을 활성화
+            if (sortType) {
+                const selectedButton = document.querySelector(`[value="${sortType}"]`);
+                if (selectedButton) {
+                    selectedButton.classList.add('active');
+                }
+            } else {
+                // 이전에 저장된 정렬 유형이 없다면 디폴트로 최신순 활성화
+                const defaultButton = document.querySelector('[value="createdDateDesc"]');
+                if (defaultButton) {
+                    defaultButton.classList.add('active');
+                }
+            }
+
+            // 검색어도 함께 표시
+            if (searchKeyword) {
+                searchInput.value = searchKeyword;
+            }
+        }
+
+        // 각 버튼에 클릭 이벤트 리스너 추가
+        sortButtons.forEach(function(button) {
+            button.addEventListener('click', function() {
+                // 선택한 정렬 유형을 URL에 추가
+                const selectedSortType = button.value;
+                const urlParams = new URLSearchParams(window.location.search);
+                urlParams.set('sortType', selectedSortType);
+
+                // 검색어 추가
+                const searchKeyword = searchInput.value;
+                urlParams.set('bookSearch', searchKeyword);
+
+                // URL 업데이트
+                window.history.pushState({}, '', `${window.location.pathname}?sortType=${selectedSortType}&bookSearch=${searchKeyword}`);
+
+                // 검색어와 함께 폼 제출
+                const form = document.querySelector('form');
+                form.submit();
+            });
+        });
+
+        // 페이지 로드 시에 URL에서 읽어오기
+        readQueryParams();
+    });
+</script>
+
+
+</html>

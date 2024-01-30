@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+</head>
+<body class="text-center">
+<div th:replace="fragment/header :: header"></div>
+<div class="container-sm" style="width:50rem">
+    <main class="form-signin">
+
+        <form action="/auth/signup" method="post">
+            <img class="mb-4" src="/img/sign-up-logo.png" alt="" width="200" height="100">
+
+            <div class="form-floating mb-2">
+                <input type="text" name="loginId" class="form-control" id="floatingInput" placeholder="id">
+                <label for="floatingInput">id</label>
+            </div>
+            <div class="form-floating mb-2">
+                <input type="text" name="name" class="form-control" id="name" placeholder="이름">
+                <label for="name">이름</label>
+            </div>
+            <div class="form-floating mb-2">
+                <input type="password" name="password" class="form-control" id="password" placeholder="비밀번호">
+                <label for="password">비밀번호</label>
+            </div>
+<!--            <div class="form-floating mb-2">-->
+<!--                <input type="password" class="form-control" id="PasswordCheck" placeholder="비밀번호 확인">-->
+<!--                <label for="passwordCheck">비밀번호 확인</label>-->
+<!--            </div>-->
+
+            <div class="checkbox mb-3">
+                <label>
+                    <input type="checkbox" value="remember-me"> Remember me
+                </label>
+            </div>
+            <div class="row d-flex justify-content-center">
+                <div class="col-2">
+                    <button class="col-1 w-100 btn btn-lg btn-dark" type="submit">회원가입</button>
+                </div>
+            </div>
+        </form>
+    </main>
+</div>
+
+
+
+
+</body>
+</html>

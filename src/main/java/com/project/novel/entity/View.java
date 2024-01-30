@@ -1,16 +1,15 @@
 package com.project.novel.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
 
 @Entity @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BookLikes {
+public class View extends BaseEntity {
 
     @Id @GeneratedValue
-    @Column(name = "book_likes_id")
+    @Column(name = "view_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -18,11 +17,11 @@ public class BookLikes {
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "book_id")
-    private Book book;
+    @JoinColumn(name = "chapter_id")
+    private Chapter chapter;
 
-    public BookLikes(Member member, Book book) {
+    public View(Member member, Chapter chapter) {
         this.member = member;
-        this.book = book;
+        this.chapter = chapter;
     }
 }
