@@ -22,10 +22,20 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0' // SQL 로그
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf' // Thymeleaf
+	implementation 'org.springframework.boot:spring-boot-starter-web' // Spring Web
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa' // JPA
+	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect' // Thymeleaf Layout Dialect
+	implementation 'org.springframework.boot:spring-boot-starter-security' // Spring Security
+	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6' // Thymeleaf Spring Security
+	implementation 'org.springframework.boot:spring-boot-starter-validation' // Validation
+	implementation 'net.coobird:thumbnailator:0.4.20' // 이미지 리사이징, 썸네일 생성
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis' // Redis
+
 	compileOnly 'org.projectlombok:lombok'
-	runtimeOnly 'com.mysql:mysql-connector-j'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	runtimeOnly 'com.oracle.database.jdbc:ojdbc11'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

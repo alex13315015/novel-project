@@ -1,0 +1,42 @@
+server:
+  port: 8090
+
+spring:
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      timeout: 10
+
+  output:
+    ansi:
+      enabled: always
+
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      enabled: true
+
+  datasource:
+    driver-class-name: oracle.jdbc.OracleDriver
+    url: jdbc:oracle:thin:@localhost:1521:xe
+    username: lotring2
+    password: 1234
+
+  jpa:
+    open-in-view: true
+    hibernate:
+      ddl-auto: update
+    properties:
+        hibernate:
+          format_sql: true
+          show-sql: true
+
+logging:
+  level:
+    org.hibernate.sql: trace
+    org.hibernate.type: trace
+
+file:
+  path: C:/novel/

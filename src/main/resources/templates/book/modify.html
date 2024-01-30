@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<div layout:fragment="content" class="main">
+    <div class="container justify-content-center d-flex">
+        <!-- 소설(텍스트) 작성 -->
+        <div class="col-8">
+            <h2>새 작품 쓰기</h2>
+            <form method="post" th:action="@{|/book/modify/${bookId}|}" enctype="multipart/form-data" th:object="${bookUploadDto}">
+                <div class="mb-3">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">제목</label>
+                        <input class="form-control" type="text" id="title" name="bookName" placeholder="제목" th:field="*{bookName}" th:maxlength="30">
+                        <div class="form-text text-danger" th:if="${#fields.hasErrors('bookName')}" th:errors="*{bookName}"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="genre" class="form-label">장르</label>
+                        <select class="form-select" id="genre" name="bookGenre" th:field="*{bookGenre}">
+                            <option value="">장르선택</option>
+                            <option value="fantasy">판타지</option>
+                            <option value="romance">로맨스</option>
+                            <option value="orientalFantasy">무협</option>
+                            <option value="detective">추리</option>
+                            <option value="horror">공포</option>
+                            <option value="SF">SF</option>
+                            <option value="etc">기타</option>
+                        </select>
+                        <div class="form-text text-danger" th:if="${#fields.hasErrors('bookGenre')}" th:errors="*{bookGenre}"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="file" class="form-label">표지 이미지</label>
+                        <input class="form-control" type="file" id="file" name="bookImage" th:field="*{bookImage}" onchange="validateImage()">
+                        <div class="form-text text-danger" th:text="${imageError}"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="content" class="form-label">작품 소개</label>
+                        <textarea class="form-control" id="content" name="bookIntro" rows="10" th:field="*{bookIntro}" th:maxlength="800"></textarea>
+                        <div class="form-text text-danger" th:if="${#fields.hasErrors('bookIntro')}" th:errors="*{bookIntro}"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="ageRating" class="form-label">작품 나이 제한 설정</label>
+                        <select class="form-select" id="ageRating" name="ageRating" th:field="*{ageRating}">
+                            <option value="">나이 제한 설정</option>
+                            <option value="0">전체 이용가</option>
+                            <option value="12">12세 이용가</option>
+                            <option value="15">15세 이용가</option>
+                            <option value="19">19세 이용가</option>
+                        </select>
+                        <div class="form-text text-danger" th:if="${#fields.hasErrors('ageRating')}" th:errors="*{ageRating}"></div>
+                    </div>
+
+                </div>
+
+                <div class="mt-5 d-grid">
+                    <button class="btn btn-outline-dark">수정하기</button>
+                    <span class="text-decoration-none delete-book mt-3" onclick="return confirmDelete()" style="display: inline-block;">
+                        <a th:href="@{|/book/delete/${bookId}|}">작품 삭제하기<span class="bi bi-trash" style="font-size: large;"></span></a>
+                    </span>
+                </div>
+
+            </form>
+        </div>
+    </div>
+    <script>
+        function validateImage() {
+            var fileName = document.getElementById("file").value;
+            var idxDot = fileName.lastIndexOf(".") + 1;
+            var extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
+            (extFile==="jpg" || extFile==="jpeg" || extFile==="png") ? true : alert("확장자 jpg, jpeg, png만 가능합니다.");
+            (extFile==="jpg" || extFile==="jpeg" || extFile==="png") ? true : document.getElementById("file").value = ""; // 파일 선택을 취소
+        }
+
+        function confirmDelete() {
+            var confirmDelete = confirm("선택하신 작품을 삭제하시겠습니까?" +
+                "\n삭제된 작품은 복구할 수 없습니다.");
+            if (!confirmDelete) {
+                // 사용자가 취소를 클릭한 경우, 링크의 기본 동작을 취소
+                return false;
+            }
+        }
+
+
+
+    </script>
+</div>
+</html>
