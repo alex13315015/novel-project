@@ -19,13 +19,7 @@
                         <label for="genre" class="form-label">장르</label>
                         <select class="form-select" id="genre" name="bookGenre" th:field="*{bookGenre}">
                             <option value="">장르선택</option>
-                            <option value="fantasy">판타지</option>
-                            <option value="romance">로맨스</option>
-                            <option value="orientalFantasy">무협</option>
-                            <option value="detective">추리</option>
-                            <option value="horror">공포</option>
-                            <option value="SF">SF</option>
-                            <option value="etc">기타</option>
+                            <option th:each="genre : ${T(com.project.novel.enums.BookGenre).values()}" th:value="${genre}" th:text="${genre}"></option>
                         </select>
                         <div class="form-text text-danger" th:if="${#fields.hasErrors('bookGenre')}" th:errors="*{bookGenre}"></div>
                     </div>
@@ -33,7 +27,6 @@
                     <div class="mb-3">
                         <label for="file" class="form-label">표지 이미지</label>
                         <input class="form-control" type="file" id="file" name="bookImage" th:field="*{bookImage}" onchange="validateImage()">
-                        <div class="form-text text-danger" th:text="${imageError}"></div>
                     </div>
 
                     <div class="mb-3">

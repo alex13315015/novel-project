@@ -58,6 +58,19 @@ public class BookService {
     }
 
     private String processImageFile(BookUploadDto bookUploadDto) {
+        if (bookUploadDto.getBookImage() == null || bookUploadDto.getBookImage().isEmpty()) {
+            // 이미지를 업로드하지 않은 경우, bookGenre 별 기본 이미지 설정
+            return switch (bookUploadDto.getBookGenre()) {
+                case ORIENTAL_FANTASY -> "/images/oriental_fantasy_genre1.png";
+                case HORROR -> "/images/horror_genre2.png";
+                case ROMANCE -> "/images/romance_genre3.png";
+                case MYSTERY -> "/images/mystery_genre4.png";
+                case SCIENCE_FICTION -> "/images/science_fiction_genre5.png";
+                case FANTASY -> "/images/fantasy_genre6.png";
+                case THRILLER -> "/images/thriller_genre7.png";
+            };
+        }
+        // 이미지를 업로드한 경우
         String originalFileName = bookUploadDto.getBookImage().getOriginalFilename();
         String fileExtension = Objects.requireNonNull(originalFileName).substring(originalFileName.lastIndexOf(".") + 1).toLowerCase();
 

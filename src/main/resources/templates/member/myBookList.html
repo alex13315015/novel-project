@@ -16,7 +16,9 @@
                     <li class="pt-2 pb-2 mt-2 mb-2 border border-opacity-25 book-item">
                         <a th:href="@{|/member/myBookList/${item.id}|}" class="subj">
                             <div class="d-flex align-items-center">
-                                <div class="mx-3"><img class="rounded" src="/images/book.png" alt="" th:src="@{|/upload/${item.bookImage}|}"></div>
+                                <div class="mx-3">
+                                    <img style="width: 150px; height: 120px" class="rounded" th:src="${item.bookImage.startsWith('/images/') ? item.bookImage : '/upload/' + item.bookImage}" alt="">
+                                </div>
                                 <div style="max-width: 100%; vertical-align: middle">
                                     <p style="font-weight: bold; color: black; margin-bottom: 5px" th:text="${item.bookName}"></p>
                                     <p style="color: #4d5154" th:text="${item.nickname}"></p>
@@ -68,26 +70,34 @@
         }
 
         function bookToHtml(book) {
-            // 책 정보를 HTML 요소로 변환하는 함수를 작성합니다.
-            // 이 함수는 서버에서 반환하는 책 정보의 형식에 따라 달라집니다.
             let bookName = book.bookName;
             let nickname = book.nickname;
             let bookImage = book.bookImage;
             let id = book.id;
 
+            // 이미지 URL 생성
+            let imageUrl;
+            if (bookImage.startsWith("/images/")) {
+                // 기본 이미지인 경우
+                imageUrl = bookImage;
+            } else {
+                // 사용자가 업로드한 이미지인 경우
+                imageUrl = "/upload/" + bookImage;
+            }
+
             return `
-                <li class="pt-2 pb-2 mt-2 mb-2 border border-opacity-25 book-item">
-                    <a href="/member/myBookList/${id}" class="subj">
-                        <div class="d-flex align-items-center">
-                            <div class="mx-3"><img class="rounded"  src="/upload/${bookImage}" alt=""></div>
-                            <div style="max-width: 100%; vertical-align: middle">
-                                <p style="font-weight: bold; color: black; margin-bottom: 5px">${bookName}</p>
-                                <p style="color: #4d5154">${nickname}</p>
-                            </div>
-                        </div>
-                    </a>
-                </li>
-            `;
+        <li class="pt-2 pb-2 mt-2 mb-2 border border-opacity-25 book-item">
+            <a href="/member/myBookList/${id}" class="subj">
+                <div class="d-flex align-items-center">
+                    <div class="mx-3"><img class="rounded" src="${imageUrl}" alt=""></div>
+                    <div style="max-width: 100%; vertical-align: middle">
+                        <p style="font-weight: bold; color: black; margin-bottom: 5px">${bookName}</p>
+                        <p style="color: #4d5154">${nickname}</p>
+                    </div>
+                </div>
+            </a>
+        </li>
+    `;
         }
     </script>
 </div>

@@ -67,9 +67,7 @@ public class ChapterService {
             Chapter chapter = chapterRepository.findById(chapterId).orElseThrow(
                     () -> new IllegalArgumentException("해당하는 챕터를 찾을 수 없습니다.")
             );
-
             chapterDetailDto = createChapterDetailDto(chapter);
-
             ops.set(chapterKey, chapterDetailDto, 1, TimeUnit.MINUTES); // 챕터 상세 정보를 Redis에 1분 동안 캐싱
         }
 
@@ -98,7 +96,7 @@ public class ChapterService {
 
             ops.set(bookKey, chapterIdList, 1, TimeUnit.MINUTES);
         } else {
-            // Redis에서 가져온 데이터를 Long 타입으로 변환
+            // Redis에서 가져온 데이터 Long 타입으로 변환
             chapterIdList = chapterIdList.stream()
                     .map(obj -> Long.valueOf(obj.toString()))
                     .collect(Collectors.toList());
@@ -127,7 +125,7 @@ public class ChapterService {
         log.info("currentChapterId: " + currentChapterId);
 
         List<Object> chapterIdList = getChapterList(bookId);
-        int currentIndex = chapterIdList.indexOf(currentChapterId); // 현재 챕터의 인덱스
+        int currentIndex = chapterIdList.indexOf(currentChapterId);
 
         log.info(chapterIdList.toString());
         log.info("currentIndex: " + currentIndex);

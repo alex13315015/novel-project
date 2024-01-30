@@ -5,7 +5,7 @@
 <div layout:fragment="content" class="main">
     <div class="container">
         <div class="d-flex mt-2 mb-2 align-items-flex-end" style="position: relative;">
-            <img style="width: 200px; height: 276px" class="mx-3 rounded border border-opacity-25" src="/images/book.png" alt="" th:src="@{|/upload/${bookInfo.bookImage}|}">
+            <img style="width: 200px; height: 276px" class="mx-3 rounded border border-opacity-25" src="/images/book.png" alt="" th:src="${bookInfo.bookImage.startsWith('/images/') ? bookInfo.bookImage : '/upload/' + bookInfo.bookImage}">
             <div class="d-flex flex-column mx-3" style="height: 100%;">
                 <h3 class="mt-2" th:text="${bookInfo.bookName}"></h3>
                 <div style="font-size: small; color: gray; font-weight: lighter;">
