@@ -4,23 +4,18 @@
       layout:decorate="~{/layout/layout}">
 <div layout:fragment="content" class="main">
     <div class="container">
-        <form class="col-auto join" th:action="@{/auth/join}" method="post" th:object="${joinDto}">
+        <form class="col-auto join" th:action="@{|/member/modify/${#authentication.principal.loggedMember.id}|}"
+              method="post" th:object="${getMemberInfo}">
             <div class="col-10">
-                <h2 class="title mt-3 mb-3">회원가입</h2>
+                <input type="hidden" th:value="${#authentication.principal.loggedMember.id}">
+                <h2 class="title mt-3 mb-3">정보수정</h2>
                 <div class="row g-3 align-items-center mb-3">
                     <div class="col-2">
                         <label for="userId" class="col-form-label">아이디</label>
                     </div>
                     <div class="col-4">
-                        <input type="text" name="userId" id="userId" class="form-control" th:field="*{userId}"
-                        placeholder="아이디는 4~20 글자로 입력">
-                    </div>
-                    <div class="col-2">
-                        <button class="btn btn-dark" id="btnIdCheck">중복확인</button>
-                    </div>
-                    <div class="col-auto">
-                        <span id="messageId"></span>
-                        <p class="error" th:if="${#fields.hasErrors('userId')}" th:errors="*{userId}"></p>
+                        <input type="text" name="userId" id="userId" class="form-control"
+                               th:value="${getMemberInfo.userId}" readonly>
                     </div>
                 </div>
                 <div class="row g-3 align-items-center mb-3">
@@ -29,7 +24,7 @@
                     </div>
                     <div class="col-4">
                         <input type="password" name="password" id="password" class="form-control"
-                        placeholder="ex) abc13!@#">
+                               placeholder="ex) abc13!@#">
                     </div>
                     <div class="col-auto">
                         <span id="pwConfirm"></span>
@@ -55,7 +50,8 @@
                         <label for="userName" class="col-form-label">이름</label>
                     </div>
                     <div class="col-4">
-                        <input type="text" name="userName" id="userName" class="form-control" th:field="*{userName}">
+                        <input type="text" name="userName" id="userName" class="form-control"
+                               th:value="${getMemberInfo.userName}" th:field="*{userName}">
                     </div>
                     <div class="col-auto">
                         <p class="error" th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></p>
@@ -66,7 +62,8 @@
                         <label for="nickname" class="col-form-label">닉네임</label>
                     </div>
                     <div class="col-4">
-                        <input type="text" name="nickname" id="nickname" class="form-control" th:field="*{nickname}">
+                        <input type="text" name="nickname" id="nickname" class="form-control"
+                               th:value="${getMemberInfo.nickname}" th:field="*{nickname}">
                     </div>
                     <div class="col-auto">
                         <p class="error" th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}"></p>
@@ -77,7 +74,7 @@
                         <label for="age" class="col-form-label">나이</label>
                     </div>
                     <div class="col-4">
-                        <input type="text" name="age" id="age" class="form-control">
+                        <input type="text" name="age" id="age" th:value="${getMemberInfo.age}" class="form-control">
                     </div>
                 </div>
                 <div class="row g-3 align-items-center mb-2">
@@ -86,7 +83,7 @@
                     </div>
                     <div class="col-4">
                         <input type="email" name="email" id="email" class="form-control"
-                        placeholder="example@test.com">
+                               placeholder="example@test.com" th:value="${getMemberInfo.email}">
                     </div>
                     <div class="col-2">
                         <button class="btn btn-dark" type="submit" id="btnEmailCheck">중복확인</button>
@@ -102,58 +99,16 @@
                     </div>
                     <div class="col-4">
                         <input type="text" name="phoneNumber" id="phoneNumber" class="form-control"
-                        placeholder="010-0000-0000">
+                               placeholder="010-0000-0000" th:value="${getMemberInfo.phoneNumber}">
                     </div>
                 </div>
                 <div class="d-flex justify-content-center mt-5">
-                    <button class="btn btn-dark" id="btnJoin">가입하기</button>
+                    <button class="btn btn-dark" id="btnModify">수정하기</button>
                 </div>
             </div>
         </form>
     </div>
     <script th:inline="javascript">
-        /*const token = $("meta[name='_csrf']").attr("content");
-        const header = $("meta[name='_csrf_header']").attr("content");
-        const name = $("#userName").val();*/
-        // csrf 토큰 설정
-
-        let idCheck = 0; // 아이디 중복체크 결과 -> 중복이면 0, 아니면 1
-        let emailCheck = 0; // 이메일 중복체크 결과 -> 중복이면 0, 아니면 1
-        let passwordCheck = 0; // 비밀번호 일치체크 결과 -> 다르면 0, 일치하면 1
-        $("#btnIdCheck").on("click",function (e) {
-            console.log("아이디 중복체크");
-            e.preventDefault(); // form 안에 버튼이라 submit 되는거 방지
-            const inputId = $("#userId").val(); // 아이디 입력란에 입력되는 값
-            if(inputId === null || inputId === "") {
-                $("#messageId").text("아이디는 필수 입력사항입니다.");
-                $("#messageId").addClass("invalid").removeClass("valid");
-                $("#userId").focus();
-                return false;
-            }
-            $.ajax({
-                url: "/auth/idCheck",
-                data: {
-                    dupId : inputId // 입력된 값을 dupId 변수에 담기
-                },
-                success: function (data) {
-                    console.log(data);
-                    if (data === 1) {
-                        $("#messageId").text("이미 사용중인 아이디입니다.");
-                        $("#messageId").addClass("invalid").removeClass("valid");
-                        $("#userId").focus();
-                        idCheck = 0;
-                        return false;
-                        // 아이디가 중복되었을 때, 처리
-                    } else {
-                        $("#messageId").text("사용가능한 아이디입니다.");
-                        $("#messageId").addClass("valid").removeClass("invalid");
-                        $("#password").focus();
-                        idCheck = 1;
-                        // 아이디가 중복되지 않았을 때, 처리
-                    }
-                }
-            })
-        });
         $("#btnEmailCheck").on("click",function (e) {
             console.log("이메일 중복체크");
             e.preventDefault();
@@ -218,17 +173,6 @@
                     }
                 }
             })
-        });
-        $("#btnJoin").on("click",function (e) {
-            console.log("가입완료!");
-            if(idCheck !== 1) {
-                //alert("아이디 중복체크를 해주세요.");  // 이메일 중복체크를 안하고 가입하기 버튼 누를시, 경고띄우기
-                $("#btnIdCheck").focus();
-            }
-            else if(emailCheck !== 1) {
-                //alert("이메일 중복체크를 해주세요."); // 아이디 중복체크를 안하고 가입하기 버튼 누를시, 경고띄우기
-                $("#btnEmailCheck").focus();
-            }
         });
     </script>
 </div>
