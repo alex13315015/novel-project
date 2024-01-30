@@ -22,9 +22,21 @@ public class LibraryService {
 
     public List<BookInfoDto> test(String sortType, String bookSearch, int pageNum, Model model){
         List<Book> bookList = bookRepository.findByBookNameContainingIgnoreCase(bookSearch);
+
+        if(pageNum < 1){
+            pageNum = 1;
+        }
+
         Page<Object[]> page = bookRepository.findBookInfoListPage(bookList,
                 PageRequest.of(pageNum - 1, 10, getSortType(sortType)));
         LibraryPageDto pageDto = new LibraryPageDto(page);
+
+        if(page.getTotalPages() < pageNum){
+            pageDto.setPage(page.getTotalPages());
+            page = bookRepository.findBookInfoListPage(bookList,
+                    PageRequest.of((int)pageDto.getPage() - 1, 10, getSortType(sortType)));
+        }
+
         model.addAttribute("pageDto", pageDto);
         List<Object[]> content = page.getContent();
         return getBookInfoList(content);

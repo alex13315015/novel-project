@@ -15,6 +15,9 @@ public class LibraryPageDto {
         this.totalRecordCount = page.getTotalElements();
         this.totalPageCount = page.getTotalPages();
         this.page = page.getNumber() + 1;
+        if(this.page > totalPageCount){
+            this.page = totalPageCount;
+        }
     }
 
     public long getStartPage(){
