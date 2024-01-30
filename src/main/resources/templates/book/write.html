@@ -19,7 +19,7 @@
                         <label for="genre" class="form-label">장르</label>
                         <select class="form-select" id="genre" name="bookGenre" th:field="*{bookGenre}">
                             <option value="">장르선택</option>
-                            <option th:each="genre : ${T(com.project.novel.enums.BookGenre).values()}" th:value="${genre}" th:text="${genre}"></option>
+                            <option th:each="genre : ${T(com.project.novel.enums.BookGenre).values()}" th:value="${genre}" th:text="${genre.getDisplayName()}"></option>
                         </select>
                         <div class="form-text text-danger" th:if="${#fields.hasErrors('bookGenre')}" th:errors="*{bookGenre}"></div>
                     </div>

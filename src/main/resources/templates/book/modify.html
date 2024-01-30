@@ -50,7 +50,7 @@
                 </div>
 
                 <div class="mt-5 d-grid">
-                    <button class="btn btn-outline-dark">수정하기</button>
+                    <button class="btn btn-outline-dark" onclick="return confirmModify()">수정하기</button>
                     <span class="text-decoration-none delete-book mt-3" onclick="return confirmDelete()" style="display: inline-block;">
                         <a th:href="@{|/book/delete/${bookId}|}">작품 삭제하기<span class="bi bi-trash" style="font-size: large;"></span></a>
                     </span>
@@ -61,21 +61,31 @@
     </div>
     <script>
         function validateImage() {
-            var fileName = document.getElementById("file").value;
-            var idxDot = fileName.lastIndexOf(".") + 1;
-            var extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
+            let fileName = document.getElementById("file").value;
+            let idxDot = fileName.lastIndexOf(".") + 1;
+            let extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
             (extFile==="jpg" || extFile==="jpeg" || extFile==="png") ? true : alert("확장자 jpg, jpeg, png만 가능합니다.");
             (extFile==="jpg" || extFile==="jpeg" || extFile==="png") ? true : document.getElementById("file").value = ""; // 파일 선택을 취소
         }
 
         function confirmDelete() {
-            var confirmDelete = confirm("선택하신 작품을 삭제하시겠습니까?" +
+            let confirmDelete = confirm("선택하신 작품을 삭제하시겠습니까?" +
                 "\n삭제된 작품은 복구할 수 없습니다.");
             if (!confirmDelete) {
                 // 사용자가 취소를 클릭한 경우, 링크의 기본 동작을 취소
                 return false;
             }
         }
+
+        function confirmModify() {
+            let confirmDelete = confirm("선택하신 작품을 수정하시겠습니까?");
+            if (!confirmDelete) {
+                // 사용자가 취소를 클릭한 경우, 링크의 기본 동작을 취소
+                return false;
+            }
+        }
+
+
 
 
 
