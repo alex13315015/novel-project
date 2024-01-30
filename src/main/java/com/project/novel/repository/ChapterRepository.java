@@ -28,4 +28,8 @@ public interface ChapterRepository extends JpaRepository<Chapter, Long> {
 
     @Query("SELECT c FROM Chapter c WHERE c.isActive = false")
     List<Chapter> findByIsActive();
+
+    @Query("SELECT c FROM Chapter c WHERE c.book.id = :bookId AND c.isActive = true " +
+            "ORDER BY c.id ASC")
+    List<Chapter> findAllByBookId(@Param("bookId") Long bookId);
 }

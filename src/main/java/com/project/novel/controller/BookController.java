@@ -57,7 +57,7 @@ public class BookController {
     public String getBookById(@PathVariable(name="bookId") Long bookId, Model model,
                               @AuthenticationPrincipal CustomUserDetails customUserDetails,
                               @RequestParam(name="order", defaultValue = "DESC") String order,
-                              @PageableDefault(size = 5) Pageable pageable) {
+                              @PageableDefault Pageable pageable) {
 
         BookDto bookDto = bookService.getBook(bookId, customUserDetails.getLoggedMember().getId(), order, pageable);
         model.addAttribute("bookInfo", bookDto);
