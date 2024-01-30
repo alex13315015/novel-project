@@ -9,5 +9,20 @@
 <body th:fragment="content(content)">
     <div th:replace="~{fragment/header :: header}"></div>
     <div th:replace="${content}"></div>
+<!--       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="/css/layout.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/jquery-3.7.1.min.js"></script>
+</head>
+<body>
+<div th:replace="~{fragment/header :: headerFragment}"></div>
+<div layout:fragment="content"></div> <!-- 각각의 페이지에서 채워질 부분 
+<div th:replace="~{fragment/footer :: footerFragment}"></div> --> 
 </body>
 </html>

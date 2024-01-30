@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<div layout:fragment="content" class="main">
+    <div class="container">
+        <div class="book-info">
+            <div class="d-flex mt-4 mb-2 align-items-flex-end" style="position: relative;">
+                <img style="width: 200px; height: 276px" class="mx-3 rounded border border-opacity-25" src="/images/book.png" alt="" th:src="@{|/upload/${bookInfo.bookImage}|}">
+                <div class="d-flex flex-column mx-3" style="height: 100%;">
+                    <div class="info-top">
+                        <h3 class="mt-2" th:text="${bookInfo.bookName}"></h3>
+                        <div class="d-flex">
+                            <span class="px-2 border-end border-opacity-25" th:text="${bookInfo.bookGenre}"></span>
+                            <span class="px-2 mb-1" th:text="${bookInfo.writer}"></span>
+                        </div>
+                    </div>
+                    <div class="info-bottom" style="position: absolute; bottom: 0;">
+                        <p style="color: #2b3035; font-size: 13px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-all;"  th:text="${bookInfo.bookIntro}"></p>
+                        <a href="#" style="min-width: 100px; max-width: 200px;" class="btn btn-outline-primary">첫회 보기</a>
+                    </div>
+                </div>
+                <div class="info-right d-flex" style="height: 100%;">
+                    <div class="d-flex flex-column align-items-center mt-2 ms-5">
+                        <span class="likeIcon" th:attr="like-state=${bookInfo.likeState ? 'liked' : 'not-liked'}">
+                            <i th:class="${bookInfo.likeState ? 'bi bi-heart-fill' : 'bi bi-heart'}"></i>
+                        </span>
+                        <span th:text="${bookInfo.likeCount}"></span>
+                    </div>
+                    <div class="d-flex flex-column align-items-center mt-2 ms-4">
+                        <span class="subscribeIcon" th:attr="subscribe-state=${bookInfo.subscribeState ? 'subscribed' : 'not-subscribed'}">
+                            <i th:class="${bookInfo.subscribeState ? 'bi bi-check-circle' : 'bi bi-plus-circle'}"></i>
+                        </span>
+                        <span th:text="'구독 ' + ${bookInfo.subscribeCount}">구독 수</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="chapter-list border-top">
+            <div class="d-flex justify-content-between align-items-center">
+                <p class="mt-2" style="font-size: x-large" th:text="'회차 ('+${bookInfo.chapterList.getTotalElements()}+')'"></p>
+                <div class="custom-order">
+                    <a class="p-3 " th:href="@{|/book/library/${bookInfo.id}?order=DESC|}">최신화부터</a>
+                    <a class="p-2" th:href="@{|/book/library/${bookInfo.id}?order=ASC|}">1화부터</a>
+                </div>
+            </div>
+            <ul>
+                <th:block th:each="item:${bookInfo.chapterList}">
+                    <li>
+                        <div class="mt-2 mb-2">
+                            <a th:href="@{|/chapter/read/${item.id}|}" th:text="${item.title}" class="subj"></a>
+                            <div class="d-flex mt-1" style="font-weight: lighter; color: #4d5154">
+                                <span class="pe-3" th:text="'조회 ' + ${item.hits}"></span>
+                                <span th:text="${item.createdAt}"></span>
+                            </div>
+                        </div>
+                    </li>
+                </th:block>
+            </ul>
+            <div>
+                <button class="btn btn-outline-primary mt-5 btn-more">더보기</button>
+            </div>
+        </div>
+    </div>
+    <script th:inline="javascript">
+        const bookId = [[${bookInfo.id}]];
+        let loadPage = 0;
+        let totalPages = [[${bookInfo.chapterList.totalPages}]];
+        let sort = 'desc'
+
+        $(".btn-more").on("click", function () {
+            if(loadPage>=totalPages) {
+                $(this).hide();
+            } else {
+                loadPage++; // 페이지 번호 증가
+                loadChapterList(bookId, loadPage);
+            }
+        });
+
+        $("a[href*='order=ASC']").on("click", function (event) {
+            event.preventDefault(); // 기본 이벤트 동작을 막습니다, 즉, a 태그의 링크를 클릭해도 페이지가 이동하지 않습니다.
+            sort = 'asc';
+            loadPage = 0; // 페이지 번호를 초기화합니다.
+
+            $('.chapter-list ul').empty();
+
+            loadChapterList(bookId, loadPage); // 챕터 목록을 다시 로드
+
+            $("a[href*='order=ASC']").css('color', 'blue');
+            $("a[href*='order=DESC']").css('color', 'black');
+        });
+
+        $("a[href*='order=DESC']").on("click", function (event) {
+            event.preventDefault(); // 기본 이벤트 동작을 막습니다.
+            sort = 'desc';
+            loadPage = 0; // 페이지 번호를 초기화합니다.
+
+            $('.chapter-list ul').empty();
+
+            loadChapterList(bookId, loadPage); // 챕터 목록을 다시 로드
+
+            // "최신화부터" 링크의 색상을 파란색으로 변경하고, "1화부터" 링크의 색상을 검은색으로 변경합니다.
+            $("a[href*='order=DESC']").css('color', 'blue');
+            $("a[href*='order=ASC']").css('color', 'black');
+        });
+
+        function loadChapterList(bookId, loadPage) {
+            $.ajax({
+                type: 'GET',
+                url: '/api/book/'+bookId+`/chapters?page=${loadPage}&sort=createdAt,${sort}`,
+                success: function (response) {
+                    console.log(response);
+                    totalPages = response.totalPages;
+                    let chapterUl = $('.chapter-list ul');
+
+                    // 챕터 목록 추가
+                    for (let chapter of response.content) {
+                        chapterUl.append(chapterToHtml(chapter));
+                    }
+                },
+                error: function (){
+                    alert('챕터 목록을 불러오는데 실패했습니다.');
+                }
+            })
+        }
+
+        function escapeHtml(unsafe) {
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function chapterToHtml(chapter) {
+            let title = escapeHtml(chapter.title);
+            let hits = escapeHtml(chapter.hits.toString());
+            let createdAt = escapeHtml(chapter.createdAt);
+
+            return `
+                <li>
+                    <div class="d-flex justify-content-between">
+                        <div class="mt-2 mb-2">
+                            <a href="/chapter/read/${chapter.id}" class="subj">${title}</a>
+                            <div class="d-flex mt-1" style="font-weight: lighter; color: #4d5154">
+                                <span class="pe-3">조회 ${hits}</span>
+                                <span>${createdAt}</span>
+                            </div>
+                        </div>
+                        <div class="dropdown mt-4">
+                            <i class="bi bi-three-dots-vertical" style="font-size: 20px; font-weight: lighter" role="button" tabindex="0" data-bs-toggle="dropdown" aria-expanded="false"></i>
+                            <ul class="dropdown-menu align-items-center" aria-labelledby="dropdownMenuButton">
+                                <li><a class="custom-dropdown-item mb-1" href="/chapter/modify/${chapter.id}">수정</a></li>
+                                <li><a class="custom-dropdown-item delete-chapter mt-1" href="/chapter/delete/${chapter.id}?bookId=${bookId}">삭제</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+            `;
+        }
+
+        $(document).ready(function () {
+            // 현재 페이지의 URL을 가져옵니다.
+            var url = window.location.href;
+
+            // URL에 'order=DESC' 또는 'order=ASC'가 포함되어 있는지 확인합니다.
+            if (url.includes('order=ASC')) {
+                // 'order=ASC'가 포함되어 있으면, 해당 링크에 파란색을 적용합니다.
+                $("a[href*='order=ASC']").css('color', 'blue');
+                sort = 'asc';
+            } else {
+                // 'order=DESC'가 포함되어 있거나 'order' 파라미터가 없으면, 해당 링크에 파란색을 적용합니다.
+                $("a[href*='order=DESC']").css('color', 'blue');
+                sort = 'desc';
+            }
+        });
+
+
+        $(document).ready(function () {
+            $('.likeIcon').click(function () {
+                const likeState = $(this).attr('like-state');
+                const likeCountElement = $(this).next(); // 좋아요 수를 표시하는 요소
+
+                if (likeState === 'liked') {
+                    $(this).find('i').removeClass('bi bi-heart-fill').addClass('bi bi-heart');
+                    $(this).attr('like-state', 'not-liked');
+
+                    // 좋아요 취소 처리를 위한 AJAX 호출
+                    $.ajax({
+                        url: '/api/book/' + bookId + '/like',
+                        type: 'DELETE',
+                        success: function(response) {
+                            likeCountElement.text(response.likeCount); // 좋아요 수 업데이트
+                        },
+                        error: function(error) {
+                            console.log(error);
+                        }
+                    });
+                } else {
+                    $(this).find('i').removeClass('bi bi-heart').addClass('bi bi-heart-fill');
+                    $(this).attr('like-state', 'liked');
+
+                    // 좋아요 처리를 위한 AJAX 호출
+                    $.ajax({
+                        url: '/api/book/' + bookId + '/like',
+                        type: 'POST',
+                        success: function(response) {
+                            likeCountElement.text(response.likeCount); // 좋아요 수 업데이트
+                        },
+                        error: function(error) {
+                            console.log(error);
+                        }
+                    });
+                }
+            });
+
+            $('.subscribeIcon').click(function () {
+                const subscribeState = $(this).attr('subscribe-state');
+                const subscribeCountElement = $(this).next(); // 구독 수를 표시하는 요소
+
+                if (subscribeState === 'subscribed') {
+                    $(this).find('i').removeClass('bi bi-check-circle').addClass('bi bi-plus-circle');
+                    $(this).attr('subscribe-state', 'not-subscribed');
+
+                    // 구독 취소 처리를 위한 AJAX 호출
+                    $.ajax({
+                        url: '/api/book/' + bookId + '/subscribe',
+                        type: 'DELETE',
+                        success: function(response) {
+                            subscribeCountElement.text("구독 " + response.subscribeCount); // 구독 수 업데이트
+                        },
+                        error: function(error) {
+                            console.log(error);
+                        }
+                    });
+                } else {
+                    $(this).find('i').removeClass('bi bi-plus-circle').addClass('bi bi-check-circle');
+                    $(this).attr('subscribe-state', 'subscribed');
+
+                    // 구독 처리를 위한 AJAX 호출
+                    $.ajax({
+                        url: '/api/book/' + bookId + '/subscribe',
+                        type: 'POST',
+                        success: function(response) {
+                            subscribeCountElement.text("구독 " + response.subscribeCount); // 구독 수 업데이트
+                        },
+                        error: function(error) {
+                            console.log(error);
+                        }
+                    });
+                }
+            });
+
+        });
+    </script>
+</div>
+</html>

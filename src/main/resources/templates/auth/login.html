@@ -1,42 +1,30 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-  <link rel="stylesheet" href="/css/bootstrap.min.css">
-
-</head>
-<body class="text-center">
-<div th:replace="fragment/header :: header"></div>
-<div class="container-sm" style="width:300px">
-<main class="form-signin">
-
-  <form action="/auth/login1" method="post">
-    <img class="mb-4" src="/img/loginlogo.png" alt="" width="200" height="100">
-
-    <div class="form-floating">
-      <input type="text" name="loginId" class="form-control" id="loginId" placeholder="login id">
-      <label for="loginId">login id</label>
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/layout}">
+<div layout:fragment="content" class="main">
+    <div class="container d-flex justify-content-center">
+        <form method="post" th:action="@{/auth/login}">
+            <div class="col-8" style="width: 400px">
+                <h1>로그인</h1>
+                <div class="mb-2">
+                    <label for="userId" class="col-form-label">아이디</label>
+                    <div class="col-auto">
+                        <input type="text" name="userId" id="userId" class="form-control" >
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <label for="password" class="col-form-label">비밀번호</label>
+                    <div class="col-auto">
+                        <input type="password" name="password" id="password" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div class="d-grid mt-2">
+                <button class="btn btn-dark mt-4 mb-2" id="btnLogin">로그인</button>
+                <a class="mt-2 d-flex justify-content-center findPassword" href="">비밀번호를 잊어버리셨나요?</a>
+            </div>
+        </form>
     </div>
-    <div class="form-floating">
-      <input type="password" name="password" class="form-control" id="password" placeholder="Password">
-      <label for="password">Password</label>
-    </div>
-
-    <div class="checkbox mb-3">
-      <label>
-        <input type="checkbox" value="remember-me"> Remember me
-      </label>
-    </div>
-    <button class="w-100 btn btn-lg btn-dark" type="submit">Sign in</button>
-    <p class="mt-5 mb-3 text-muted">© 2017–2021</p>
-  </form>
-</main>
 </div>
-
-
-
-
-</body>
 </html>
