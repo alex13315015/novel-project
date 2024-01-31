@@ -21,5 +21,6 @@ public class BookDto {
     private Integer subscribeCount;
     private boolean subscribeState;
     private Page<ChapterDto> chapterList;
+    private Long totalHits;
 
 }

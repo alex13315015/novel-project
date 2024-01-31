@@ -6,6 +6,7 @@ import com.project.novel.entity.BookLikes;
 import com.project.novel.entity.Member;
 import com.project.novel.repository.BookLikesRepository;
 import com.project.novel.repository.BookRepository;
+import com.project.novel.repository.ChapterRepository;
 import com.project.novel.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -36,6 +37,7 @@ public class BookService {
     private String uploadFolder;
     private final BookRepository bookRepository;
     private final BookLikesRepository bookLikesRepository;
+    private final ChapterRepository chapterRepository;
     private final MemberRepository memberRepository;
     private final ChapterService chapterService;
     private final SubscribeService subscribeService;
@@ -145,6 +147,7 @@ public class BookService {
         pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
 
         Page<ChapterDto> chapterDtoList = chapterService.getChapterList(bookId, pageable);
+        Long totalHits = chapterRepository.sumHitsByBookId(bookId);
 
         return BookDto.builder()
                 .id(bookId)
@@ -154,6 +157,7 @@ public class BookService {
                 .bookImage(book.getBookImage())
                 .bookGenre(book.getBookGenre())
                 .ageRating(book.getAgeRating())
+                .totalHits(totalHits)
                 .chapterList(chapterDtoList)
                 .build();
     }
