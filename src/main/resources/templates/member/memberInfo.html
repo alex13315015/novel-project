@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<div layout:fragment="content" class="main">
+    <div class="container">
+        <h2 class="title">내 정보</h2>
+        <table class="table memberInfo">
+            <thead>
+            <tr>
+                <th scope="col">아이디</th>
+                <th scope="col">이름</th>
+                <th scope="col">닉네임</th>
+                <th scope="col">이메일</th>
+                <th scope="col">전화번호</th>
+            </tr>
+            </thead>
+            <tr>
+                <td th:text="${getMemberInfo.userId}"></td>
+                <td th:text="${getMemberInfo.userName}"></td>
+                <td th:text="${getMemberInfo.nickname}"></td>
+                <td th:text="${getMemberInfo.email}"></td>
+                <td th:text="${getMemberInfo.phoneNumber}"></td>
+            </tr>
+        </table>
+        <div class="d-flex justify-content-center mt-5">
+            <a class="btn btn-dark"
+                    th:href="@{/member/modify/{id}(id=${#authentication.principal.loggedMember.id})}">
+                    정보수정
+            </a>
+        </div>
+    </div>
+</div>
+</html>

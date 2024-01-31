@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+                xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+                layout:decorate="~{layout/layout}">
+<div layout:fragment="content" class="main">
+    <div class="container d-flex justify-content-center border-bottom">
+       <div class="lnb">
+           <ul class="section d-flex justify-content-between">
+               <li class="s2 mx-3 sectionTxt">
+                   <a class="sub_link"
+                      th:href="@{/member/memberInfo/{id}(id=${#authentication.principal.loggedMember.id})}">
+                       <span class="sub_text">회원 정보</span>
+                   </a>
+               </li>
+           </ul>
+       </div>
+    </div>
+</div>
+</html>

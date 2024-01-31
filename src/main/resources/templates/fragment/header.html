@@ -32,42 +32,75 @@
   </div>
 </header>
 </body>
-<!-- <html lang="en"
-      xmlns:th= "http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
->
-<div class="container" th:fragment="headerFragment">
-    <header class="d-flex flex-wrap justify-content-center align-items-center py-3 border-bottom">
-        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
-            <i class="bi bi-house" style="font-size: 3rem"></i>
-        </a>
-        <div sec:authorize="!isAuthenticated()">
-            <div class="nav nav-fill">
-                <a th:href="@{/auth/join}" class="fs-3 mx-2 text-dark">
-                    <i class="bi bi-person-plus-fill" style="font-size: 3rem"></i>
-                </a>
-                <a th:href="@{/auth/login}" class="fs-3 mx-2 text-dark">
-                    <i class="bi bi-person-fill-lock" style="font-size: 3rem"></i>
-                </a>
-            </div>
-        </div>
-        <div sec:authorize="isAuthenticated()">
-            <div class="nav nav-fill">
-                <a th:href="@{/member/myBookList}" class="fs-3 mx-2 text-dark">
-                    <i class="bi bi-collection" style="font-size: 3rem"></i>
-                </a>
-                <a th:href="@{/book/write}" class="fs-3 mx-2 text-dark">
-                    <i class="bi bi-pen" style="font-size: 3rem"></i>
-                </a>
-                <a th:href="@{/book/library}" class="fs-3 mx-2 text-dark">
-                    <i class="bi bi-book" style="font-size: 3rem"></i>
-                </a>
-                <a th:href="@{/auth/logout}" class="fs-3 mx-2 text-dark">
-                    <i class="bi bi-door-open" style="font-size: 3rem"></i>
-                </a>
 
-            </div>
-        </div>
-    </header>
-</div> -->
+<!--<div class="container" th:fragment="headerFragment">-->
+<!--    <div class="header">-->
+<!--        <div class="header-inner d-flex justify-content-between align-items-center py-3 border-bottom">-->
+<!--            &lt;!&ndash; gnb &ndash;&gt;-->
+<!--            <div class="sta">-->
+<!--                <h1>-->
+<!--                    <a href="/static" th:href="@{/}" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">-->
+<!--                        <img src="/images/writer.png" alt="" class="logo mx-3"><span style="font-size: 30px; font-weight: bold">Book Repository</span>-->
+<!--                    </a>-->
+<!--                </h1>-->
+<!--            </div>-->
+<!--            <div class="search-area">-->
+<!--                <span class="search-box">-->
+<!--                    <label for="searchKeyword"></label>-->
+<!--                    <input type="text" id="searchKeyword" placeholder="제목,작가명을 입력해주세요.">-->
+<!--                </span>-->
+<!--                <button type="button" class="btn btn-dark searchBtn mx-2" id="searchBtn">검색</button>-->
+<!--            </div>-->
+<!--            <div sec:authorize="!isAuthenticated()">-->
+<!--                <div class="gnb_li">-->
+<!--                    <ul class="nav nav-pills">-->
+<!--                        <li class="mx-2">-->
+<!--                            <a href="/auth/login" class="gnb_login">-->
+<!--                                <span class="gnb_bg"></span>-->
+<!--                                <span class="gnb-bdr"></span>-->
+<!--                                <span class="gnb_txt">로그인</span>-->
+<!--                            </a>-->
+<!--                        </li>-->
+<!--                        <li class="mx-2">-->
+<!--                            <a href="/member/myPage" class="gnb_myPage">-->
+<!--                                <span class="gnb_bg"></span>-->
+<!--                                <span class="gnb-bdr"></span>-->
+<!--                                <span class="gnb_txt">마이페이지</span>-->
+<!--                            </a>-->
+<!--                        </li>-->
+<!--                    </ul>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div sec:authorize="isAuthenticated()">-->
+<!--                <div class="gnb_li">-->
+<!--                    <ul class="nav nav-pills">-->
+<!--                        <li class="mx-2">-->
+<!--                            <a th:href="@{/member/memberInfo/{id}(id=${#authentication.principal.loggedMember.id})}"-->
+<!--                               class="gnb_login">-->
+<!--                                <i class="bi bi-person-circle memberProfileImg"></i>-->
+<!--                                <span class="gnb_txt" th:text="${#authentication.principal.loggedMember.userName}"></span>-->
+<!--                            </a>-->
+<!--                        </li>-->
+<!--                        <li class="mx-3">-->
+<!--                            <a th:href="@{/member/my}"-->
+<!--                               class="gnb_myPage">-->
+<!--                                <span class="gnb_bg"></span>-->
+<!--                                <span class="gnb-bdr"></span>-->
+<!--                                <span class="gnb_txt">MY소설</span>-->
+<!--                            </a>-->
+<!--                        </li>-->
+<!--                        <li class="mx-3">-->
+<!--                            <a th:href="@{/auth/logout}"-->
+<!--                               class="gnb_logout">-->
+<!--                                <span class="gnb_bg"></span>-->
+<!--                                <span class="gnb-bdr"></span>-->
+<!--                                <span class="gnb_txt">로그아웃</span>-->
+<!--                            </a>-->
+<!--                        </li>-->
+<!--                    </ul>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
 </html>
