@@ -21,16 +21,16 @@ public class BookInfoDto {
     private Long hit;
     private Long likes;
     private String bookImage;
-    private LocalDateTime createdDate;
+    private LocalDateTime createdAt;
 
     public BookInfoDto(Book book, Long hit, Long likes, Long subscribes, String author){
         this.id = book.getId();
         this.bookName = book.getBookName();
-        this.genre = book.getGenre();
+        this.genre = book.getBookGenre();
         this.bookIntro = book.getBookIntro();
         this.ageRating = book.getAgeRating();
         this.bookImage = book.getBookImage();
-        this.createdDate = book.getCreatedDate();
+        this.createdAt = book.getCreatedAt();
         this.subscribes = subscribes;
         this.hit = hit;
         this.likes = likes;

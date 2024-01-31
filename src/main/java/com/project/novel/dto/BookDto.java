@@ -1,5 +1,7 @@
 package com.project.novel.dto;
 
+import com.project.novel.enums.AgeRating;
+import com.project.novel.enums.Genre;
 import lombok.*;
 import org.springframework.data.domain.Page;
 
@@ -13,8 +15,8 @@ public class BookDto {
     private String writer;
     private String bookIntro;
     private String bookImage;
-    private String bookGenre;
-    private Integer ageRating;
+    private Genre bookGenre;
+    private AgeRating ageRating;
     private Integer likeCount;
     private boolean likeState;
     private Integer subscribeCount;

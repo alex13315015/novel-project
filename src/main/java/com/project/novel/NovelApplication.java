@@ -7,7 +7,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @EnableJpaAuditing
 @SpringBootApplication
-@EnableJpaAuditing
 @EnableScheduling
 public class NovelApplication {
 

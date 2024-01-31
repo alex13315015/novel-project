@@ -2,6 +2,8 @@ package com.project.novel.dto;
 
 import com.project.novel.entity.Book;
 import com.project.novel.entity.Member;
+import com.project.novel.enums.AgeRating;
+import com.project.novel.enums.Genre;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -26,15 +28,15 @@ public class BookUploadDto {
 
     private MultipartFile bookImage;
 
-    @NotBlank(message = "책 장르를 선택해주세요.")
-    private String bookGenre;
+    @NotNull(message = "책 장르를 선택해주세요.")
+    private Genre bookGenre;
 
     @NotNull(message = "연령 등급을 선택해주세요.")
-    private Integer ageRating;
+    private AgeRating ageRating;
 
     public Book toEntity(String bookName, String bookIntro,
-                         String bookImage, String bookGenre,
-                         Integer ageRating, Member member) {
+                         String bookImage, Genre bookGenre,
+                         AgeRating ageRating, Member member) {
             return Book.builder()
                     .bookName(bookName)
                     .bookIntro(bookIntro)

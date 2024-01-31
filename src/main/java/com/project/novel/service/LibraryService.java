@@ -57,10 +57,10 @@ public class LibraryService {
 
     public Sort getSortType(String sortType){
         if (sortType.equals("createdDateDesc")) {
-            return Sort.by("createdDate").descending();
+            return Sort.by("createdAt").descending();
         }
         if (sortType.equals("createdDateAsc")) {
-            return Sort.by("createdDate").ascending();
+            return Sort.by("createdAt").ascending();
         }
         return Sort.by(sortType).descending();
     }

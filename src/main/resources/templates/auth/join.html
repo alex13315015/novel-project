@@ -1,8 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/layout/layout}">
-<div layout:fragment="content" class="main">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout :: head(~{::title})">
+    <meta charset="UTF-8">
+    <title>로그인</title>
+</head>
+<body th:replace="layout/layout :: content(~{::content})">
+<content>
     <div class="container d-flex justify-content-center">
         <form class="col-auto join" th:action="@{/auth/join}" method="post" th:object="${joinDto}">
             <div class="col-8">
@@ -112,6 +115,7 @@
             </div>
         </form>
     </div>
+
     <script th:inline="javascript">
         /*const token = $("meta[name='_csrf']").attr("content");
         const header = $("meta[name='_csrf_header']").attr("content");
@@ -214,5 +218,6 @@
             })
         });
     </script>
-</div>
+</content>
+</body>
 </html>

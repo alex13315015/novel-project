@@ -25,7 +25,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     @Query("select b from Book b where lower(b.bookName) like lower(concat('%', :keyword, '%'))")
     List<Book> findByBookNameContainingIgnoreCase(@Param("keyword") String keyword);
 
-    @Query("SELECT b, COALESCE(SUM(c.hits), 0) AS hits, COUNT(bl) AS likes, COUNT(s) AS subscribes, m.name " +
+    @Query("SELECT b, COALESCE(SUM(c.hits), 0) AS hits, COUNT(bl) AS likes, COUNT(s) AS subscribes, m.nickname " +
             "FROM Book b " +
             "LEFT JOIN BookLikes bl on b = bl.book " +
             "LEFT JOIN Subscribe s on b = s.book " +
@@ -36,15 +36,15 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     Page<Object[]> findBookInfoListPage(@Param("books") List<Book> books, Pageable pageable);
 
 
-    @Query("select b from Book b where b.createdDate > :sevenDaysAgo ORDER BY createdDate DESC")
+    @Query("select b from Book b where b.createdAt > :sevenDaysAgo ORDER BY createdAt DESC")
     Page<Book> findByCreatedDateAfter(@Param("sevenDaysAgo")LocalDateTime sevenDaysAgo, PageRequest pageRequest);
 
 
     @Query("select b " +
             "from Book b " +
             "left join Chapter c on c.book = b " +
-            "left join View v on v.chapter = c " +
-            "where v.createdDate > :sevenDaysAgo GROUP BY b ORDER BY COUNT(v) DESC")
+            "left join Views v on v.chapter = c " +
+            "where v.updatedAt > :sevenDaysAgo GROUP BY b ORDER BY COUNT(v) DESC")
     Page<Book> findBookPopularityOfWeek(@Param("sevenDaysAgo")LocalDateTime sevenDaysAgo, PageRequest pageRequest);
 
 }

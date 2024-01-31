@@ -29,10 +29,10 @@ logging.level:
   org.hibernate.type: trace
 
 file:
-  dir: "/Users/ijinmo/Desktop/novel-img/"
+  path: "/Users/ijinmo/Desktop/novel-img/"
 
-logging:
-  level:
-    org.hibernate.sql: trace
-    org.hibernate.type: trace
+#logging:
+#  level:
+#    org.hibernate.sql: trace
+#    org.hibernate.type: trace
 

@@ -15,6 +15,6 @@ public class BookSummaryDto {
         this.id = book.getId();
         this.bookName = book.getBookName();
         this.bookImage = book.getBookImage();
-        this.author = book.getMember().getName();
+        this.author = book.getMember().getNickname();
     }
 }

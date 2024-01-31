@@ -1,8 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/layout/layout}">
-<div layout:fragment="content" class="main">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout :: head(~{::title})">
+    <meta charset="UTF-8">
+    <title>로그인</title>
+</head>
+<body th:replace="layout/layout :: content(~{::content})">
+<content>
     <div class="container d-flex justify-content-center">
         <form method="post" th:action="@{/auth/login}">
             <div class="col-8" style="width: 400px">
@@ -26,5 +29,6 @@
             </div>
         </form>
     </div>
-</div>
+</content>
+</body>
 </html>

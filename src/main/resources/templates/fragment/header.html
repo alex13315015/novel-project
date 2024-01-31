@@ -15,7 +15,7 @@
       </a>
 
       <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-        <li><a href="/book/make" class="nav-link px-2 me-2 text-black fw-bolder fs-4">책만들기</a></li>
+        <li><a href="/book/write" class="nav-link px-2 me-2 text-black fw-bolder fs-4">책만들기</a></li>
         <li><a href="/library" class="nav-link px-2 me-2 text-black fw-bolder fs-4">서점</a></li>
         <li><a href="#" class="nav-link px-2 me-2 text-black fw-bolder fs-4">커뮤니티</a></li>
       </ul>
@@ -23,8 +23,10 @@
       <div class="text-end">
         <span sec:authentication="name"></span>
         <a href="/auth/login"><button type="button" class="btn btn-outline-dark me-2" sec:authorize="isAnonymous()">로그인</button></a>
-        <a href="/auth/signup"><button type="button" class="btn btn-dark" sec:authorize="isAnonymous()">회원가입</button></a>
+        <a href="/auth/join"><button type="button" class="btn btn-dark" sec:authorize="isAnonymous()">회원가입</button></a>
+        <a href="/member/myBookList"><button type="button" class="btn btn-outline-dark me-2" sec:authorize="isAuthenticated()">내정보</button></a>
         <a href="/auth/logout"><button type="button" class="btn btn-outline-dark me-2" sec:authorize="isAuthenticated()">로그아웃</button></a>
+
       </div>
     </div>
   </div>
