@@ -69,12 +69,12 @@ public class ChapterService {
                     () -> new IllegalArgumentException("해당하는 챕터를 찾을 수 없습니다.")
             );
             chapterDetailDto = createChapterDetailDto(chapter);
-            ops.set(chapterKey, chapterDetailDto, 1, TimeUnit.MINUTES); // 챕터 상세 정보를 Redis에 1분 동안 캐싱
+            ops.set(chapterKey, chapterDetailDto, 1, TimeUnit.HOURS); // 챕터 상세 정보를 Redis에 1분 동안 캐싱
         }
 
         if (ops.get(viewKey) == null) { // 해당 사용자가 이 챕터를 처음 조회하는 경우
             log.info("해당 사용자가 이 챕터를 처음 조회했습니다.");
-            ops.set(viewKey, true, 1, TimeUnit.MINUTES); // 해당 사용자가 이 챕터를 조회했음을 표시하고, 1분 후에 자동 삭제
+            ops.set(viewKey, true, 1, TimeUnit.HOURS); // 해당 사용자가 이 챕터를 조회했음을 표시하고, 1분 후에 자동 삭제
             ops.increment("chapter:hits:" + chapterId, 1); // 조회수 증가
         }
 
@@ -95,7 +95,7 @@ public class ChapterService {
                 chapterIdList.add(chapter.getId());
             }
 
-            ops.set(bookKey, chapterIdList, 1, TimeUnit.MINUTES);
+            ops.set(bookKey, chapterIdList, 1, TimeUnit.HOURS);
         } else {
             // Redis에서 가져온 데이터 Long 타입으로 변환
             chapterIdList = chapterIdList.stream()
@@ -170,7 +170,7 @@ public class ChapterService {
         String chapterKey = "chapter:detail:" + chapterId;
         ValueOperations<String, Object> ops = redisTemplate.opsForValue();
 
-        ops.set(chapterKey, createChapterDetailDto(chapter), 1, TimeUnit.MINUTES); // 챕터 상세 정보를 Redis에 1분 동안 캐싱
+        ops.set(chapterKey, createChapterDetailDto(chapter), 1, TimeUnit.HOURS); // 챕터 상세 정보를 Redis에 1분 동안 캐싱
     }
 
     private ChapterDetailDto createChapterDetailDto(Chapter chapter) {

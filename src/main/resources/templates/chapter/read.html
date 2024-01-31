@@ -158,6 +158,9 @@
         });
 
         $('#nextChapter').click(function () {
+            if (chapterId === undefined) {
+                chapterId = Number.MAX_SAFE_INTEGER; // 매우 큰 숫자로 설정
+            }
             $.ajax({
                 type: 'GET',
                 url: '/api/book/'+bookId+'/chapter/'+chapterId+'/next',
@@ -183,8 +186,12 @@
                     window.history.pushState({}, '', '/chapter/read/' + chapterId);
 
                 },
-                error: function (){
-                    alert('다음 장을 불러오는데 실패했습니다.');
+                error: function (jqXHR) {
+                    if (jqXHR.status === 400) {
+                        alert('다음 장이 없습니다.');
+                    } else {
+                        alert('다음 장을 불러오는데 실패했습니다.');
+                    }
                 }
             });
         });
@@ -214,8 +221,12 @@
                     // 브라우저의 주소창 업데이트
                     window.history.pushState({}, '', '/chapter/read/' + chapterId);
                 },
-                error: function (){
-                    alert('이전 장을 불러오는데 실패했습니다.');
+                error: function (jqXHR) {
+                    if (jqXHR.status === 400) {
+                        alert('이전 장이 없습니다.');
+                    } else {
+                        alert('이전 장을 불러오는데 실패했습니다.');
+                    }
                 }
             });
         });

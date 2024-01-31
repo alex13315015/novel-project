@@ -46,4 +46,12 @@ public class MemberController {
         return "member/myBookInfo";
     }
 
+    /*@GetMapping("myRecent")
+    public String myRecent(@AuthenticationPrincipal CustomUserDetails customUserDetails, Model model,
+                           @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        // 최근 본 책
+        model.addAttribute("myRecent", bookService.getMyRecent(customUserDetails.getLoggedMember().getId(), pageable));
+        return "member/myRecent";
+    }*/
+
 }
