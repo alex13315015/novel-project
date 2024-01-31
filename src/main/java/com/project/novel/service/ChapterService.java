@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.time.format.DateTimeFormatter;
@@ -122,13 +123,8 @@ public class ChapterService {
 
     @Transactional
     public ChapterDetailDto getPrevChapter(Long currentChapterId, Long bookId, String userId) {
-        log.info("currentChapterId: " + currentChapterId);
-
         List<Object> chapterIdList = getChapterList(bookId);
         int currentIndex = chapterIdList.indexOf(currentChapterId);
-
-        log.info(chapterIdList.toString());
-        log.info("currentIndex: " + currentIndex);
 
         if (currentIndex > 0) { // 이전 챕터가 있는 경우
             Long previousChapterId = (Long) chapterIdList.get(currentIndex - 1);
@@ -146,24 +142,21 @@ public class ChapterService {
         if(chapter.getBook().getMember().getId().equals(loggedId)) {
             chapter.deactivate();
         } else {
-            throw new IllegalArgumentException("해당 챕터의 작성자가 아닙니다.");
+            throw new AccessDeniedException("해당 챕터의 작성자가 아닙니다.");
         }
     }
 
-    public ChapterUploadDto getChapter(Long chapterId, Long memberId) {
+    // 수정을 위해 챕터 정보를 가져옴
+    public ChapterUploadDto getModifiedChapter(Long chapterId) {
         Chapter chapter = chapterRepository.findById(chapterId).orElseThrow(
                 () -> new IllegalArgumentException("해당하는 챕터를 찾을 수 없습니다.")
         );
-        if(chapter.getBook().getMember().getId().equals(memberId)) {
-            return ChapterUploadDto.builder()
-                    .title(chapter.getTitle())
-                    .contents(chapter.getContents())
-                    .price(chapter.getPrice())
-                    .bookId(chapter.getBook().getId())
-                    .build();
-        } else {
-            throw new IllegalArgumentException("해당 챕터의 작성자가 아닙니다.");
-        }
+        return ChapterUploadDto.builder()
+                .title(chapter.getTitle())
+                .contents(chapter.getContents())
+                .price(chapter.getPrice())
+                .bookId(chapter.getBook().getId())
+                .build();
     }
 
     @Transactional

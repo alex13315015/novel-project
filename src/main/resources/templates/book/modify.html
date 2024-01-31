@@ -57,9 +57,27 @@
                 </div>
 
             </form>
+            <input type="hidden" id="bookId" name="bookId" th:value="${bookId}">
         </div>
     </div>
     <script>
+        $(document).ready(function() {
+            let bookId = $('#bookId').val(); // 숨겨진 입력 필드에서 bookId 값을 읽습니다.
+            console.log(bookId);
+            $.ajax({
+                url: '/api/checkAccess/' + bookId,
+                type: 'GET',
+                success: function(response) {
+                },
+                error: function(jqXHR) {
+                    if (jqXHR.status === 403) {
+                        alert(jqXHR.responseText); // 서버에서 보낸 메시지를 경고문으로 띄웁니다.
+                        window.history.back();
+
+                    }
+                }
+            });
+        });
         function validateImage() {
             let fileName = document.getElementById("file").value;
             let idxDot = fileName.lastIndexOf(".") + 1;

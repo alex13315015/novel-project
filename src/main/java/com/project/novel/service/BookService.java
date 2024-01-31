@@ -222,19 +222,15 @@ public class BookService {
 
     // 책 정보 수정을 위해 책 정보를 가져옴
     @Transactional
-    public BookUploadDto getModifiedBook(Long bookId, Long loggedId) {
+    public BookUploadDto getModifiedBook(Long bookId) {
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 책은 존재하지 않습니다."));
-        if(book.getMember().getId().equals(loggedId)) {
-            return BookUploadDto.builder()
-                    .bookName(book.getBookName())
-                    .bookIntro(book.getBookIntro())
-                    .bookGenre(book.getBookGenre())
-                    .ageRating(book.getAgeRating())
-                    .build();
-        } else {
-            throw new IllegalArgumentException("해당 책의 작성자가 아닙니다.");
-        }
+        return BookUploadDto.builder()
+                .bookName(book.getBookName())
+                .bookIntro(book.getBookIntro())
+                .bookGenre(book.getBookGenre())
+                .ageRating(book.getAgeRating())
+                .build();
     }
 
     @Transactional
