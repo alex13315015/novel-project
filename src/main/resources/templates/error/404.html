@@ -1,11 +1,15 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-    <h1>404 Error</h1>
-    <h1 th:text="${errorMessage}"></h1>
-</body>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<div layout:fragment="content" class="main">
+    <div class="container">
+        <h1>서비스를 제공할 수 없습니다.</h1>
+        <h2 th:text="${errorMessage}"></h2>
+        <ul class="mt-3">
+            <li><a class="btn btn-outline-dark mb-2" href="/">홈으로 돌아가기</a></li>
+            <li><a class="btn btn-outline-dark" href="javascript:history.back()">이전 페이지로 돌아가기</a></li>
+        </ul>
+    </div>
+</div>
 </html>
