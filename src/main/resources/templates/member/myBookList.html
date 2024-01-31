@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="layout/layout :: head(~{::title})">
+    <meta charset="UTF-8">
+    <title>home</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+<body th:replace="layout/layout :: content(~{::content})">
+<content>
+    <div class="container">
+        <div class="border-bottom pt-2 pb-2">
+            <a href="/member/myBookList" class="btn btn-outline-primary">내 작품</a>
+            <a href="/member/myBookmark" class="btn btn-outline-primary">책갈피</a>
+            <a href="/member/myInterest" class="btn btn-outline-primary">관심작품</a>
+            <a href="/member/myRecent" class="btn btn-outline-primary">최근 본 작품</a>
+        </div>
+        <div class="book-list">
+            <ul>
+                <th:block th:each="item:${myBookList}">
+                    <li class="pt-2 pb-2 mt-2 mb-2 border border-opacity-25 book-item">
+                        <a th:href="@{|/member/myBookList/${item.id}|}" class="subj">
+                            <div class="d-flex align-items-center">
+                                <div class="mx-3"><img class="rounded" src="/images/book.png" alt="" th:src="@{|/upload/${item.bookImage}|}"></div>
+                                <div style="max-width: 100%; vertical-align: middle">
+                                    <p style="font-weight: bold; color: black; margin-bottom: 5px" th:text="${item.bookName}"></p>
+                                    <p style="color: #4d5154" th:text="${item.nickname}"></p>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                </th:block>
+            </ul>
+            <div>
+                <button class="btn btn-outline-primary mt-5 btn-more">더보기</button>
+            </div>
+        </div>
+    </div>
+    <script th:inline="javascript">
+        const memberId = [[${#authentication.principal.loggedMember.id}]];
+        let loadPage = 0;
+        let totalPages = [[${myBookList.totalPages}]];
+        let sort = 'desc'
+
+        $(".btn-more").on("click", function () {
+            if(loadPage>=totalPages) {
+                $(this).hide();
+            } else {
+                loadPage++; // 페이지 번호 증가
+                loadBookList(memberId, loadPage);
+            }
+        });
+
+        function loadBookList(memberId, loadPage) {
+            $.ajax({
+                type: 'GET',
+                url: `/api/book/${memberId}/bookList?page=${loadPage}&sort=createdAt,${sort}`,
+                success: function(response) {
+                    console.log(response);
+
+                    totalPages = response.totalPages;
+                    let bookListUl = $('.book-list ul');
+
+                    // 책 목록 추가
+                    for (let book of response.content) {
+                        bookListUl.append(bookToHtml(book));
+                    }
+                },
+                error: function() {
+                    alert('책 목록을 불러오는데 실패했습니다.');
+                }
+            })
+        }
+
+        function bookToHtml(book) {
+            // 책 정보를 HTML 요소로 변환하는 함수를 작성합니다.
+            // 이 함수는 서버에서 반환하는 책 정보의 형식에 따라 달라집니다.
+            let bookName = book.bookName;
+            let nickname = book.nickname;
+            let bookImage = book.bookImage;
+            let id = book.id;
+
+            return `
+                <li class="pt-2 pb-2 mt-2 mb-2 border border-opacity-25 book-item">
+                    <a href="/member/myBookList/${id}" class="subj">
+                        <div class="d-flex align-items-center">
+                            <div class="mx-3"><img class="rounded"  src="/upload/${bookImage}" alt=""></div>
+                            <div style="max-width: 100%; vertical-align: middle">
+                                <p style="font-weight: bold; color: black; margin-bottom: 5px">${bookName}</p>
+                                <p style="color: #4d5154">${nickname}</p>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+            `;
+        }
+    </script>
+</content>
+</body>
+</html>
+
+

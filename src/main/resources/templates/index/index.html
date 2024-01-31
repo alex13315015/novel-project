@@ -1,9 +1,46 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/layout}">
-<div layout:fragment="content" class="main">
-    <div class="container d-flex justify-content-center">
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="layout/layout :: head(~{::title})">
+    <meta charset="UTF-8">
+    <title>home</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+<body th:replace="layout/layout :: content(~{::content})">
+<content>
+    <div>
+        <div class="container px-4 py-5" id="featured-3">
+            <h2 class="pb-2 border-bottom">신작</h2>
+            <div class="row g-4 py-5 row-cols-1 row-cols-lg-5">
+                <div class="feature col" th:each="newBook: ${newBookOfWeeks}">
+                    <a th:href="@{/book/library/{id}(id=${newBook.id})}">
+                        <div class="d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
+                            <img src="/images/book.png" alt="" th:src="@{|/upload/${newBook.bookImage}|}" class="bi" width="200px" height="200px">
+                        </div>
+                        <h3 class="fs-2 text-body-emphasis text-center" th:text="${newBook.getBookName}">title</h3>
+                        <div class="text-center" th:text="${newBook.getAuthor}"></div>
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
-</html>>
+
+    <div>
+        <div class="container px-4 py-5" id="featured-4">
+            <h2 class="pb-2 border-bottom">이주의 인기작</h2>
+            <div class="row g-4 py-5 row-cols-1 row-cols-lg-5">
+                <div class="feature col" th:each="popularityBook: ${popularityBookOfWeeks}">
+                    <a th:href="@{/book/library/{id}(id=${popularityBook.id})}">
+                        <div class="d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
+                            <img src="/images/book.png" alt="" th:src="@{|/upload/${popularityBook.bookImage}|}" class="bi" width="200px" height="200px">
+                        </div>
+                        <h3 class="fs-2 text-body-emphasis text-center" th:text="${popularityBook.getBookName}">title</h3>
+                        <div class="text-center" th:text="${popularityBook.getAuthor}"></div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</content>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="layout/layout :: head(~{::title})">
+    <meta charset="UTF-8">
+    <title>home</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+<body th:replace="layout/layout :: content(~{::content})">
+<content>
+    <div class="container justify-content-center d-flex">
+        <!-- 소설(텍스트) 작성 -->
+        <div class="col-8">
+            <h2>새 작품 쓰기</h2>
+            <form method="post" action="/book/write" enctype="multipart/form-data" th:object="${bookUploadDto}">
+                <div class="mb-3">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">제목</label>
+                        <input class="form-control" type="text" id="title" name="bookName" placeholder="제목" th:field="*{bookName}" th:maxlength="30">
+                        <div class="form-text text-danger" th:if="${#fields.hasErrors('bookName')}" th:errors="*{bookName}"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="genre" class="form-label">장르</label>
+                        <select class="form-select" id="genre" name="bookGenre" th:field="*{bookGenre}">
+                            <option th:each="genre : ${genre}" th:text="${genre.genreName}" th:value="${genre.toString()}">장르선택</option>
+                        </select>
+                        <div class="form-text text-danger" th:if="${#fields.hasErrors('bookGenre')}" th:errors="*{bookGenre}"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="file" class="form-label">표지 이미지</label>
+                        <input class="form-control" type="file" id="file" name="bookImage" th:field="*{bookImage}" onchange="validateImage()">
+                        <div class="form-text text-danger" th:text="${imageError}"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="content" class="form-label">작품 소개</label>
+                        <textarea class="form-control" id="content" name="bookIntro" rows="10" th:field="*{bookIntro}" th:maxlength="800"></textarea>
+                        <div class="form-text text-danger" th:if="${#fields.hasErrors('bookIntro')}" th:errors="*{bookIntro}"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="ageRating" class="form-label">작품 나이 제한 설정</label>
+                        <select class="form-select" id="ageRating" name="ageRating" th:field="*{ageRating}">
+                            <option th:each="ageRating : ${ageRating}" th:text="${ageRating.ratingName}" th:value="${ageRating.toString()}">나이 제한 설정</option>
+                        </select>
+                        <div class="form-text text-danger" th:if="${#fields.hasErrors('ageRating')}" th:errors="*{ageRating}"></div>
+                    </div>
+
+                </div>
+
+                <div class="mt-5 d-grid">
+                    <button class="btn btn-primary">저장</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+    <script>
+        function validateImage() {
+            var fileName = document.getElementById("file").value;
+            var idxDot = fileName.lastIndexOf(".") + 1;
+            var extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
+            (extFile==="jpg" || extFile==="jpeg" || extFile==="png") ? true : alert("확장자 jpg, jpeg, png만 가능합니다.");
+            (extFile==="jpg" || extFile==="jpeg" || extFile==="png") ? true : document.getElementById("file").value = ""; // 파일 선택을 취소
+        }
+    </script>
+</content>
+</body>
+</html>

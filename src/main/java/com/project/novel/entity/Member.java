@@ -44,7 +44,6 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private Grade role;
     // 등급에 따른 role 부여하는 컬럼
-
     private String profileImage;
 
     @CreatedDate

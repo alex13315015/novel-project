@@ -19,4 +19,5 @@ public interface MemberRepository extends JpaRepository<Member,Integer> {
 
     @Query("SELECT COUNT(*) FROM Member m WHERE m.email = :email")
     int checkDuplicatedEmail(@Param("email") String email);*/
+
 }

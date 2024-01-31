@@ -26,6 +26,7 @@ public class AuthController {
         model.addAttribute("joinDto",new JoinDto());
         return "/auth/join";
     }
+
     @PostMapping("/join")
     public String joinProcess(@Valid @ModelAttribute JoinDto joinDto,
                               BindingResult bindingResult,
