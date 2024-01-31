@@ -4,6 +4,7 @@ import com.project.novel.dto.BookLikesDto;
 import com.project.novel.dto.BookListDto;
 import com.project.novel.dto.CustomUserDetails;
 import com.project.novel.service.BookService;
+import com.project.novel.service.ViewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class BookApiController {
 
     private final BookService bookService;
+    private final ViewService viewService;
 
 
     @PostMapping("/book/{bookId}/like")
@@ -48,6 +50,12 @@ public class BookApiController {
     public Page<BookListDto> getMyBookList(@PathVariable(name="memberId") Long memberId,
                                            @PageableDefault Pageable pageable) {
         return bookService.getAllMyBook(memberId, pageable);
+    }
+
+    @GetMapping("/book/myRecent")
+    public Page<BookListDto> getMyRecent(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                         @PageableDefault Pageable pageable) {
+        return viewService.recentViewList(customUserDetails.getLoggedMember().getId(), pageable);
     }
 
 }
