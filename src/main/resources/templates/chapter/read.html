@@ -4,10 +4,10 @@
       layout:decorate="~{layout/layout}">
 <div layout:fragment="content" class="main">
     <div id="chapterNavbar" class="navbar fixed-top">
-        <button id="prevChapter" class="btn btn-outline-primary mt-2">
+        <button id="prevChapter" class="btn btn-outline-primary">
             <i class="bi bi-arrow-left" style="font-size: x-large"></i> 이전화
         </button>
-        <button id="nextChapter" class="btn btn-outline-primary mt-2">
+        <button id="nextChapter" class="btn btn-outline-primary">
             다음화 <i class="bi bi-arrow-right" style="font-size: x-large"></i>
         </button>
     </div>
@@ -165,6 +165,10 @@
         });
 
         $('#nextChapter').click(function () {
+            if (chapterId === undefined) {
+                alert("목록으로 이동 후 다시 시도해주세요.")
+                return;
+            }
             $.ajax({
                 type: 'GET',
                 url: '/api/book/'+bookId+'/chapter/'+chapterId+'/next',
@@ -201,6 +205,10 @@
         });
 
         $('#prevChapter').click(function () {
+            if (chapterId === undefined) {
+                alert("목록으로 이동 후 다시 시도해주세요.")
+                return;
+            }
             $.ajax({
                 type: 'GET',
                 url: '/api/book/'+bookId+'/chapter/'+chapterId+'/prev',
