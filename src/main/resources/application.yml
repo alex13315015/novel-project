@@ -1,4 +1,10 @@
 spring:
+
+  output:
+    ansi:
+      enabled: always
+
+
   datasource:
     url: jdbc:mysql://localhost:3306/novel
     username: root

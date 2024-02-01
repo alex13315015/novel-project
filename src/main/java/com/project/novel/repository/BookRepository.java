@@ -25,7 +25,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     @Query("select b from Book b where lower(b.bookName) like lower(concat('%', :keyword, '%'))")
     List<Book> findByBookNameContainingIgnoreCase(@Param("keyword") String keyword);
 
-    @Query("SELECT b, COALESCE(SUM(c.hits), 0) AS hits, COUNT(bl) AS likes, COUNT(s) AS subscribes, m.nickname " +
+    @Query("SELECT b, COALESCE(SUM(c.hits), 0) AS hits, COUNT(DISTINCT bl) AS likes, COUNT(DISTINCT s) AS subscribes, m.nickname " +
             "FROM Book b " +
             "LEFT JOIN BookLikes bl on b = bl.book " +
             "LEFT JOIN Subscribe s on b = s.book " +
