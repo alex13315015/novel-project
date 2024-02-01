@@ -61,33 +61,35 @@
             })
         }
 
+        // 더보기 버튼 클릭 시 책 목록 추가
         function loadMoreBooks(loadFunction) {
             if(loadPage>=totalPages) {
                 $btnMore.hide();
             } else {
-                loadPage++; // 페이지 번호 증가
+                loadPage++;
                 loadFunction(memberId, loadPage);
             }
         }
 
+        // 더보기 버튼 이벤트
         $btnMore.on("click", function () {
             loadMoreBooks(function(memberId, loadPage) {
                 loadBooks(`/api/book/${memberId}/bookList?page=${loadPage}&sort=createdAt,${sort}`, memberId, loadPage);
             });
         });
 
-
+        // 최근 본 작품 목록
         $("#myRecent").on("click", function () {
-            // 작품 목록 비우기
             $('.book-list ul').empty();
-            // 페이지 번호 초기화
             loadPage = 0;
-            // 더보기 버튼 이벤트 변경
+            $btnMore.show();
+            // 더보기 버튼 이벤트 변경 + 추가 페이지 불러오기
             $btnMore.off("click").on("click", function () {
                 loadMoreBooks(function(memberId, loadPage) {
                     loadBooks(`/api/book/myRecent?page=${loadPage}&sort=updatedAt,${sort}`, memberId, loadPage);
                 });
             });
+            // 최근 본 작품 목록 첫 페이지 불러오기
             loadBooks(`/api/book/myRecent?page=${loadPage}&sort=updatedAt,${sort}`, memberId, loadPage);
         });
 

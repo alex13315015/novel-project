@@ -113,3 +113,23 @@ a.btn-sort.active {
 .book-item {
     width: calc(50% - 10px); /* 50% 너비에 양쪽 마진 10px을 뺀 값 */
 }
+
+#chapterNavbar {
+    background-color: black;
+    color: white;
+}
+
+#chapterNavbar .bi {
+    color: white;
+}
+
+#chapterNavbar button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: x-large;
+}
+
+#chapterNavbar button:hover {
+    color: #ddd;
+}
