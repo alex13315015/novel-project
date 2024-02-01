@@ -70,6 +70,6 @@ public class OAuth2DetailsService extends DefaultOAuth2UserService {
                     .build();
             memberRepository.save(returnMember);
         }
-        return new CustomUserDetails(returnMember,oAuth2User.getAttributes());
+        return (OAuth2User) new CustomUserDetails(returnMember, oAuth2User.getAttributes());
     }
 }

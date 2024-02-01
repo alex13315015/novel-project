@@ -75,6 +75,8 @@ public class BookController {
         BookUploadDto bookUploadDto = bookService.getModifiedBook(bookId, customUserDetails.getLoggedMember().getId());
         model.addAttribute("bookUploadDto", bookUploadDto);
         model.addAttribute("bookId", bookId);
+        model.addAttribute("genre", Genre.values());
+        model.addAttribute("ageRating", AgeRating.values());
         return "book/modify";
     }
 

@@ -23,14 +23,7 @@
                     <div class="mb-3">
                         <label for="genre" class="form-label">장르</label>
                         <select class="form-select" id="genre" name="bookGenre" th:field="*{bookGenre}">
-                            <option value="">장르선택</option>
-                            <option value="fantasy">판타지</option>
-                            <option value="romance">로맨스</option>
-                            <option value="orientalFantasy">무협</option>
-                            <option value="detective">추리</option>
-                            <option value="horror">공포</option>
-                            <option value="SF">SF</option>
-                            <option value="etc">기타</option>
+                            <option th:each="genre : ${genre}" th:text="${genre.genreName}"  th:value="${genre.toString()}">장르선택</option>
                         </select>
                         <div class="form-text text-danger" th:if="${#fields.hasErrors('bookGenre')}" th:errors="*{bookGenre}"></div>
                     </div>
@@ -50,11 +43,7 @@
                     <div class="mb-3">
                         <label for="ageRating" class="form-label">작품 나이 제한 설정</label>
                         <select class="form-select" id="ageRating" name="ageRating" th:field="*{ageRating}">
-                            <option value="">나이 제한 설정</option>
-                            <option value="0">전체 이용가</option>
-                            <option value="12">12세 이용가</option>
-                            <option value="15">15세 이용가</option>
-                            <option value="19">19세 이용가</option>
+                            <option th:each="ageRating : ${ageRating}" th:text="${ageRating.ratingName}" th:value="${ageRating.toString()}">나이 제한 설정</option>
                         </select>
                         <div class="form-text text-danger" th:if="${#fields.hasErrors('ageRating')}" th:errors="*{ageRating}"></div>
                     </div>
