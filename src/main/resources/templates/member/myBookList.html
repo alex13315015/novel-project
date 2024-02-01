@@ -9,19 +9,46 @@
 <body th:replace="layout/layout :: content(~{::content})">
 <content>
     <div class="container">
-        <div class="border-bottom pt-2 pb-2">
-            <a href="/member/myBookList" class="btn btn-outline-primary">내 작품</a>
-            <a href="/member/myBookmark" class="btn btn-outline-primary">책갈피</a>
-            <a href="/member/myInterest" class="btn btn-outline-primary">관심작품</a>
-            <a href="/member/myRecent" class="btn btn-outline-primary">최근 본 작품</a>
+        <div class="button-group mt-2 mb-2 pt-2 pb-3">
+            <!-- 내 작품 버튼 -->
+            <a href="/member/myBookList"
+               class="btn btn-outline-dark me-2"
+               style="border-radius: 20px">
+                내 작품
+            </a>
+
+            <!-- 관심작품 버튼 -->
+            <a href="/member/myInterest"
+               class="btn btn-outline-dark me-2"
+               style="border-radius: 20px">
+                관심작품
+            </a>
+
+            <!-- 최근 본 버튼 -->
+            <a id="myRecent"
+               class="btn btn-outline-dark me-2"
+               style="border-radius: 20px">
+                최근 본
+            </a>
         </div>
         <div class="book-list">
             <ul>
+                <!-- 각 책 정보를 반복하여 표시 -->
                 <th:block th:each="item:${myBookList}">
-                    <li class="pt-2 pb-2 mt-2 mb-2 border border-opacity-25 book-item">
+                    <li class="pt-2 pb-2 mt-2 mb-2 book-item">
+                        <!-- 책 정보 링크 -->
                         <a th:href="@{|/member/myBookList/${item.id}|}" class="subj">
                             <div class="d-flex align-items-center">
-                                <div class="mx-3"><img class="rounded" src="/images/book.png" alt="" th:src="@{|/upload/${item.bookImage}|}"></div>
+                                <!-- 책 이미지 -->
+                                <div class="mx-3">
+                                    <img
+                                            style="width: 150px; height: 120px; border-radius: 10px"
+                                            class="border border-opacity-25 rounded"
+                                            th:src="${item.bookImage.startsWith('/images/') ? item.bookImage : '/upload/' + item.bookImage}"
+                                            alt=""
+                                    >
+                                </div>
+                                <!-- 책 이름과 작가 이름 -->
                                 <div style="max-width: 100%; vertical-align: middle">
                                     <p style="font-weight: bold; color: black; margin-bottom: 5px" th:text="${item.bookName}"></p>
                                     <p style="color: #4d5154" th:text="${item.nickname}"></p>
@@ -31,33 +58,45 @@
                     </li>
                 </th:block>
             </ul>
+            <!-- 더보기 버튼 -->
             <div>
                 <button class="btn btn-outline-primary mt-5 btn-more">더보기</button>
             </div>
         </div>
     </div>
     <script th:inline="javascript">
+        // 로그인한 회원의 ID
         const memberId = [[${#authentication.principal.loggedMember.id}]];
+
+        // 페이지 정보
         let loadPage = 0;
         let totalPages = [[${myBookList.totalPages}]];
         let sort = 'desc'
 
-        $(".btn-more").on("click", function () {
-            if(loadPage>=totalPages) {
-                $(this).hide();
-            } else {
-                loadPage++; // 페이지 번호 증가
-                loadBookList(memberId, loadPage);
-            }
-        });
+        // 더보기 버튼
+        let $btnMore = $(".btn-more");
 
-        function loadBookList(memberId, loadPage) {
+        // 태그 정보
+        const tags = {
+            myBookList: {
+                url: (memberId, loadPage) => `/api/book/${memberId}/bookList?page=${loadPage}&sort=createdAt,${sort}`,
+                shouldShowContinueReading: () => false
+            },
+            myRecent: {
+                url: (memberId, loadPage) => `/api/book/myRecent?page=${loadPage}&sort=updatedAt,${sort}`,
+                shouldShowContinueReading: () => true
+            }
+        };
+
+        // 현재 선택된 태그
+        let currentTag = 'myBookList';
+
+        // 책 목록을 불러오는 함수
+        function loadBooks(url) {
             $.ajax({
                 type: 'GET',
-                url: `/api/book/${memberId}/bookList?page=${loadPage}&sort=createdAt,${sort}`,
+                url: url,
                 success: function(response) {
-                    console.log(response);
-
                     totalPages = response.totalPages;
                     let bookListUl = $('.book-list ul');
 
@@ -72,25 +111,80 @@
             })
         }
 
+        // 더보기 버튼 클릭 시 책 목록 추가하는 함수
+        function loadMoreBooks(loadFunction) {
+            if(loadPage>=totalPages) {
+                $btnMore.hide();
+            } else {
+                loadPage++;
+                loadFunction(memberId, loadPage);
+            }
+        }
+
+        // 더보기 버튼 이벤트
+        $btnMore.on("click", function () {
+            loadMoreBooks(function(memberId, loadPage) {
+                let url = tags[currentTag].url(memberId, loadPage);
+                loadBooks(url, memberId, loadPage);
+            });
+        });
+
+        // 태그 클릭 이벤트
+        for (let tag in tags) {
+            $(`#${tag}`).on("click", function () {
+                $('.book-list ul').empty();
+                loadPage = 0;
+                $btnMore.show();
+                currentTag = tag;
+
+                // 첫 페이지 불러오기
+                let url = tags[currentTag].url(memberId, loadPage);
+                loadBooks(url, memberId, loadPage);
+            });
+        }
+
+        // 책 정보를 HTML로 변환하는 함수
         function bookToHtml(book) {
-            // 책 정보를 HTML 요소로 변환하는 함수를 작성합니다.
-            // 이 함수는 서버에서 반환하는 책 정보의 형식에 따라 달라집니다.
-            let bookName = book.bookName;
-            let nickname = book.nickname;
-            let bookImage = book.bookImage;
-            let id = book.id;
+            let imageUrl = book.bookImage.startsWith("/images/") ? book.bookImage : "/upload/" + book.bookImage;
+            let continueReadingButton = '';
+
+            if (book.chapterId && tags[currentTag].shouldShowContinueReading()) {
+                continueReadingButton = `
+            <a href="/chapter/read/${book.chapterId}" class="continue-reading-button">
+                이어보기
+                <i class="bi bi-arrow-right" style="font-weight: bold; font-size: larger"></i>
+            </a>
+        `;
+            }
 
             return `
-                <li class="pt-2 pb-2 mt-2 mb-2 border border-opacity-25 book-item">
-                    <a href="/member/myBookList/${id}" class="subj">
+                <!-- 책 항목 -->
+                <li class="pt-2 pb-3 mt-2 mb-2 book-item">
+                    <!-- 책 정보 링크 -->
+                    <a href="/member/myBookList/${book.id}" class="subj">
                         <div class="d-flex align-items-center">
-                            <div class="mx-3"><img class="rounded"  src="/upload/${bookImage}" alt=""></div>
+                            <!-- 책 이미지 -->
+                            <div class="mx-3">
+                                <img
+                                    style="width: 150px; height: 120px; border-radius: 10px"
+                                    class="border border-opacity-25 rounded"
+                                    src="${imageUrl}"
+                                    alt=""
+                                >
+                            </div>
+                            <!-- 책 이름과 작가 이름 -->
                             <div style="max-width: 100%; vertical-align: middle">
-                                <p style="font-weight: bold; color: black; margin-bottom: 5px">${bookName}</p>
-                                <p style="color: #4d5154">${nickname}</p>
+                                <p style="font-weight: bold; color: black; margin-bottom: 5px">
+                                    ${book.bookName}
+                                </p>
+                                <p style="color: #4d5154">
+                                    ${book.nickname}
+                                </p>
                             </div>
                         </div>
                     </a>
+                    <!-- 이어보기 버튼 -->
+                    ${continueReadingButton}
                 </li>
             `;
         }

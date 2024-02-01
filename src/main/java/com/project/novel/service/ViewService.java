@@ -1,13 +1,15 @@
 package com.project.novel.service;
 
+import com.project.novel.dto.BookListDto;
 import com.project.novel.entity.Views;
 import com.project.novel.repository.ChapterRepository;
 import com.project.novel.repository.MemberRepository;
 import com.project.novel.repository.ViewRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -31,8 +33,8 @@ public class ViewService {
         }
     }
 
-    public List<Views> recentViewList(Long loggedId) {
-        return viewRepository.findAllByMemberId(loggedId);
+    public Page<BookListDto> recentViewList(Long loggedId, Pageable pageable) {
+        return viewRepository.findRecentlyViewedBooks(loggedId, pageable);
     }
 
 }

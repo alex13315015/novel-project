@@ -27,7 +27,7 @@
                         <option value="1">유료</option>
                     </select>
                 </div>
-                <input type="hidden" id="bookId" name="bookId" th:field="*{bookId}" th:value="${chapterUploadDto.bookId}">
+                <input type="hidden" id="bookId" name="bookId" th:value="${chapterUploadDto.bookId}">
                 <div class="mt-5 d-grid">
                     <button class="btn btn-primary" type="submit">작성</button>
                 </div>
@@ -35,6 +35,23 @@
         </div>
     </div>
     <script th:inline="javascript">
+        $(document).ready(function() {
+            let bookId = $('#bookId').val(); // 숨겨진 입력 필드에서 bookId 값을 읽습니다.
+            $.ajax({
+                url: '/api/checkAccess/' + bookId,
+                type: 'GET',
+                success: function(response) {
+                },
+                error: function(jqXHR) {
+                    if (jqXHR.status === 403) {
+                        alert(jqXHR.responseText); // 서버에서 보낸 메시지를 경고문으로 띄웁니다.
+                        window.history.back();
+
+                    }
+                }
+            });
+        });
+
         document.querySelector('form').addEventListener('submit', function(event) {
             const title = document.getElementById('title').value;
             const contents = document.getElementById('contents').value;

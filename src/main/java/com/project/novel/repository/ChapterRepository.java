@@ -20,6 +20,8 @@ public interface ChapterRepository extends JpaRepository<Chapter, Long> {
             "FROM Chapter c WHERE c.book.id = :bookId AND c.isActive = true")
     Page<ChapterDto> findAllByBookId(@Param("bookId") Long bookId, Pageable pageable);
 
+    @Query("SELECT SUM(c.hits) FROM Chapter c WHERE c.book.id = :bookId AND c.isActive = true")
+    Long sumHitsByBookId(@Param("bookId") Long bookId);
 
     @Modifying
     @Transactional

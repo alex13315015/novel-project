@@ -1,7 +1,7 @@
 package com.project.novel.entity;
 
+import com.project.novel.enums.BookGenre;
 import com.project.novel.enums.AgeRating;
-import com.project.novel.enums.Genre;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -39,8 +39,9 @@ public class Book extends BaseEntity{
     @NotBlank(message = "책 소개를 입력해주세요.")
     private String bookIntro;
 
+    @Enumerated(EnumType.STRING)
     @NotNull(message = "책 장르를 선택해주세요.")
-    private Genre bookGenre;
+    private BookGenre bookGenre;
 
     @NotNull(message = "연령 등급을 선택해주세요.")
     private AgeRating ageRating;
@@ -57,7 +58,7 @@ public class Book extends BaseEntity{
     private boolean isActive;
 
     @Builder
-    public Book(String bookName, String bookImage, Member member, String bookIntro, Genre bookGenre, AgeRating ageRating) {
+    public Book(String bookName, String bookImage, Member member, String bookIntro, BookGenre bookGenre, Integer ageRating) {
         this.bookName = bookName;
         this.bookImage = bookImage;
         this.member = member;
@@ -66,13 +67,12 @@ public class Book extends BaseEntity{
         this.ageRating = ageRating;
         this.isActive = true;
     }
-
     public void deactivate() {
         this.isActive = false;
     }
 
     // 책 정보 수정
-    public void update(String bookName, String bookImage, String bookIntro, Genre bookGenre, AgeRating ageRating) {
+    public void update(String bookName, String bookImage, String bookIntro, BookGenre bookGenre, Integer ageRating) {
         this.bookName = bookName;
         this.bookImage = bookImage;
         this.bookIntro = bookIntro;

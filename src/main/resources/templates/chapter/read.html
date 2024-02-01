@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="layout/layout :: head(~{::title})">
     <meta charset="UTF-8">
     <title>home</title>
@@ -8,9 +7,13 @@
 </head>
 <body th:replace="layout/layout :: content(~{::content})">
 <content>
-    <div id="navbar" class="navbar">
-        <button id="prevChapter" class="btn btn-outline-primary mt-2">이전 장</button>
-        <button id="nextChapter" class="btn btn-outline-primary mt-2">다음 장</button>
+    <div id="chapterNavbar" class="navbar fixed-top">
+        <button id="prevChapter" class="btn btn-outline-primary">
+            <i class="bi bi-arrow-left" style="font-size: x-large"></i> 이전화
+        </button>
+        <button id="nextChapter" class="btn btn-outline-primary">
+            다음화 <i class="bi bi-arrow-right" style="font-size: x-large"></i>
+        </button>
     </div>
     <div class="container">
         <div class="d-flex justify-content-center">
@@ -53,10 +56,13 @@
     <script th:inline="javascript">
         const loggedId = [[${#authentication.principal.loggedMember.id}]];
         const bookId = [[${chapterDetailDto.bookId}]];
+
         let chapterId = [[${chapterDetailDto.chapterId}]];
         let loadPage = 0;
         let totalPages = 0;
         let sort = 'desc'
+        let navbarVisible = false;
+
         loadReviewList(chapterId, loadPage)
 
         function loadReviewList(chapterId, loadPage) {
@@ -163,6 +169,10 @@
         });
 
         $('#nextChapter').click(function () {
+            if (chapterId === undefined) {
+                alert("목록으로 이동 후 다시 시도해주세요.")
+                return;
+            }
             $.ajax({
                 type: 'GET',
                 url: '/api/book/'+bookId+'/chapter/'+chapterId+'/next',
@@ -188,13 +198,21 @@
                     window.history.pushState({}, '', '/chapter/read/' + chapterId);
 
                 },
-                error: function (){
-                    alert('다음 장을 불러오는데 실패했습니다.');
+                error: function (jqXHR) {
+                    if (jqXHR.status === 400) {
+                        alert('다음 장이 없습니다.');
+                    } else {
+                        alert('다음 장을 불러오는데 실패했습니다.');
+                    }
                 }
             });
         });
 
         $('#prevChapter').click(function () {
+            if (chapterId === undefined) {
+                alert("목록으로 이동 후 다시 시도해주세요.")
+                return;
+            }
             $.ajax({
                 type: 'GET',
                 url: '/api/book/'+bookId+'/chapter/'+chapterId+'/prev',
@@ -219,10 +237,29 @@
                     // 브라우저의 주소창 업데이트
                     window.history.pushState({}, '', '/chapter/read/' + chapterId);
                 },
-                error: function (){
-                    alert('이전 장을 불러오는데 실패했습니다.');
+                error: function (jqXHR) {
+                    if (jqXHR.status === 400) {
+                        alert('이전 장이 없습니다.');
+                    } else {
+                        alert('이전 장을 불러오는데 실패했습니다.');
+                    }
                 }
             });
+        });
+
+        $(document).click(function(event) {
+            // 클릭한 요소가 네비게이션바나 챕터 내용이 아닐 경우
+            if (!$(event.target).closest('#navbar').length) {
+                if (navbarVisible) {
+                    // 네비게이션바 숨기기
+                    $('#chapterNavbar').hide();
+                    navbarVisible = false;
+                } else {
+                    // 네비게이션바 보이기
+                    $('#chapterNavbar').show();
+                    navbarVisible = true;
+                }
+            }
         });
     </script>
 </content>

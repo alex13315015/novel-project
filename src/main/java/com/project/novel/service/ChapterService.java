@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.time.format.DateTimeFormatter;
@@ -39,6 +40,12 @@ public class ChapterService {
 //        book.chapterUpdated(); // 책의 최근 업데이트 날짜를 현재 시간으로 업데이트
         Chapter chapter = chapterUploadDto.toEntity(book);
         chapterRepository.save(chapter);
+
+        // 새로 작성된 챕터의 상세 정보를 Redis에 저장
+        String chapterKey = "chapter:detail:" + chapter.getId();
+        ChapterDetailDto chapterDetailDto = createChapterDetailDto(chapter);
+        ValueOperations<String, Object> ops = redisTemplate.opsForValue();
+        ops.set(chapterKey, chapterDetailDto, 1, TimeUnit.MINUTES); // 챕터 상세 정보를 Redis에 1분 동안 캐싱
     }
 
 
@@ -67,9 +74,7 @@ public class ChapterService {
             Chapter chapter = chapterRepository.findById(chapterId).orElseThrow(
                     () -> new IllegalArgumentException("해당하는 챕터를 찾을 수 없습니다.")
             );
-
             chapterDetailDto = createChapterDetailDto(chapter);
-
             ops.set(chapterKey, chapterDetailDto, 1, TimeUnit.MINUTES); // 챕터 상세 정보를 Redis에 1분 동안 캐싱
         }
 
@@ -98,7 +103,7 @@ public class ChapterService {
 
             ops.set(bookKey, chapterIdList, 1, TimeUnit.MINUTES);
         } else {
-            // Redis에서 가져온 데이터를 Long 타입으로 변환
+            // Redis에서 가져온 데이터 Long 타입으로 변환
             chapterIdList = chapterIdList.stream()
                     .map(obj -> Long.valueOf(obj.toString()))
                     .collect(Collectors.toList());
@@ -124,13 +129,8 @@ public class ChapterService {
 
     @Transactional
     public ChapterDetailDto getPrevChapter(Long currentChapterId, Long bookId, String userId) {
-        log.info("currentChapterId: " + currentChapterId);
-
         List<Object> chapterIdList = getChapterList(bookId);
-        int currentIndex = chapterIdList.indexOf(currentChapterId); // 현재 챕터의 인덱스
-
-        log.info(chapterIdList.toString());
-        log.info("currentIndex: " + currentIndex);
+        int currentIndex = chapterIdList.indexOf(currentChapterId);
 
         if (currentIndex > 0) { // 이전 챕터가 있는 경우
             Long previousChapterId = (Long) chapterIdList.get(currentIndex - 1);
@@ -148,24 +148,21 @@ public class ChapterService {
         if(chapter.getBook().getMember().getId().equals(loggedId)) {
             chapter.deactivate();
         } else {
-            throw new IllegalArgumentException("해당 챕터의 작성자가 아닙니다.");
+            throw new AccessDeniedException("해당 챕터의 작성자가 아닙니다.");
         }
     }
 
-    public ChapterUploadDto getChapter(Long chapterId, Long memberId) {
+    // 수정을 위해 챕터 정보를 가져옴
+    public ChapterUploadDto getModifiedChapter(Long chapterId) {
         Chapter chapter = chapterRepository.findById(chapterId).orElseThrow(
                 () -> new IllegalArgumentException("해당하는 챕터를 찾을 수 없습니다.")
         );
-        if(chapter.getBook().getMember().getId().equals(memberId)) {
-            return ChapterUploadDto.builder()
-                    .title(chapter.getTitle())
-                    .contents(chapter.getContents())
-                    .price(chapter.getPrice())
-                    .bookId(chapter.getBook().getId())
-                    .build();
-        } else {
-            throw new IllegalArgumentException("해당 챕터의 작성자가 아닙니다.");
-        }
+        return ChapterUploadDto.builder()
+                .title(chapter.getTitle())
+                .contents(chapter.getContents())
+                .price(chapter.getPrice())
+                .bookId(chapter.getBook().getId())
+                .build();
     }
 
     @Transactional

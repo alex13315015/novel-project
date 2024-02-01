@@ -10,8 +10,8 @@
 <content>
     <div class="container">
         <div class="book-info">
-            <div class="d-flex mt-4 mb-2 align-items-flex-end" style="position: relative;">
-                <img style="width: 200px; height: 276px" class="mx-3 rounded border border-opacity-25" src="/images/book.png" alt="" th:src="@{|/upload/${bookInfo.bookImage}|}">
+            <div class="d-flex mt-3 mb-3 align-items-flex-end" style="position: relative;">
+                <img style="width: 200px; height: 276px" class="mx-3 rounded border border-opacity-25" src="/images/book.png" alt="" th:src="${bookInfo.bookImage.startsWith('/images/') ? bookInfo.bookImage : '/upload/' + bookInfo.bookImage}">
                 <div class="d-flex flex-column mx-3" style="height: 100%;">
                     <div class="info-top">
                         <h3 class="mt-2" th:text="${bookInfo.bookName}"></h3>
@@ -36,7 +36,13 @@
                         <span class="subscribeIcon" th:attr="subscribe-state=${bookInfo.subscribeState ? 'subscribed' : 'not-subscribed'}">
                             <i th:class="${bookInfo.subscribeState ? 'bi bi-check-circle' : 'bi bi-plus-circle'}"></i>
                         </span>
-                        <span th:text="'구독 ' + ${bookInfo.subscribeCount}">구독 수</span>
+                        <span th:text="'구독 ' + ${bookInfo.subscribeCount}"></span>
+                    </div>
+                    <div class="d-flex flex-column align-items-center mt-2 ms-4">
+                        <span class="hitsIcon">
+                            <i class="bi bi-eye"></i>
+                        </span>
+                        <span th:text="'조회 ' + ${bookInfo.totalHits}"></span>
                     </div>
                 </div>
             </div>
@@ -153,13 +159,6 @@
                                 <span>${createdAt}</span>
                             </div>
                         </div>
-                        <div class="dropdown mt-4">
-                            <i class="bi bi-three-dots-vertical" style="font-size: 20px; font-weight: lighter" role="button" tabindex="0" data-bs-toggle="dropdown" aria-expanded="false"></i>
-                            <ul class="dropdown-menu align-items-center" aria-labelledby="dropdownMenuButton">
-                                <li><a class="custom-dropdown-item mb-1" href="/chapter/modify/${chapter.id}">수정</a></li>
-                                <li><a class="custom-dropdown-item delete-chapter mt-1" href="/chapter/delete/${chapter.id}?bookId=${bookId}">삭제</a></li>
-                            </ul>
-                        </div>
                     </div>
                 </li>
             `;
@@ -167,7 +166,7 @@
 
         $(document).ready(function () {
             // 현재 페이지의 URL을 가져옵니다.
-            var url = window.location.href;
+            let url = window.location.href;
 
             // URL에 'order=DESC' 또는 'order=ASC'가 포함되어 있는지 확인합니다.
             if (url.includes('order=ASC')) {
