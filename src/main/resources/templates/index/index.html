@@ -17,8 +17,8 @@
                 </a>
             </div>
             <div class="row g-4 py-5 row-cols-1 row-cols-lg-5">
-                <div class="feature col" th:each="newBook: ${newBookOfWeeks}">
-                    <a th:href="@{/book/library/{id}(id=${newBook.id})}">
+                <div class="feature col text-center" th:each="newBook: ${newBookOfWeeks}">
+                    <a th:href="@{/book/library/{id}(id=${newBook.id})}" style="text-decoration: none;" >
                         <div class="d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
                             <img src="/images/book.png" alt="" th:src="@{|/upload/${newBook.bookImage}|}" class="bi" width="200px" height="200px">
                         </div>
@@ -34,8 +34,8 @@
         <div class="container px-4 py-5" id="featured-4">
             <h2 class="pb-2 border-bottom">이주의 인기작</h2>
             <div class="row g-4 py-5 row-cols-1 row-cols-lg-5">
-                <div class="feature col" th:each="popularityBook: ${popularityBookOfWeeks}">
-                    <a th:href="@{/book/library/{id}(id=${popularityBook.id})}">
+                <div class="feature col text-center" th:each="popularityBook: ${popularityBookOfWeeks}">
+                    <a th:href="@{/book/library/{id}(id=${popularityBook.id})}" style="text-decoration: none;">
                         <div class="d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
                             <img src="/images/book.png" alt="" th:src="@{|/upload/${popularityBook.bookImage}|}" class="bi" width="200px" height="200px">
                         </div>
