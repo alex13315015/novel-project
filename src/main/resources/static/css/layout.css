@@ -29,6 +29,7 @@ ul {
 
 .subj:hover {
     text-decoration: underline;
+    text-decoration-color: black;
 }
 
 .info-top {
@@ -112,4 +113,42 @@ a.btn-sort.active {
 
 .book-item {
     width: calc(50% - 10px); /* 50% 너비에 양쪽 마진 10px을 뺀 값 */
+    position: relative;
+}
+
+#chapterNavbar {
+    background-color: black;
+    color: white;
+    height: 100px;
+}
+
+#chapterNavbar .bi {
+    color: white;
+}
+
+#chapterNavbar button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: x-large;
+}
+
+#chapterNavbar button:hover {
+    color: #ddd;
+}
+
+.continue-reading-button {
+    text-decoration: none;
+    color: black;
+    font-size: 1.2em;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%); /* 자신의 높이의 절반만큼 위로 이동하여 완벽하게 중앙에 위치하게 조정 */
+}
+
+.continue-reading-button:hover {
+    text-decoration: underline;
+    text-decoration-color: black;
+    font-weight: bold;
 }

@@ -53,8 +53,8 @@ public class BookApiController {
     }
 
     @GetMapping("/book/myRecent")
-    public Page<BookListDto> getMyRecent(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-                                         @PageableDefault Pageable pageable) {
+    public Page<BookListDto> getMyRecentViewList(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                                 @PageableDefault Pageable pageable) {
         return viewService.recentViewList(customUserDetails.getLoggedMember().getId(), pageable);
     }
 

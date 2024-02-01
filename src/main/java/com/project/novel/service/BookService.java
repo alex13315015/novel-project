@@ -26,6 +26,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -147,7 +148,7 @@ public class BookService {
         pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
 
         Page<ChapterDto> chapterDtoList = chapterService.getChapterList(bookId, pageable);
-        Long totalHits = chapterRepository.sumHitsByBookId(bookId);
+        Long totalHits = Optional.ofNullable(chapterRepository.sumHitsByBookId(bookId)).orElse(0L);
 
         return BookDto.builder()
                 .id(bookId)
@@ -163,7 +164,7 @@ public class BookService {
     }
 
     public Page<BookListDto> getAllMyBook(Long loggedId, Pageable pageable) {
-        return bookRepository.findAllByMemberId(loggedId, pageable);
+        return bookRepository.findMyBookList(loggedId, pageable);
     }
 
     public boolean isMyBook(Long bookId, Long loggedId) {

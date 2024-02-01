@@ -16,7 +16,7 @@ public interface ViewRepository extends JpaRepository<Views, Long> {
     Views findByMemberIdAndChapterId(@Param("memberId") Long memberId, @Param("chapterId") Long chapterId);
 
 
-    @Query("SELECT new com.project.novel.dto.BookListDto(b.id, b.bookName, b.bookImage, m.nickname) " +
+    @Query("SELECT new com.project.novel.dto.BookListDto(b.id, b.bookName, b.bookImage, m.nickname, c.id) " +
             "FROM Views v JOIN v.chapter c JOIN c.book b JOIN b.member m " +
             "WHERE v.member.id = :userId AND v.updatedAt IN " +
             "(SELECT MAX(v2.updatedAt) FROM Views v2 WHERE v2.member.id = :userId GROUP BY v2.chapter.book.id) " +
