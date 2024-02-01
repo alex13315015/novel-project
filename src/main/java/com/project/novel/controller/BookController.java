@@ -4,7 +4,7 @@ import com.project.novel.dto.BookDto;
 import com.project.novel.dto.BookUploadDto;
 import com.project.novel.dto.CustomUserDetails;
 import com.project.novel.enums.AgeRating;
-import com.project.novel.enums.Genre;
+import com.project.novel.enums.BookGenre;
 import com.project.novel.service.BookService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,6 @@ public class BookController {
     @GetMapping("/write")
     public String write(Model model) {
         model.addAttribute("bookUploadDto",new BookUploadDto());
-        model.addAttribute("genre", Genre.values());
         model.addAttribute("ageRating", AgeRating.values());
         return "book/write";
     }
@@ -66,12 +65,12 @@ public class BookController {
     }
 
     @GetMapping("/modify/{bookId}")
-    public String modifyBook(@PathVariable(name="bookId") Long bookId,
-                             Model model) {
-        BookUploadDto bookUploadDto = bookService.getModifiedBook(bookId);
+    public String modifyBook(@PathVariable(name="bookId") Long bookId, Model model,
+                             @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        BookUploadDto bookUploadDto = bookService.getModifiedBook(bookId, customUserDetails.getLoggedMember().getId());
         model.addAttribute("bookUploadDto", bookUploadDto);
         model.addAttribute("bookId", bookId);
-        model.addAttribute("genre", Genre.values());
+        model.addAttribute("BookGenre", BookGenre.values());
         model.addAttribute("ageRating", AgeRating.values());
         return "book/modify";
     }

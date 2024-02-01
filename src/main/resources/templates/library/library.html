@@ -63,7 +63,7 @@
                                         <div class="col-5">
                                             <div class="row mb-2">
                                                 <label class="col-sm-4" for="a" >장르</label>
-                                                <div class="col fw-bolder" id="a" th:text="${book.genre.getGenreName}"></div>
+                                                <div class="col fw-bolder" id="a" th:text="${book.bookGenre.displayName}"></div>
                                             </div>
                                             <div class="row mb-2">
                                                 <label class="col-sm-4" for="b" >제한</label>
@@ -93,7 +93,7 @@
                                 </div>
                             </div>
                             <div class="col d-flex align-items-center justify-content-center overflow-auto" >
-                                <div class="overflow-auto" style="height: 200px;" th:text="${book.bookIntro}">이 이야기는 진모가 왕이 되는 이야기 이다.</div>
+                                <div class="overflow-auto d-flex align-items-center" style="height: 200px;" th:text="${book.bookIntro}">이 이야기는 진모가 왕이 되는 이야기 이다.</div>
                             </div>
                         </div>
                     </div>

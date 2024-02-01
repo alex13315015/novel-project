@@ -36,7 +36,7 @@ public class BookUploadDto {
 
     public Book toEntity(String bookName, String bookIntro,
                          String bookImage, BookGenre bookGenre,
-                         Integer ageRating, Member member) {
+                         AgeRating ageRating, Member member) {
         return Book.builder()
                 .bookName(bookName)
                 .bookIntro(bookIntro)

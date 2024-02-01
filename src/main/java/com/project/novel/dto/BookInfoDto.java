@@ -2,7 +2,7 @@ package com.project.novel.dto;
 
 import com.project.novel.entity.Book;
 import com.project.novel.enums.AgeRating;
-import com.project.novel.enums.Genre;
+import com.project.novel.enums.BookGenre;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class BookInfoDto {
     private Long id;
     private String bookName;
-    private Genre genre;
+    private BookGenre bookGenre;
     private String author;
     private AgeRating ageRating;
     private String bookIntro;
@@ -26,7 +26,7 @@ public class BookInfoDto {
     public BookInfoDto(Book book, Long hit, Long likes, Long subscribes, String author){
         this.id = book.getId();
         this.bookName = book.getBookName();
-        this.genre = book.getBookGenre();
+        this.bookGenre = book.getBookGenre();
         this.bookIntro = book.getBookIntro();
         this.ageRating = book.getAgeRating();
         this.bookImage = book.getBookImage();

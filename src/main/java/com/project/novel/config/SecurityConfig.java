@@ -23,7 +23,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain (HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/auth/**","/css/**","/js/**","/images/**")
+                        .requestMatchers("/img/**", "/auth/**","/css/**","/js/**","/images/**")
                         .permitAll()
                         .requestMatchers("/admin/**").hasRole(Grade.ROLE_ADMIN.getRole()) // ADMIN ROLE 만 접근 가능
                         .anyRequest()

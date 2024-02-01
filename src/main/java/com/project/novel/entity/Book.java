@@ -58,7 +58,7 @@ public class Book extends BaseEntity{
     private boolean isActive;
 
     @Builder
-    public Book(String bookName, String bookImage, Member member, String bookIntro, BookGenre bookGenre, Integer ageRating) {
+    public Book(String bookName, String bookImage, Member member, String bookIntro, BookGenre bookGenre, AgeRating ageRating) {
         this.bookName = bookName;
         this.bookImage = bookImage;
         this.member = member;
@@ -72,7 +72,7 @@ public class Book extends BaseEntity{
     }
 
     // 책 정보 수정
-    public void update(String bookName, String bookImage, String bookIntro, BookGenre bookGenre, Integer ageRating) {
+    public void update(String bookName, String bookImage, String bookIntro, BookGenre bookGenre, AgeRating ageRating) {
         this.bookName = bookName;
         this.bookImage = bookImage;
         this.bookIntro = bookIntro;

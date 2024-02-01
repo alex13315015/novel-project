@@ -223,7 +223,7 @@ public class BookService {
 
     // 책 정보 수정을 위해 책 정보를 가져옴
     @Transactional
-    public BookUploadDto getModifiedBook(Long bookId) {
+    public BookUploadDto getModifiedBook(Long bookId, Long id) {
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 책은 존재하지 않습니다."));
         return BookUploadDto.builder()

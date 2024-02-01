@@ -40,6 +40,7 @@
 .subj:hover {
     text-decoration: underline;
     text-decoration-color: black;
+}
   
 .gnb_bdr {
     opacity: 0.1;
@@ -119,7 +120,7 @@
 .read {
     color: #b4b4b4;
 }
-.naver_login {
+.naver_login{
     height: 40px;
     width: 300px;
 }
