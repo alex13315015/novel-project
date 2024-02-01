@@ -1,8 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/layout}">
-<div layout:fragment="content" class="main">
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="layout/layout :: head(~{::title})">
+    <meta charset="UTF-8">
+    <title>home</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+<body th:replace="layout/layout :: content(~{::content})">
+<content>
     <div class="container">
         <div class="d-flex mt-2 mb-2 align-items-flex-end" style="position: relative;">
             <img style="width: 200px; height: 276px" class="mx-3 rounded border border-opacity-25" src="/images/book.png" alt="" th:src="${bookInfo.bookImage.startsWith('/images/') ? bookInfo.bookImage : '/upload/' + bookInfo.bookImage}">
@@ -150,5 +155,6 @@
             }
         });
     </script>
-</div>
+</content>
+</body>
 </html>

@@ -16,7 +16,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
-public class Chapter {
+public class Chapter extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "chapter_id")

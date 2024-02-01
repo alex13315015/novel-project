@@ -1,9 +1,25 @@
-.findPassword {
-    font-size: 15px;
+.main {
+    height: 600px;
+}
+.title {
+    font-weight: bold;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+.findMember {
+    font-size: 18px;
     color: #c4c8cb;
+    text-decoration: none;
+}
+.F_P {
+    width: 600px;
+}
+.vr {
+    height: 30px;
 }
 .join{
-    width: 1200px;
+    display: flex;
+    justify-content: center;
 }
 .valid {
     font-size: 15px;
@@ -17,99 +33,106 @@
     font-size: 15px;
     color: red;
 }
-
-ul {
-    list-style-type: none;
-}
-
-
-.subj {
+.gnb_li a {
     text-decoration: none;
 }
 
 .subj:hover {
     text-decoration: underline;
     text-decoration-color: black;
+  
+.gnb_bdr {
+    opacity: 0.1;
 }
-
-.info-top {
-    margin-bottom: 20px;
+.gnb_txt {
+    color: #b4b4b4;
+    font-size: 17px;
+    font-weight: bold;
 }
-
-.info-bottom {
-    margin-top: 50px;
-    margin-bottom: 10px;
-    padding-top: 40px;
+.memberProfileImg {
+    font-size: 17px;
+    color: #b4b4b4;
 }
-
-.custom-link {
-    color: #000000;
-    text-decoration: none;
+.search-box {
+    width: 300px;
+    color: #b4b4b4;
+    font-size: 17px;
 }
-
-.custom-link:hover {
-    text-decoration: underline;
+#searchKeyword {
+    width: 300px;
+    height: 43px;
 }
-
-.chapter-list ul li:not(:last-child) {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+.searchBtn {
+    height: 40px;
 }
-
-
-.custom-dropdown-item {
-    text-decoration: none;
-    color: black;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.section li {
+    list-style: none;
 }
-
-.custom-dropdown-item:hover {
-    color: #0b5ed7;
-}
-
-.dropdown-menu li {
-    display: block;
-    box-sizing: border-box;
-    padding: 0 2px;
-    margin: 0;
-}
-
-.delete-book a {
-    color: black;
-    text-decoration: none;
-}
-
-.delete-book a:hover {
-    color: red;
-    text-decoration: underline;
-}
-
-a.btn-sort {
-    text-decoration: none;
-    color: dimgrey;
-    cursor: pointer;
-    margin-top: 20px;
-}
-
-a.btn-sort.active {
-    text-decoration: none;
-    font-size: 1.2em;
+.default_msg {
+    font-size: 20px;
     font-weight: bold;
     color: black;
 }
-
-.custom-order a {
+.section {
+    padding: 10px 0 0 0;
+}
+.sub_link {
+    padding: 9px 0 0 0;
     text-decoration: none;
+}
+.sub_text {
+    display: block;
+    position: relative;
+    padding: 8px 14px;
+    background-color: yellowgreen;
+    border-radius: 36px;
+    font-size: 25px;
+    color: white; !important;
+}
+.recent_area li{
+    list-style: none;
+}
+.book_image {
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+}
+.info_list {
+    width: 300px;
+    display: inline-block;
+}
+.info_list p {
     color: black;
-    font-size: x-large;
+}
+.concern_book li {
+    list-style: none;
+}
+.book_list a {
+    text-decoration: none;
+}
+.novel_subject {
+    color: black;
+}
+.sub-title {
+    color: #b4b4b4;
+}
+.read {
+    color: #b4b4b4;
+}
+.naver_login {
+    height: 40px;
+    width: 300px;
+}
+.myId {
+    border: 3px solid black;
+    font-size: 20px;
+    font-weight: normal;
+}
+.authBtn {
+    width: 200px;
+    height: 40px;
 }
 
-.book-list ul {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-}
 
 .book-item {
     width: calc(50% - 10px); /* 50% 너비에 양쪽 마진 10px을 뺀 값 */
@@ -151,4 +174,8 @@ a.btn-sort.active {
     text-decoration: underline;
     text-decoration-color: black;
     font-weight: bold;
+  
+.changePassword {
+    width: 600px;
+    height: 200px;
 }

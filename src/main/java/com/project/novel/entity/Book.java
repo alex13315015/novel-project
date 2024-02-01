@@ -1,6 +1,7 @@
 package com.project.novel.entity;
 
 import com.project.novel.enums.BookGenre;
+import com.project.novel.enums.AgeRating;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -17,7 +18,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
-public class Book {
+public class Book extends BaseEntity{
 
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "book_id")
@@ -43,7 +44,7 @@ public class Book {
     private BookGenre bookGenre;
 
     @NotNull(message = "연령 등급을 선택해주세요.")
-    private Integer ageRating;
+    private AgeRating ageRating;
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
     private List<Chapter> chapterList;
@@ -53,12 +54,6 @@ public class Book {
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
     private List<Subscribe> subscribeList;
-
-    @CreatedDate
-    private LocalDateTime createdAt;
-
-    @LastModifiedDate
-    private LocalDateTime updatedAt;
 
     private boolean isActive;
 
@@ -83,9 +78,5 @@ public class Book {
         this.bookIntro = bookIntro;
         this.bookGenre = bookGenre;
         this.ageRating = ageRating;
-    }
-
-    public void chapterUpdated() {
-        this.updatedAt = LocalDateTime.now();
     }
 }

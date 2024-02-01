@@ -1,8 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/layout}">
-<div layout:fragment="content" class="main">
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="layout/layout :: head(~{::title})">
+    <meta charset="UTF-8">
+    <title>home</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+<body th:replace="layout/layout :: content(~{::content})">
+<content>
     <div class="container justify-content-center d-flex">
         <!-- 소설(텍스트) 작성 -->
         <div class="col-8">
@@ -38,11 +43,7 @@
                     <div class="mb-3">
                         <label for="ageRating" class="form-label">작품 나이 제한 설정</label>
                         <select class="form-select" id="ageRating" name="ageRating" th:field="*{ageRating}">
-                            <option value="">나이 제한 설정</option>
-                            <option value="0">전체 이용가</option>
-                            <option value="12">12세 이용가</option>
-                            <option value="15">15세 이용가</option>
-                            <option value="19">19세 이용가</option>
+                            <option th:each="ageRating : ${ageRating}" th:text="${ageRating.ratingName}" th:value="${ageRating.toString()}">나이 제한 설정</option>
                         </select>
                         <div class="form-text text-danger" th:if="${#fields.hasErrors('ageRating')}" th:errors="*{ageRating}"></div>
                     </div>
@@ -108,5 +109,6 @@
 
 
     </script>
-</div>
+</content>
+</body>
 </html>

@@ -1,8 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/layout}">
-<div layout:fragment="content" class="main">
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="layout/layout :: head(~{::title})">
+    <meta charset="UTF-8">
+    <title>home</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+<body th:replace="layout/layout :: content(~{::content})">
+<content>
     <div class="container justify-content-center d-flex" >
         <div class="col-8">
             <h1>회차 쓰기</h1>
@@ -74,5 +79,6 @@
             // 모든 유효성 검사를 통과하면 폼 제출
         });
     </script>
-</div>
+</content>
+</body>
 </html>

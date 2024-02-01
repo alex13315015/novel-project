@@ -3,65 +3,53 @@ package com.project.novel.entity;
 import com.project.novel.constant.Grade;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
-@Getter
-@Builder
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EntityListeners(AuditingEntityListener.class)
+@Builder
+@EntityListeners(AuditingEntityListener.class) // 자동으로 날짜를 생성
 public class Member {
-
-    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "member_id")
+    @Id @Column(name = "member_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true)
     private String userId;
 
-    @Column(nullable = false)
     private String userName;
 
     private String nickname;
 
-    @Column(nullable = false)
     private String password;
 
     @Email
-    @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false, length = 2)
+    @Column(length = 2)
     private Integer age;
 
     private String phoneNumber;
 
     private Integer coin;
 
+    @Column(name = "role")
+    @Enumerated(EnumType.STRING)
+    private Grade role;
+    // 등급에 따른 role 부여하는 컬럼
     private String profileImage;
 
     @CreatedDate
     private LocalDateTime createdAt;
-
+    // 회원 등록 날짜
     @LastModifiedDate
     private LocalDateTime updatedAt;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name="role")
-    private Grade role;
-
-    @OneToMany(mappedBy = "member")
-    private List<Book> bookList;
-
-
+    // 회원정보수정 날짜
 }
