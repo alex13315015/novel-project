@@ -5,11 +5,12 @@
 <div layout:fragment="content" class="main">
     <div class="container">
         <div class="d-flex mt-2 mb-2 align-items-flex-end" style="position: relative;">
-            <img style="width: 200px; height: 276px" class="mx-3 rounded border border-opacity-25" src="/images/book.png" alt="" th:src="@{|/upload/${bookInfo.bookImage}|}">
+            <img style="width: 200px; height: 276px" class="mx-3 rounded border border-opacity-25" src="/images/book.png" alt="" th:src="${bookInfo.bookImage.startsWith('/images/') ? bookInfo.bookImage : '/upload/' + bookInfo.bookImage}">
             <div class="d-flex flex-column mx-3" style="height: 100%;">
                 <h3 class="mt-2" th:text="${bookInfo.bookName}"></h3>
-                <div style="font-size: small; color: gray; font-weight: lighter;">
-                    <span th:text="'구독 ' + ${bookInfo.subscribeCount}"></span>
+                <div style="font-size: small; color: gray;">
+                    <span th:text="'구독 ' + ${bookInfo.subscribeCount}" style="margin-right: 10px;"></span>
+                    <span th:text="'조회 ' + ${bookInfo.totalHits}"></span>
                 </div>
                 <div class="info-bottom" style="position: absolute; bottom: 0;">
                     <p class="mt-2" style="color: #2b3035; font-size: 13px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-all;" th:text="${bookInfo.bookIntro}"></p>
@@ -20,7 +21,7 @@
         </div>
         <div class="chapter-list border-top">
             <p class="mt-2" style="font-size: x-large" th:text="'회차 ('+${bookInfo.chapterList.getTotalElements()}+')'"></p>
-            <ul>
+            <ul class="chapter-list-ul">
                 <th:block th:each="item:${bookInfo.chapterList}">
                     <li>
                         <div class="d-flex justify-content-between">
@@ -55,6 +56,7 @@
         let sort = 'desc'
 
         $(".btn-more").on("click", function () {
+            console.log(loadPage)
             if(loadPage>=totalPages) {
                 $(this).hide();
             } else {
@@ -71,7 +73,7 @@
                     console.log(response);
 
                     totalPages = response.totalPages;
-                    let chapterUl = $('.chapter-list ul');
+                    let chapterUl = $('.chapter-list-ul');
 
                     // 챕터 목록 추가
                     for (let chapter of response.content) {
@@ -121,12 +123,12 @@
         }
 
         document.querySelector('.chapter-list').addEventListener('click', function(event) {
-            var item = event.target;
+            let item = event.target;
             if (item.classList.contains('delete-chapter')) {
                 event.preventDefault();
-                var url = new URL(item.getAttribute('href'), window.location.href).href;
+                let url = new URL(item.getAttribute('href'), window.location.href).href;
 
-                var confirmed = confirm('선택하신 챕터를 삭제하시겠습니까?' +
+                let confirmed = confirm('선택하신 챕터를 삭제하시겠습니까?' +
                     '\n삭제된 챕터는 복구할 수 없습니다.');
                 if (!confirmed) {
                     return;
@@ -137,7 +139,7 @@
                 })
                     .then(response => {
                         if (response.ok) {
-                            var bookId = new URL(url).searchParams.get("bookId");
+                            let bookId = new URL(url).searchParams.get("bookId");
                             console.log(bookId)
                             window.location.href = '/member/myBookList/' + bookId;
                         } else {

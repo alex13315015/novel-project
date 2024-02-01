@@ -8,7 +8,7 @@
             <a href="/member/myBookList" class="btn btn-outline-primary">내 작품</a>
             <a href="/member/myBookmark" class="btn btn-outline-primary">책갈피</a>
             <a href="/member/myInterest" class="btn btn-outline-primary">관심작품</a>
-            <a href="/member/myRecent" class="btn btn-outline-primary">최근 본 작품</a>
+            <a id="myRecent" class="btn btn-outline-primary">최근 본 작품</a>
         </div>
         <div class="book-list">
             <ul>
@@ -16,7 +16,9 @@
                     <li class="pt-2 pb-2 mt-2 mb-2 border border-opacity-25 book-item">
                         <a th:href="@{|/member/myBookList/${item.id}|}" class="subj">
                             <div class="d-flex align-items-center">
-                                <div class="mx-3"><img class="rounded" src="/images/book.png" alt="" th:src="@{|/upload/${item.bookImage}|}"></div>
+                                <div class="mx-3">
+                                    <img style="width: 150px; height: 120px" class="rounded" th:src="${item.bookImage.startsWith('/images/') ? item.bookImage : '/upload/' + item.bookImage}" alt="">
+                                </div>
                                 <div style="max-width: 100%; vertical-align: middle">
                                     <p style="font-weight: bold; color: black; margin-bottom: 5px" th:text="${item.bookName}"></p>
                                     <p style="color: #4d5154" th:text="${item.nickname}"></p>
@@ -36,20 +38,12 @@
         let loadPage = 0;
         let totalPages = [[${myBookList.totalPages}]];
         let sort = 'desc'
+        let $btnMore = $(".btn-more"); // jQuery selector 중복 방지
 
-        $(".btn-more").on("click", function () {
-            if(loadPage>=totalPages) {
-                $(this).hide();
-            } else {
-                loadPage++; // 페이지 번호 증가
-                loadBookList(memberId, loadPage);
-            }
-        });
-
-        function loadBookList(memberId, loadPage) {
+        function loadBooks(url) {
             $.ajax({
                 type: 'GET',
-                url: `/api/book/${memberId}/bookList?page=${loadPage}&sort=createdAt,${sort}`,
+                url: url,
                 success: function(response) {
                     console.log(response);
 
@@ -67,22 +61,47 @@
             })
         }
 
+        function loadMoreBooks(loadFunction) {
+            if(loadPage>=totalPages) {
+                $btnMore.hide();
+            } else {
+                loadPage++; // 페이지 번호 증가
+                loadFunction(memberId, loadPage);
+            }
+        }
+
+        $btnMore.on("click", function () {
+            loadMoreBooks(function(memberId, loadPage) {
+                loadBooks(`/api/book/${memberId}/bookList?page=${loadPage}&sort=createdAt,${sort}`, memberId, loadPage);
+            });
+        });
+
+
+        $("#myRecent").on("click", function () {
+            // 작품 목록 비우기
+            $('.book-list ul').empty();
+            // 페이지 번호 초기화
+            loadPage = 0;
+            // 더보기 버튼 이벤트 변경
+            $btnMore.off("click").on("click", function () {
+                loadMoreBooks(function(memberId, loadPage) {
+                    loadBooks(`/api/book/myRecent?page=${loadPage}&sort=updatedAt,${sort}`, memberId, loadPage);
+                });
+            });
+            loadBooks(`/api/book/myRecent?page=${loadPage}&sort=updatedAt,${sort}`, memberId, loadPage);
+        });
+
         function bookToHtml(book) {
-            // 책 정보를 HTML 요소로 변환하는 함수를 작성합니다.
-            // 이 함수는 서버에서 반환하는 책 정보의 형식에 따라 달라집니다.
-            let bookName = book.bookName;
-            let nickname = book.nickname;
-            let bookImage = book.bookImage;
-            let id = book.id;
+            let imageUrl = book.bookImage.startsWith("/images/") ? book.bookImage : "/upload/" + book.bookImage;
 
             return `
                 <li class="pt-2 pb-2 mt-2 mb-2 border border-opacity-25 book-item">
-                    <a href="/member/myBookList/${id}" class="subj">
+                    <a href="/member/myBookList/${book.id}" class="subj">
                         <div class="d-flex align-items-center">
-                            <div class="mx-3"><img class="rounded"  src="/upload/${bookImage}" alt=""></div>
+                            <div class="mx-3"><img style="width: 150px; height: 120px" class="rounded" src="${imageUrl}" alt=""></div>
                             <div style="max-width: 100%; vertical-align: middle">
-                                <p style="font-weight: bold; color: black; margin-bottom: 5px">${bookName}</p>
-                                <p style="color: #4d5154">${nickname}</p>
+                                <p style="font-weight: bold; color: black; margin-bottom: 5px">${book.bookName}</p>
+                                <p style="color: #4d5154">${book.nickname}</p>
                             </div>
                         </div>
                     </a>

@@ -34,7 +34,7 @@ public class MemberController {
     @GetMapping("/myBookList/{bookId}")
     public String myBookList(@PathVariable(name="bookId") Long bookId, Model model,
                              @AuthenticationPrincipal CustomUserDetails customUserDetails,
-                             @PageableDefault(size = 5) Pageable pageable) {
+                             @PageableDefault Pageable pageable) {
         // 해당 book 작성한 사람인지 확인
         if(bookService.isMyBook(bookId, customUserDetails.getLoggedMember().getId())) {
             BookDto bookDto = bookService.getBook(bookId,"DESC", pageable);

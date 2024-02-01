@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.time.format.DateTimeFormatter;
@@ -67,15 +68,13 @@ public class ChapterService {
             Chapter chapter = chapterRepository.findById(chapterId).orElseThrow(
                     () -> new IllegalArgumentException("해당하는 챕터를 찾을 수 없습니다.")
             );
-
             chapterDetailDto = createChapterDetailDto(chapter);
-
-            ops.set(chapterKey, chapterDetailDto, 1, TimeUnit.MINUTES); // 챕터 상세 정보를 Redis에 1분 동안 캐싱
+            ops.set(chapterKey, chapterDetailDto, 1, TimeUnit.HOURS); // 챕터 상세 정보를 Redis에 1분 동안 캐싱
         }
 
         if (ops.get(viewKey) == null) { // 해당 사용자가 이 챕터를 처음 조회하는 경우
             log.info("해당 사용자가 이 챕터를 처음 조회했습니다.");
-            ops.set(viewKey, true, 1, TimeUnit.MINUTES); // 해당 사용자가 이 챕터를 조회했음을 표시하고, 1분 후에 자동 삭제
+            ops.set(viewKey, true, 1, TimeUnit.HOURS); // 해당 사용자가 이 챕터를 조회했음을 표시하고, 1분 후에 자동 삭제
             ops.increment("chapter:hits:" + chapterId, 1); // 조회수 증가
         }
 
@@ -96,9 +95,9 @@ public class ChapterService {
                 chapterIdList.add(chapter.getId());
             }
 
-            ops.set(bookKey, chapterIdList, 1, TimeUnit.MINUTES);
+            ops.set(bookKey, chapterIdList, 1, TimeUnit.HOURS);
         } else {
-            // Redis에서 가져온 데이터를 Long 타입으로 변환
+            // Redis에서 가져온 데이터 Long 타입으로 변환
             chapterIdList = chapterIdList.stream()
                     .map(obj -> Long.valueOf(obj.toString()))
                     .collect(Collectors.toList());
@@ -124,13 +123,8 @@ public class ChapterService {
 
     @Transactional
     public ChapterDetailDto getPrevChapter(Long currentChapterId, Long bookId, String userId) {
-        log.info("currentChapterId: " + currentChapterId);
-
         List<Object> chapterIdList = getChapterList(bookId);
-        int currentIndex = chapterIdList.indexOf(currentChapterId); // 현재 챕터의 인덱스
-
-        log.info(chapterIdList.toString());
-        log.info("currentIndex: " + currentIndex);
+        int currentIndex = chapterIdList.indexOf(currentChapterId);
 
         if (currentIndex > 0) { // 이전 챕터가 있는 경우
             Long previousChapterId = (Long) chapterIdList.get(currentIndex - 1);
@@ -148,24 +142,21 @@ public class ChapterService {
         if(chapter.getBook().getMember().getId().equals(loggedId)) {
             chapter.deactivate();
         } else {
-            throw new IllegalArgumentException("해당 챕터의 작성자가 아닙니다.");
+            throw new AccessDeniedException("해당 챕터의 작성자가 아닙니다.");
         }
     }
 
-    public ChapterUploadDto getChapter(Long chapterId, Long memberId) {
+    // 수정을 위해 챕터 정보를 가져옴
+    public ChapterUploadDto getModifiedChapter(Long chapterId) {
         Chapter chapter = chapterRepository.findById(chapterId).orElseThrow(
                 () -> new IllegalArgumentException("해당하는 챕터를 찾을 수 없습니다.")
         );
-        if(chapter.getBook().getMember().getId().equals(memberId)) {
-            return ChapterUploadDto.builder()
-                    .title(chapter.getTitle())
-                    .contents(chapter.getContents())
-                    .price(chapter.getPrice())
-                    .bookId(chapter.getBook().getId())
-                    .build();
-        } else {
-            throw new IllegalArgumentException("해당 챕터의 작성자가 아닙니다.");
-        }
+        return ChapterUploadDto.builder()
+                .title(chapter.getTitle())
+                .contents(chapter.getContents())
+                .price(chapter.getPrice())
+                .bookId(chapter.getBook().getId())
+                .build();
     }
 
     @Transactional
@@ -179,7 +170,7 @@ public class ChapterService {
         String chapterKey = "chapter:detail:" + chapterId;
         ValueOperations<String, Object> ops = redisTemplate.opsForValue();
 
-        ops.set(chapterKey, createChapterDetailDto(chapter), 1, TimeUnit.MINUTES); // 챕터 상세 정보를 Redis에 1분 동안 캐싱
+        ops.set(chapterKey, createChapterDetailDto(chapter), 1, TimeUnit.HOURS); // 챕터 상세 정보를 Redis에 1분 동안 캐싱
     }
 
     private ChapterDetailDto createChapterDetailDto(Chapter chapter) {

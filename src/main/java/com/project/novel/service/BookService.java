@@ -6,6 +6,7 @@ import com.project.novel.entity.BookLikes;
 import com.project.novel.entity.Member;
 import com.project.novel.repository.BookLikesRepository;
 import com.project.novel.repository.BookRepository;
+import com.project.novel.repository.ChapterRepository;
 import com.project.novel.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -36,6 +37,7 @@ public class BookService {
     private String uploadFolder;
     private final BookRepository bookRepository;
     private final BookLikesRepository bookLikesRepository;
+    private final ChapterRepository chapterRepository;
     private final MemberRepository memberRepository;
     private final ChapterService chapterService;
     private final SubscribeService subscribeService;
@@ -58,6 +60,19 @@ public class BookService {
     }
 
     private String processImageFile(BookUploadDto bookUploadDto) {
+        if (bookUploadDto.getBookImage() == null || bookUploadDto.getBookImage().isEmpty()) {
+            // 이미지를 업로드하지 않은 경우, bookGenre 별 기본 이미지 설정
+            return switch (bookUploadDto.getBookGenre()) {
+                case ORIENTAL_FANTASY -> "/images/oriental_fantasy_genre1.png";
+                case HORROR -> "/images/horror_genre2.png";
+                case ROMANCE -> "/images/romance_genre3.png";
+                case MYSTERY -> "/images/mystery_genre4.png";
+                case SCIENCE_FICTION -> "/images/science_fiction_genre5.png";
+                case FANTASY -> "/images/fantasy_genre6.png";
+                case THRILLER -> "/images/thriller_genre7.png";
+            };
+        }
+        // 이미지를 업로드한 경우
         String originalFileName = bookUploadDto.getBookImage().getOriginalFilename();
         String fileExtension = Objects.requireNonNull(originalFileName).substring(originalFileName.lastIndexOf(".") + 1).toLowerCase();
 
@@ -132,6 +147,7 @@ public class BookService {
         pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
 
         Page<ChapterDto> chapterDtoList = chapterService.getChapterList(bookId, pageable);
+        Long totalHits = chapterRepository.sumHitsByBookId(bookId);
 
         return BookDto.builder()
                 .id(bookId)
@@ -141,6 +157,7 @@ public class BookService {
                 .bookImage(book.getBookImage())
                 .bookGenre(book.getBookGenre())
                 .ageRating(book.getAgeRating())
+                .totalHits(totalHits)
                 .chapterList(chapterDtoList)
                 .build();
     }
@@ -205,19 +222,15 @@ public class BookService {
 
     // 책 정보 수정을 위해 책 정보를 가져옴
     @Transactional
-    public BookUploadDto getModifiedBook(Long bookId, Long loggedId) {
+    public BookUploadDto getModifiedBook(Long bookId) {
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 책은 존재하지 않습니다."));
-        if(book.getMember().getId().equals(loggedId)) {
-            return BookUploadDto.builder()
-                    .bookName(book.getBookName())
-                    .bookIntro(book.getBookIntro())
-                    .bookGenre(book.getBookGenre())
-                    .ageRating(book.getAgeRating())
-                    .build();
-        } else {
-            throw new IllegalArgumentException("해당 책의 작성자가 아닙니다.");
-        }
+        return BookUploadDto.builder()
+                .bookName(book.getBookName())
+                .bookIntro(book.getBookIntro())
+                .bookGenre(book.getBookGenre())
+                .ageRating(book.getAgeRating())
+                .build();
     }
 
     @Transactional

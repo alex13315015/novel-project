@@ -34,12 +34,8 @@ public class BookController {
                                BindingResult bindingResult,
                                @AuthenticationPrincipal CustomUserDetails customUserDetails,
                                Model model) {
-        if(bindingResult.hasErrors() || bookUploadDto.getBookImage().isEmpty()) {
+        if(bindingResult.hasErrors()) {
             model.addAttribute("bookUploadDto", bookUploadDto);
-            // 이미지 파일이 없을 경우
-            if (bookUploadDto.getBookImage().isEmpty()) {
-                model.addAttribute("imageError", "책 이미지를 선택해주세요.");
-            }
             return "book/write";
         }
 
@@ -66,9 +62,9 @@ public class BookController {
     }
 
     @GetMapping("/modify/{bookId}")
-    public String modifyBook(@PathVariable(name="bookId") Long bookId, Model model,
-                             @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        BookUploadDto bookUploadDto = bookService.getModifiedBook(bookId, customUserDetails.getLoggedMember().getId());
+    public String modifyBook(@PathVariable(name="bookId") Long bookId,
+                             Model model) {
+        BookUploadDto bookUploadDto = bookService.getModifiedBook(bookId);
         model.addAttribute("bookUploadDto", bookUploadDto);
         model.addAttribute("bookId", bookId);
         return "book/modify";

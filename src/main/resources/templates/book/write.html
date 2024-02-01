@@ -19,13 +19,7 @@
                         <label for="genre" class="form-label">장르</label>
                         <select class="form-select" id="genre" name="bookGenre" th:field="*{bookGenre}">
                             <option value="">장르선택</option>
-                            <option value="fantasy">판타지</option>
-                            <option value="romance">로맨스</option>
-                            <option value="orientalFantasy">무협</option>
-                            <option value="detective">추리</option>
-                            <option value="horror">공포</option>
-                            <option value="SF">SF</option>
-                            <option value="etc">기타</option>
+                            <option th:each="genre : ${T(com.project.novel.enums.BookGenre).values()}" th:value="${genre}" th:text="${genre.getDisplayName()}"></option>
                         </select>
                         <div class="form-text text-danger" th:if="${#fields.hasErrors('bookGenre')}" th:errors="*{bookGenre}"></div>
                     </div>
@@ -33,7 +27,6 @@
                     <div class="mb-3">
                         <label for="file" class="form-label">표지 이미지</label>
                         <input class="form-control" type="file" id="file" name="bookImage" th:field="*{bookImage}" onchange="validateImage()">
-                        <div class="form-text text-danger" th:text="${imageError}"></div>
                     </div>
 
                     <div class="mb-3">
@@ -57,7 +50,7 @@
                 </div>
 
                 <div class="mt-5 d-grid">
-                    <button class="btn btn-primary">저장</button>
+                    <button class="btn btn-primary" type="submit">저장</button>
                 </div>
 
             </form>
@@ -65,9 +58,9 @@
     </div>
     <script>
         function validateImage() {
-            var fileName = document.getElementById("file").value;
-            var idxDot = fileName.lastIndexOf(".") + 1;
-            var extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
+            let fileName = document.getElementById("file").value;
+            let idxDot = fileName.lastIndexOf(".") + 1;
+            let extFile = fileName.slice(idxDot).toLowerCase();
             (extFile==="jpg" || extFile==="jpeg" || extFile==="png") ? true : alert("확장자 jpg, jpeg, png만 가능합니다.");
             (extFile==="jpg" || extFile==="jpeg" || extFile==="png") ? true : document.getElementById("file").value = ""; // 파일 선택을 취소
         }
