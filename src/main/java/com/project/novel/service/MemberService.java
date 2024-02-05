@@ -1,7 +1,6 @@
 package com.project.novel.service;
 
 import com.project.novel.dto.JoinDto;
-import com.project.novel.dto.MemberProfileDto;
 import com.project.novel.entity.Member;
 import com.project.novel.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -70,15 +69,5 @@ public class MemberService {
         } else {
             throw new UsernameNotFoundException("등록되지 않은 회원입니다.");
         }
-    }
-    @Transactional
-    public MemberProfileDto getProfile(Long id) {
-        MemberProfileDto memberProfileDto = new MemberProfileDto();
-        Member memberInfo =
-                memberRepository.findById(id).orElseThrow(
-                        () -> new UsernameNotFoundException("등록되지 않은 회원입니다.")
-                );
-        memberProfileDto.setMember(memberInfo);
-        return memberProfileDto;
     }
 }
