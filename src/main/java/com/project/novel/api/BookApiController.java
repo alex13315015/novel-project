@@ -4,12 +4,15 @@ import com.project.novel.dto.BookLikesDto;
 import com.project.novel.dto.BookListDto;
 import com.project.novel.dto.CustomUserDetails;
 import com.project.novel.service.BookService;
+import com.project.novel.service.SubscribeService;
 import com.project.novel.service.ViewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +25,7 @@ public class BookApiController {
 
     private final BookService bookService;
     private final ViewService viewService;
+    private final SubscribeService subscribeService;
 
 
     @PostMapping("/book/{bookId}/like")
@@ -47,15 +51,21 @@ public class BookApiController {
     }
 
     @GetMapping("/book/{memberId}/bookList")
-    public Page<BookListDto> getMyBookList(@PathVariable(name="memberId") Long memberId,
-                                           @PageableDefault Pageable pageable) {
-        return bookService.getAllMyBook(memberId, pageable);
+    public ResponseEntity<Slice<BookListDto>> getMyBookList(@PathVariable(name="memberId") Long memberId,
+                                                            @PageableDefault(size = 25, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        return ResponseEntity.ok(bookService.getAllMyBook(memberId, pageable));
     }
 
     @GetMapping("/book/myRecent")
-    public Page<BookListDto> getMyRecentViewList(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-                                                 @PageableDefault Pageable pageable) {
+    public Slice<BookListDto> getMyRecentViewList(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                                  @PageableDefault(size = 25, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         return viewService.recentViewList(customUserDetails.getLoggedMember().getId(), pageable);
+    }
+
+    @GetMapping("/book/mySubscribe")
+    public Slice<BookListDto> getMySubscribeList(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                                 @PageableDefault(size = 25, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        return subscribeService.getMySubscribeList(customUserDetails.getLoggedMember().getId(), pageable);
     }
 
 }

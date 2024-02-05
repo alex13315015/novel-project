@@ -65,9 +65,8 @@ public class BookController {
     }
 
     @GetMapping("/modify/{bookId}")
-    public String modifyBook(@PathVariable(name="bookId") Long bookId, Model model,
-                             @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        BookUploadDto bookUploadDto = bookService.getModifiedBook(bookId, customUserDetails.getLoggedMember().getId());
+    public String modifyBook(@PathVariable(name="bookId") Long bookId, Model model) {
+        BookUploadDto bookUploadDto = bookService.getModifiedBook(bookId);
         model.addAttribute("bookUploadDto", bookUploadDto);
         model.addAttribute("bookId", bookId);
         model.addAttribute("BookGenre", BookGenre.values());
