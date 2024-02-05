@@ -52,7 +52,7 @@ public class OAuth2DetailsService extends DefaultOAuth2UserService {
         String email = socialUserInfo.getEmail();
         String nickname = socialUserInfo.getName();
         String userId = socialUserInfo.getProviderId();
-        Grade role = Grade.ROLE_USER;
+        Grade role = Grade.USER;
         String password = bCryptPasswordEncoder.encode(UUID.randomUUID().toString());
 
         Member returnMember = null;
@@ -64,7 +64,7 @@ public class OAuth2DetailsService extends DefaultOAuth2UserService {
             returnMember = Member.builder()
                     .userId(userId)
                     .password(password)
-                    .role(role)
+                    .role(role.getRole())
                     .nickname(nickname)
                     .email(email)
                     .build();
