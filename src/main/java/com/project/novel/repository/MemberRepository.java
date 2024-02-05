@@ -14,6 +14,8 @@ public interface MemberRepository extends JpaRepository<Member,Integer> {
     Optional<Member> findByPassword(String password);
     Optional<Member> findByUserIdAndEmail(String userId, String email);
 
+    @Query(value = "DELETE FROM MEMBER WHERE id = :id" ,nativeQuery = true)
+    void deleteMember(@Param("id") Long id);
 
 
 

@@ -1,6 +1,5 @@
 package com.project.novel.config;
 
-import com.project.novel.constant.Grade;
 import com.project.novel.service.CustomUserDetailsService;
 import com.project.novel.service.OAuth2DetailsService;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +24,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/auth/**","/css/**","/js/**","/images/**")
                         .permitAll()
-                        .requestMatchers("/admin/**").hasRole(Grade.ROLE_ADMIN.getRole()) // ADMIN ROLE 만 접근 가능
+                        .requestMatchers("/admin/**").hasRole("ADMIN") // ADMIN 만 접근 가능
                         .anyRequest()
                         .authenticated())
                 .formLogin((form) -> form

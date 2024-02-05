@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<div layout:fragment="content" class="main">
+    <div class="container">
+        <h2 class="title">회원정보</h2>
+        <table class="table memberInfo">
+            <colgroup>
+                <col style="width : 2%">
+                <col style="width : 10%">
+                <col style="width : 10%">
+                <col style="width : 15%">
+                <col style="width : 10%">
+                <col style="width : 10%">
+                <col style="width : 10%">
+            </colgroup>
+            <thead>
+            <tr>
+                <th>
+                    <label class="checkbox">
+                        <input type="checkbox" id="selectAll">
+                    </label>
+                </th>
+                <th scope="col">아이디</th>
+                <th scope="col">이름</th>
+                <th scope="col">닉네임</th>
+                <th scope="col">이메일</th>
+                <th scope="col">전화번호</th>
+                <th></th>
+            </tr>
+            </thead>
+            <th:block th:each="member : ${memberList}">
+            <tr>
+                <td>
+                    <label class="checkbox">
+                        <input type="checkbox" class="selectSome" th:value="${member.id}">
+                    </label>
+                </td>
+                <td th:text="${member.userId}"></td>
+                <td th:text="${member.userName}"></td>
+                <td th:text="${member.nickname}"></td>
+                <td th:text="${member.email}"></td>
+                <td th:text="${member.phoneNumber}"></td>
+                <td><button class="btn btn-danger btnDeleteMember" id="btnDeleteMember" th:data-idx="${member.id}">삭제</button></td>
+            </tr>
+            </th:block>
+        </table>
+        <div>
+            <button class="btn btn-dark" id="deleteSome">선택 삭제</button>
+        </div>
+    </div>
+    <script th:inline="javascript">
+        $("#btnDeleteMember").on("click",function (e) {
+            console.log("개별선택");
+            e.preventDefault();
+            const id=  $(this).data("idx");
+            const tr = $(this).closest("tr");
+            $.ajax({
+                url : `/api/admin/${id}`,
+                method : "DELETE",
+                success : function (response) {
+                    if(response.deleteMember === "OK") {
+                        tr.fadeOut();
+                    }
+                }
+            })
+        });
+        $("#selectAll").on("click",function () {
+            console.log("전체선택");
+            let check = $("#selectAll").prop("checked");
+            if(check) {
+                $(".selectSome").prop("checked",true);
+            } else {
+                $(".selectSome").prop("checked",false);
+            }
+        });
+        $(".selectSome").on("click",function () {
+            $("#selectAll").prop("checked",false);
+        });
+        $("#deleteSome").on("click",function () {
+            console.log("선택삭제");
+            let checkArr = [];
+            $(".selectSome:checked").each(function () {
+                checkArr.push($(this).attr("data-idx"));
+            });
+            console.log(checkArr);
+        });
+    </script>
+</div>
+</html>
