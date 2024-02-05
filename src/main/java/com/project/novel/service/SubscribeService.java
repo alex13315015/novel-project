@@ -1,5 +1,6 @@
 package com.project.novel.service;
 
+import com.project.novel.dto.BookListDto;
 import com.project.novel.entity.Book;
 import com.project.novel.entity.Member;
 import com.project.novel.entity.Subscribe;
@@ -8,6 +9,8 @@ import com.project.novel.repository.MemberRepository;
 import com.project.novel.repository.SubscribeRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -72,5 +75,9 @@ public class SubscribeService {
         );
 
         return subscribeRepository.countByBook(book);
+    }
+
+    public Slice<BookListDto> getMySubscribeList(Long loggedId, Pageable pageable) {
+        return subscribeRepository.findMySubscribeList(loggedId, pageable);
     }
 }

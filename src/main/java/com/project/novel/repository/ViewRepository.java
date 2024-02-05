@@ -2,8 +2,8 @@ package com.project.novel.repository;
 
 import com.project.novel.dto.BookListDto;
 import com.project.novel.entity.Views;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -21,5 +21,5 @@ public interface ViewRepository extends JpaRepository<Views, Long> {
             "WHERE v.member.id = :userId AND v.updatedAt IN " +
             "(SELECT MAX(v2.updatedAt) FROM Views v2 WHERE v2.member.id = :userId GROUP BY v2.chapter.book.id) " +
             "ORDER BY v.updatedAt DESC")
-    Page<BookListDto> findRecentlyViewedBooks(@Param("userId") Long userId, Pageable pageable);
+    Slice<BookListDto> findRecentlyViewedBooks(@Param("userId") Long userId, Pageable pageable);
 }

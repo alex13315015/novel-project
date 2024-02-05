@@ -6,6 +6,7 @@ import com.project.novel.dto.BookListDto;
 import com.project.novel.entity.Book;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,11 +14,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface BookRepository extends JpaRepository<Book, Long> {
-  
+
     @Query("SELECT new com.project.novel.dto.BookListDto(b.id, b.bookName, b.bookImage, m.nickname) " +
             "FROM Book b JOIN b.member m " +
             "WHERE m.id = :loggedId AND b.isActive = true")
-    Page<BookListDto> findMyBookList(@Param("loggedId") Long loggedId, Pageable pageable);
+    Slice<BookListDto> findMyBookList(@Param("loggedId") Long loggedId, Pageable pageable);
 
     @Query("SELECT b FROM Book b WHERE b.isActive = false")
     List<Book> findByIsActive();
@@ -36,7 +37,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     Page<Object[]> findBookInfoListPage(@Param("books") List<Book> books, Pageable pageable);
 
 
-    @Query("select b from Book b where b.createdAt > :sevenDaysAgo ORDER BY createdAt DESC")
+    @Query("select b from Book b where b.createdAt > :sevenDaysAgo ORDER BY b.createdAt DESC")
     Page<Book> findByCreatedDateAfter(@Param("sevenDaysAgo")LocalDateTime sevenDaysAgo, PageRequest pageRequest);
 
 

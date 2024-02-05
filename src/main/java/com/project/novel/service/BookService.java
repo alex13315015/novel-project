@@ -14,10 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 
@@ -163,7 +160,7 @@ public class BookService {
                 .build();
     }
 
-    public Page<BookListDto> getAllMyBook(Long loggedId, Pageable pageable) {
+    public Slice<BookListDto> getAllMyBook(Long loggedId, Pageable pageable) {
         return bookRepository.findMyBookList(loggedId, pageable);
     }
 
@@ -223,7 +220,7 @@ public class BookService {
 
     // 책 정보 수정을 위해 책 정보를 가져옴
     @Transactional
-    public BookUploadDto getModifiedBook(Long bookId, Long id) {
+    public BookUploadDto getModifiedBook(Long bookId) {
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 책은 존재하지 않습니다."));
         return BookUploadDto.builder()
