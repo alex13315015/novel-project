@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/layout}">
+<div layout:fragment="content" class="main">
+    <div class="container F_P">
+            <div class="row mt-5 mb-3 myId">
+                <p class="col-4">회원님의 아이디는</p>
+                <p class="col-3" th:text="${userId}"></p>
+            </div>
+            <div class="d-grid justify-content-center mt-2">
+                <a th:href="@{/auth/findPassword}">
+                    <button class="btn btn-dark authBtn mt-3">비밀번호 찾기</button>
+                </a>
+                <a th:href="@{/auth/login}">
+                    <button class="btn btn-dark authBtn mt-3" type="submit">로그인 하러가기</button>
+                </a>
+            </div>
+    </div>
+</div>
+</html>
