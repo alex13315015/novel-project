@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout :: head(~{::title})">
+    <meta charset="UTF-8">
+    <title>home</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+<body th:replace="layout/layout :: content(~{::content})">
+<content>
+<div class="container">
+    <table class="table">
+        <tr>
+            <th>id</th>
+            <th>subject</th>
+            <th>writer</th>
+            <th>date</th>
+            <th>hit</th>
+        </tr>
+        <tr th:each="board: ${boardList}">
+            <td th:text="${board.id}"></td>
+            <td><a th:href="@{|/board/${board.id}|(page=${boardList.number + 1})}" th:text="${board.subject}"></a></td>
+            <td th:text="${board.member_id}"></td>
+            <td th:text="*{#temporals.format(board.createDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+            <td th:text="${board.hit}"></td>
+        </tr>
+    </table>
+
+
+    <div class="container mt-5">
+        <form th:action="@{/board/list}" method="get">
+            <div class="row">
+                <div class="col-4">
+                    <select class="form-select" name="category">
+                        <option value="title" th:selected="${category == 'title'}">제목</option>
+                        <option value="content" th:selected="${category == 'content'}">내용</option>
+                        <option value="writer" th:selected="${category == 'writer'}">아이디</option>
+                    </select>
+                </div>
+                <div class="col-6">
+                    <input type="text" class="form-control" name="keyword" placeholder="검색어를 입력해주세요."
+                           th:value="${param.keyword}">
+                </div>
+                <div class="col-2">
+                    <button type="submit" class="btn btn-dark text-light">검색</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="mt-5 d-flex justify-content-center">
+        <a href="/board/write" class="btn btn-dark text-light">글쓰기</a>
+    </div>
+
+    <nav aria-label="Page navigation example" class="mt-5 d-flex justify-content-center">
+        <ul class="pagination">
+
+            <!-- 첫 페이지 링크 -->
+            <li class="page-item" th:classappend="${boardList.isFirst() ? 'disabled' : ''}">
+                <a class="page-link" th:href="@{/board/list(page=0, category=${category}, keyword=${keyword})}">&laquo;&laquo;</a>
+            </li>
+
+            <!-- 이전 페이지 링크 -->
+            <li class="page-item" th:classappend="${boardList.isFirst() ? 'disabled' : ''}">
+                <a class="page-link"
+                   th:href="@{/board/list(page=${currentPage - 2}, category=${category}, keyword=${keyword})}">&laquo;</a>
+            </li>
+
+            <!-- 페이지 번호 링크 -->
+            <span th:each="page : ${#numbers.sequence(startPage, endPage)}">
+            <li class="page-item" th:classappend="${page == currentPage ? 'active' : ''}">
+                <a class="page-link"
+                   th:href="@{/board/list(page=${page - 1}, category=${category}, keyword=${keyword})}"
+                   th:text="${page}"></a>
+            </li>
+        </span>
+
+            <!-- 다음 페이지 링크 -->
+            <li class="page-item" th:classappend="${boardList.isLast() ? 'disabled' : ''}">
+                <a class="page-link"
+                   th:href="@{/board/list(page=${boardList.number + 1}, category=${category}, keyword=${keyword})}">&raquo;</a>
+            </li>
+
+            <!-- 마지막 페이지 링크 -->
+            <li class="page-item" th:classappend="${boardList.isLast() ? 'disabled' : ''}">
+                <a class="page-link"
+                   th:href="@{/board/list(page=${boardList.totalPages - 1}, category=${category}, keyword=${keyword})}">&raquo;&raquo;</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+</content>
+</body>
+</html>

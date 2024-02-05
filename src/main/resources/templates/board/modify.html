@@ -1,0 +1,60 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout :: head(~{::title})">
+    <meta charset="UTF-8">
+    <title>home</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+<body th:replace="layout/layout :: content(~{::content})">
+<content>
+    <div class="container">
+        <h2>MODIFY</h2>
+        <form action="/board/modify" method="post" name="modifyForm">
+
+            <input type="hidden" name="id" th:value="${boardModify.id}">
+
+            <div class="mb-3">
+                <label for="member_id" class="form-label">writer</label>
+                <input type="text" class="form-control" placeholder="member_id" name="member_id"
+                       th:value="${boardModify.member_id}" readonly>
+            </div>
+
+            <div class="mb-3">
+                <label for="subject" class="form-label">subject</label>
+                <input type="text" class="form-control" placeholder="subject" name="subject"
+                       th:value="${boardModify.subject}">
+            </div>
+
+            <div class="mb-3">
+                <label for="content" class="form-label">content</label>
+                <textarea class="form-control" rows="5" id="content" name="content"
+                          th:text="${boardModify.content}"></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label">password</label>
+                <input type="password" class="form-control" placeholder="password" name="password" id="password">
+            </div>
+
+            <input type="hidden" name="hit" th:value="${boardModify.hit}">
+
+            <input type="button" value="글수정" onclick="boardModify()">
+
+        </form>
+    </div>
+</div>
+
+
+<script th:inline="javascript">
+    const boardModify = () => {
+        const pass = [[${boardModify.password}]];
+        const inputPass = document.getElementById("password").value;
+        if (pass === inputPass) {
+            document.modifyForm.submit();
+        } else {
+            alert("비밀번호가 일치하지 않습니다.");
+        }
+    }
+</script>
+</content>
+</body>
+</html>

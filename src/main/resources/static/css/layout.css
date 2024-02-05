@@ -175,8 +175,135 @@
     text-decoration: underline;
     text-decoration-color: black;
     font-weight: bold;
+}
   
 .changePassword {
     width: 600px;
     height: 200px;
+}
+
+/*comment*/
+.comment-container {
+  margin-top: 20px;
+  border-top: 1px solid #ddd;
+  padding-top: 15px;
+}
+
+.comment {
+  margin-bottom: 15px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.comment-author {
+  font-weight: bold;
+  color: #000000;
+}
+
+.comment-content {
+  margin-top: 5px;
+  color: #333;
+}
+
+.comment-date {
+  font-size: 12px;
+  color: #777;
+}
+
+.comment-form {
+  margin-top: 20px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.comment-form textarea {
+  width: 100%;
+  resize: none;
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+}
+
+.comment-form button {
+  background-color: #000000;
+  color: #fff;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+/*board*/
+.main {
+  min-height: 500px;
+}
+
+.main h2 {
+  margin: 30px 0;
+}
+
+.error {
+  font-size: 12px;
+  color: #f00;
+  margin-top: 10px;
+}
+
+#viewModal .modal-content {
+  white-space: pre-wrap;
+}
+
+.even td,.even th {
+  background-color: #ccc !important;
+}
+
+ul {
+  padding-left: 0;
+}
+/*.comment {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding:5px 0;
+  border-bottom:1px solid #eee;
+}
+.comment .date {
+  font-size: 12px;
+}*/
+.btn-del {
+  cursor: pointer;
+}
+.writerInfo{
+  padding: 10px;
+  background-color: #eee;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  align-self: flex-start;
+  font-size: 12px;
+  margin-left: 50px;
+  min-width: 120px;
+}
+.text-box{
+  width: 900px;
+}
+
+.input-file-button{
+  padding: 6px 25px;
+  background-color:#FF6600;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+}
+
+.gnb_li .nav-pills .gnb_myPage .gnb_txt {
+  color: black;
+
+  text-decoration: none !important;
 }
