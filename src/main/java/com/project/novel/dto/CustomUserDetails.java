@@ -1,18 +1,29 @@
 package com.project.novel.dto;
 
 import com.project.novel.entity.Member;
-import lombok.RequiredArgsConstructor;
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.ArrayList;
 import java.util.Collection;
-@RequiredArgsConstructor
-public class CustomUserDetails implements UserDetails {
-    private Member loggedMember;
+import java.util.Map;
 
+@Data
+public class CustomUserDetails implements UserDetails, OAuth2User {
+    private Member loggedMember;
+    private Map<String,Object> attributes;
     public CustomUserDetails(Member loggedMember) {
         this.loggedMember = loggedMember;
+    }
+    public CustomUserDetails(Member loggedMember,Map<String,Object> attributes) {
+        this.loggedMember = loggedMember;
+        this.attributes = attributes;
+    }
+    @Override
+    public Map<String, Object> getAttributes() {
+        return attributes;
     }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -25,7 +36,6 @@ public class CustomUserDetails implements UserDetails {
         });
         return collection;
     }
-
     @Override
     public String getPassword() {
         return loggedMember.getPassword();
@@ -54,5 +64,10 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public String getName() {
+        return (String) attributes.get("name");
     }
 }
