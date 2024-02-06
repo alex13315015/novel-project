@@ -19,7 +19,7 @@
             <div class="row g-4 py-5 row-cols-1 row-cols-lg-5">
                 <div class="feature col text-center" th:each="newBook: ${newBookOfWeeks}">
                     <a th:href="@{/book/library/{id}(id=${newBook.id})}" style="text-decoration: none;" >
-                        <div class="d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
+                        <div class="d-inline-flex align-items-center justify-content-center bg-gradient fs-2 mb-3">
                             <img  alt="" th:src="${newBook.bookImage.startsWith('/images/') ? newBook.bookImage : '/upload/' + newBook.bookImage}" class="bi" width="200px" height="200px">
                         </div>
                         <h3 class="fs-2 text-body-emphasis text-center" th:text="${newBook.getBookName}">title</h3>
@@ -36,7 +36,7 @@
             <div class="row g-4 py-5 row-cols-1 row-cols-lg-5">
                 <div class="feature col text-center" th:each="popularityBook: ${popularityBookOfWeeks}">
                     <a th:href="@{/book/library/{id}(id=${popularityBook.id})}" style="text-decoration: none;">
-                        <div class="d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
+                        <div class="d-inline-flex align-items-center justify-content-center bg-gradient fs-2 mb-3">
                             <img alt="" th:src="${popularityBook.bookImage.startsWith('/images/') ? popularityBook.bookImage : '/upload/' + popularityBook.bookImage}" class="bi" width="200px" height="200px">
                         </div>
                         <h3 class="fs-2 text-body-emphasis text-center" th:text="${popularityBook.getBookName}">title</h3>

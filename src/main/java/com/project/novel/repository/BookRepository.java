@@ -1,6 +1,7 @@
 package com.project.novel.repository;
 
 
+import com.project.novel.enums.BookGenre;
 import org.springframework.data.domain.PageRequest;
 import com.project.novel.dto.BookListDto;
 import com.project.novel.entity.Book;
@@ -22,8 +23,8 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     @Query("SELECT b FROM Book b WHERE b.isActive = false")
     List<Book> findByIsActive();
 
-    @Query("select b from Book b where lower(b.bookName) like lower(concat('%', :keyword, '%'))")
-    List<Book> findByBookNameContainingIgnoreCase(@Param("keyword") String keyword);
+//    @Query("select b from Book b where lower(b.bookName) like lower(concat('%', :keyword, '%'))")
+//    List<Book> findByBookNameContainingIgnoreCase(@Param("keyword") String keyword);
 
     @Query("SELECT b, COALESCE(SUM(c.hits), 0) AS hits, COUNT(DISTINCT bl) AS likes, COUNT(DISTINCT s) AS subscribes, m.nickname " +
             "FROM Book b " +
@@ -31,12 +32,12 @@ public interface BookRepository extends JpaRepository<Book, Long> {
             "LEFT JOIN Subscribe s on b = s.book " +
             "LEFT JOIN Member m on m = b.member " +
             "LEFT JOIN Chapter c on b = c.book " +
-            "WHERE b IN :books " +
+            "WHERE lower(b.bookName) like lower(concat('%', :keyword, '%')) and (:genre IS NULL OR b.bookGenre = :genre) " +
             "GROUP BY b")
-    Page<Object[]> findBookInfoListPage(@Param("books") List<Book> books, Pageable pageable);
+    Page<Object[]> findBookInfoListPage(String keyword, @Param("genre") BookGenre bookGenre, Pageable pageable);
 
 
-    @Query("select b from Book b where b.createdAt > :sevenDaysAgo ORDER BY createdAt DESC")
+    @Query("select b from Book b where b.createdAt > :sevenDaysAgo ORDER BY b.createdAt DESC")
     Page<Book> findByCreatedDateAfter(@Param("sevenDaysAgo")LocalDateTime sevenDaysAgo, PageRequest pageRequest);
 
 

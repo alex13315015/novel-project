@@ -20,8 +20,20 @@
 </head>
 <body>
 <div th:replace="fragment/header :: header"></div>
+
 <div class="container" style="width:70%">
-    <form action="/library">
+
+    <nav class="navbar m-3">
+        <div class="container-fluid justify-content-start">
+            <a th:href="@{/library(sortType=${sortType},keyword=${keyword},genre=all)}"><button class="btn btn-sm btn-outline-dark me-2"
+                                                                                                th:value="all" name="genre">전체</button></a>
+            <a th:href="@{/library(sortType=${sortType},keyword=${keyword},genre=${genre.toString()})}" th:each="genre: ${T(com.project.novel.enums.BookGenre).values()}"><button class="btn btn-sm btn-outline-dark me-2"
+                                                                                                                                                                                  th:text="${genre.displayName}" th:value="${genre.toString()}" name="genre" type="btn"></button></a>
+        </div>
+    </nav>
+
+
+    <form action="/library" method="GET">
         <div class="m-auto">
             <ul class="nav nav-underline">
                 <li class="nav-item">
@@ -34,6 +46,8 @@
         </div>
 
 
+
+
         <div class="mt-2">
             <input class="form-control form-control-lg" id="keyword" name="keyword" type="text"
                 placeholder="제목 작가 검색 모두 가능합니다."
@@ -41,13 +55,15 @@
         </div>
 
 
+        <input type="hidden" id="genre" name="genre" value="">
+
         <nav class="navbar m-3">
             <div class="container-fluid justify-content-start">
-                <button class="btn btn-sm btn-outline-dark me-2" value="createdDateDesc" name="sortType" type="submit">최신순</button>
-                <button class="btn btn-sm btn-outline-dark me-2" value="createdDateAsc" name="sortType" type="submit">오래된순</button>
-                <button class="btn btn-sm btn-outline-dark me-2" value="hits" name="sortType" type="submit">조회순</button>
-                <button class="btn btn-sm btn-outline-dark me-2" value="subscribes" name="sortType" type="submit">구독자순</button>
-                <button class="btn btn-sm btn-outline-dark me-2" value="likes" name="sortType" type="submit">좋아요순</button>
+                <a th:href="@{/library(sortType=createdDateDesc,keyword=${keyword},genre=${genre})}"><button class="btn btn-sm btn-outline-dark me-2" value="createdDateDesc" name="sortType" >최신순</button></a>
+                <a th:href="@{/library(sortType=createdDateAsc,keyword=${keyword},genre=${genre})}"><button class="btn btn-sm btn-outline-dark me-2" value="createdDateAsc" name="sortType" >오래된순</button></a>
+                <a th:href="@{/library(sortType=hits,keyword=${keyword},genre=${genre})}"><button class="btn btn-sm btn-outline-dark me-2" value="hits" name="sortType" >조회순</button></a>
+                <a th:href="@{/library(sortType=subscribes,keyword=${keyword},genre=${genre})}"><button class="btn btn-sm btn-outline-dark me-2" value="subscribes" name="sortType" >구독자순</button></a>
+                <a th:href="@{/library(sortType=likes,keyword=${keyword},genre=${genre})}"><button class="btn btn-sm btn-outline-dark me-2" value="likes" name="sortType" >좋아요순</button></a>
             </div>
         </nav>
     </form>
@@ -106,7 +122,7 @@
             </div>
         </div>
 
-    <div class="d-flex justify-content-center">
+    <div class="d-flex justify-content-center" th:if="${#lists.size(books) > 0}">
         <nav aria-label="Page navigation example">
             <ul class="pagination">
                 <li class="page-item">
@@ -136,59 +152,92 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const sortButtons = document.querySelectorAll('[name="sortType"]');
+        const genreButtons = document.querySelectorAll('[name="genre"]');
         const searchInput = document.getElementById('keyword');
+        const libraryForm = document.getElementById('libraryForm');
 
-        // URL에서 검색어 및 정렬 유형을 읽어오는 함수
+        // URL에서 검색어, 정렬 유형, 장르를 읽어오는 함수
         function readQueryParams() {
             const urlParams = new URLSearchParams(window.location.search);
             const searchKeyword = urlParams.get('keyword');
             const sortType = urlParams.get('sortType');
+            const genre = urlParams.get('genre');
 
-            // 이전에 저장된 정렬 유형이 있다면 해당 버튼을 활성화
+            // 검색어 표시
+            if (searchKeyword) {
+                searchInput.value = searchKeyword;
+            }
+
+            // 정렬 버튼 활성화
             if (sortType) {
-                const selectedButton = document.querySelector(`[value="${sortType}"]`);
+                const selectedButton = document.querySelector(`[name="sortType"][value="${sortType}"]`);
                 if (selectedButton) {
                     selectedButton.classList.add('active');
                 }
             } else {
-                // 이전에 저장된 정렬 유형이 없다면 디폴트로 최신순 활성화
-                const defaultButton = document.querySelector('[value="createdDateDesc"]');
+                // 기본값으로 최신순 활성화
+                const defaultButton = document.querySelector('[name="sortType"][value="createdDateDesc"]');
                 if (defaultButton) {
                     defaultButton.classList.add('active');
                 }
             }
 
-            // 검색어도 함께 표시
-            if (searchKeyword) {
-                searchInput.value = searchKeyword;
+            // 장르 버튼 활성화
+            if (genre) {
+                const selectedGenreButton = document.querySelector(`[name="genre"][value="${genre}"]`);
+                if (selectedGenreButton) {
+                    selectedGenreButton.classList.add('active');
+                }
+            } else {
+                // 기본값으로 전체 장르 활성화
+                const defaultGenreButton = document.querySelector('[name="genre"][value="all"]');
+                if (defaultGenreButton) {
+                    defaultGenreButton.classList.add('active');
+                }
             }
         }
 
-        // 각 버튼에 클릭 이벤트 리스너 추가
+        // 정렬 및 장르 버튼에 클릭 이벤트 리스너 추가
         sortButtons.forEach(function(button) {
             button.addEventListener('click', function() {
-                // 선택한 정렬 유형을 URL에 추가
                 const selectedSortType = button.value;
-                const urlParams = new URLSearchParams(window.location.search);
-                urlParams.set('sortType', selectedSortType);
+                const selectedGenre = document.querySelector('[name="genre"].active')?.value || 'all';
 
-                // 검색어 추가
-                const searchKeyword = searchInput.value;
-                urlParams.set('bookSearch', searchKeyword);
-
-                // URL 업데이트
-                window.history.pushState({}, '', `${window.location.pathname}?sortType=${selectedSortType}&bookSearch=${searchKeyword}`);
-
-                // 검색어와 함께 폼 제출
-                const form = document.querySelector('form');
-                form.submit();
+                updateUrlParams(selectedSortType, selectedGenre);
             });
         });
+
+        genreButtons.forEach(function(button) {
+            button.addEventListener('click', function() {
+                const selectedGenre = button.value;
+                const selectedSortType = document.querySelector('[name="sortType"].active')?.value || 'createdDateDesc';
+
+                updateUrlParams(selectedSortType, selectedGenre);
+            });
+        });
+
+        // URL 업데이트 및 form 제출 함수
+        function updateUrlParams(sortType, genre) {
+            const urlParams = new URLSearchParams(window.location.search);
+            urlParams.set('sortType', sortType);
+            urlParams.set('genre', genre);
+            urlParams.set('keyword', searchInput.value);
+
+            const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+            window.history.pushState({}, '', newUrl);
+
+            // hidden input의 값을 업데이트하여 form으로 전송
+            document.getElementById('genre').value = genre;
+            libraryForm.submit();
+        }
 
         // 페이지 로드 시에 URL에서 읽어오기
         readQueryParams();
     });
 </script>
+
+
+
 
 
 </html>
