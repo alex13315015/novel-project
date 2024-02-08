@@ -8,7 +8,6 @@ import com.project.novel.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -52,10 +51,7 @@ public class MemberController {
     }
 
     @GetMapping("/myBookList")
-    public String mypage(@AuthenticationPrincipal CustomUserDetails customUserDetails, Model model,
-                         @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-
-        model.addAttribute("myBookList", bookService.getAllMyBook(customUserDetails.getLoggedMember().getId(), pageable));
+    public String mypage() {
         return "member/myBookList";
     }
 

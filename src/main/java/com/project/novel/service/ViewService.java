@@ -6,8 +6,8 @@ import com.project.novel.repository.ChapterRepository;
 import com.project.novel.repository.MemberRepository;
 import com.project.novel.repository.ViewRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 
@@ -33,7 +33,7 @@ public class ViewService {
         }
     }
 
-    public Page<BookListDto> recentViewList(Long loggedId, Pageable pageable) {
+    public Slice<BookListDto> recentViewList(Long loggedId, Pageable pageable) {
         return viewRepository.findRecentlyViewedBooks(loggedId, pageable);
     }
 

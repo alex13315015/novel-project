@@ -9,21 +9,20 @@
 <body th:replace="layout/layout :: content(~{::content})">
 <content>
     <div class="container">
-        <div class="button-group mt-2 mb-2 pt-2 pb-3">
+        <h3 style="font-weight: bold; margin-top: 30px">보관함</h3>
+        <div class="button-group mt-2 mb-2 pt-2 pb-3" style="margin-bottom: 20px;">
             <!-- 내 작품 버튼 -->
-            <a href="/member/myBookList"
+            <a id="myBookList"
                class="btn btn-outline-dark me-2"
                style="border-radius: 20px">
                 내 작품
             </a>
-
             <!-- 관심작품 버튼 -->
-            <a href="/member/myInterest"
+            <a id="mySubscribe"
                class="btn btn-outline-dark me-2"
                style="border-radius: 20px">
-                관심작품
+                구독중
             </a>
-
             <!-- 최근 본 버튼 -->
             <a id="myRecent"
                class="btn btn-outline-dark me-2"
@@ -32,36 +31,8 @@
             </a>
         </div>
         <div class="book-list">
-            <ul>
-                <!-- 각 책 정보를 반복하여 표시 -->
-                <th:block th:each="item:${myBookList}">
-                    <li class="pt-2 pb-2 mt-2 mb-2 book-item">
-                        <!-- 책 정보 링크 -->
-                        <a th:href="@{|/member/myBookList/${item.id}|}" class="subj">
-                            <div class="d-flex align-items-center">
-                                <!-- 책 이미지 -->
-                                <div class="mx-3">
-                                    <img
-                                            style="width: 150px; height: 120px; border-radius: 10px"
-                                            class="border border-opacity-25 rounded"
-                                            th:src="${item.bookImage.startsWith('/images/') ? item.bookImage : '/upload/' + item.bookImage}"
-                                            alt=""
-                                    >
-                                </div>
-                                <!-- 책 이름과 작가 이름 -->
-                                <div style="max-width: 100%; vertical-align: middle">
-                                    <p style="font-weight: bold; color: black; margin-bottom: 5px" th:text="${item.bookName}"></p>
-                                    <p style="color: #4d5154" th:text="${item.nickname}"></p>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-                </th:block>
+            <ul style="padding-left: 0">
             </ul>
-            <!-- 더보기 버튼 -->
-            <div>
-                <button class="btn btn-outline-primary mt-5 btn-more">더보기</button>
-            </div>
         </div>
     </div>
     <script th:inline="javascript">
@@ -69,40 +40,65 @@
         const memberId = [[${#authentication.principal.loggedMember.id}]];
 
         // 페이지 정보
-        let loadPage = 0;
-        let totalPages = [[${myBookList.totalPages}]];
         let sort = 'desc'
-
-        // 더보기 버튼
-        let $btnMore = $(".btn-more");
+        let page = 0;
+        let isLoading = false;
 
         // 태그 정보
         const tags = {
             myBookList: {
-                url: (memberId, loadPage) => `/api/book/${memberId}/bookList?page=${loadPage}&sort=createdAt,${sort}`,
+                url: (memberId) => `/api/book/${memberId}/bookList`,
                 shouldShowContinueReading: () => false
             },
             myRecent: {
-                url: (memberId, loadPage) => `/api/book/myRecent?page=${loadPage}&sort=updatedAt,${sort}`,
+                url: () => `/api/book/myRecent`,
                 shouldShowContinueReading: () => true
+            },
+            mySubscribe: {
+                url: () => `/api/book/mySubscribe`,
+                shouldShowContinueReading: () => false
             }
         };
 
         // 현재 선택된 태그
         let currentTag = 'myBookList';
+        // 저장해놓을 책 목록
+        let books = [];
 
-        // 책 목록을 불러오는 함수
-        function loadBooks(url) {
+        $(document).ready(function() {
+            if(!isLoading) {
+                loadBooks();
+            }
+        });
+
+        $(window).scroll(function() {
+            if($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
+                if(!isLoading) {
+                    loadBooks();
+                }
+            }
+        });
+
+        function loadBooks() {
+            isLoading = true;
+            let url = `${tags[currentTag].url(memberId)}?page=${page}`;
             $.ajax({
                 type: 'GET',
                 url: url,
                 success: function(response) {
-                    totalPages = response.totalPages;
-                    let bookListUl = $('.book-list ul');
+                    console.log(response);
 
-                    // 책 목록 추가
-                    for (let book of response.content) {
-                        bookListUl.append(bookToHtml(book));
+                    books = response.content;
+
+                    displayData(books);
+
+                    if (response.last) {
+                        // 마지막 페이지에 도달했으므로 더 이상 데이터를 불러오지 않습니다.
+                        isLoading = true;
+                    } else {
+                        // 아직 더 불러올 데이터가 있으므로 페이지 번호를 증가시킵니다.
+                        page++;
+                        isLoading = false;
                     }
                 },
                 error: function() {
@@ -111,36 +107,45 @@
             })
         }
 
-        // 더보기 버튼 클릭 시 책 목록 추가하는 함수
-        function loadMoreBooks(loadFunction) {
-            if(loadPage>=totalPages) {
-                $btnMore.hide();
-            } else {
-                loadPage++;
-                loadFunction(memberId, loadPage);
+        // 데이터를 화면에 표시하는 함수
+        function displayData(books) {
+            let bookListUl = $('.book-list ul');
+            for(let i = 0; i < books.length; i++) {
+                bookListUl.append(bookToHtml(books[i]));
             }
         }
-
-        // 더보기 버튼 이벤트
-        $btnMore.on("click", function () {
-            loadMoreBooks(function(memberId, loadPage) {
-                let url = tags[currentTag].url(memberId, loadPage);
-                loadBooks(url, memberId, loadPage);
-            });
-        });
 
         // 태그 클릭 이벤트
         for (let tag in tags) {
             $(`#${tag}`).on("click", function () {
                 $('.book-list ul').empty();
-                loadPage = 0;
-                $btnMore.show();
                 currentTag = tag;
-
-                // 첫 페이지 불러오기
-                let url = tags[currentTag].url(memberId, loadPage);
-                loadBooks(url, memberId, loadPage);
+                page = 0; // 페이지 초기화
+                updateButtonStyles();
+                loadBooks(); // 첫 페이지 불러오기
             });
+        }
+
+        // 버튼 스타일 업데이트하는 함수
+        function updateButtonStyles() {
+            // 각 버튼에 대한 jQuery 객체를 변수에 저장
+            let $myBookList = $("#myBookList");
+            let $mySubscribe = $("#mySubscribe");
+            let $myRecent = $("#myRecent");
+
+            // 모든 버튼의 스타일을 초기화
+            $myBookList.removeClass("btn-dark").addClass("btn-outline-dark");
+            $mySubscribe.removeClass("btn-dark").addClass("btn-outline-dark");
+            $myRecent.removeClass("btn-dark").addClass("btn-outline-dark");
+
+            // 현재 선택된 태그에 따라 해당 버튼의 스타일을 변경
+            if (currentTag === 'myBookList') {
+                $myBookList.removeClass("btn-outline-dark").addClass("btn-dark");
+            } else if (currentTag === 'mySubscribe') {
+                $mySubscribe.removeClass("btn-outline-dark").addClass("btn-dark");
+            } else if (currentTag === 'myRecent') {
+                $myRecent.removeClass("btn-outline-dark").addClass("btn-dark");
+            }
         }
 
         // 책 정보를 HTML로 변환하는 함수
@@ -150,18 +155,26 @@
 
             if (book.chapterId && tags[currentTag].shouldShowContinueReading()) {
                 continueReadingButton = `
-            <a href="/chapter/read/${book.chapterId}" class="continue-reading-button">
-                이어보기
-                <i class="bi bi-arrow-right" style="font-weight: bold; font-size: larger"></i>
-            </a>
-        `;
+                    <a href="/chapter/read/${book.chapterId}" class="continue-reading-button">
+                        이어보기
+                        <i class="bi bi-arrow-right" style="font-weight: bold; font-size: larger"></i>
+                    </a>
+                `;
             }
+
+            // 책 정보 링크 설정
+            let bookInfoLink = currentTag === 'myBookList' ? `/member/myBookList/${book.id}` : `/book/library/${book.id}`;
+
+            // 책 이름을 렌더링하는 요소 생성
+            let bookNameElement = document.createElement('p');
+            bookNameElement.style = "font-weight: bold; color: black; margin-bottom: 5px";
+            bookNameElement.textContent = book.bookName; // HTML 태그 이스케이프
 
             return `
                 <!-- 책 항목 -->
                 <li class="pt-2 pb-3 mt-2 mb-2 book-item">
                     <!-- 책 정보 링크 -->
-                    <a href="/member/myBookList/${book.id}" class="subj">
+                    <a href="${bookInfoLink}" class="subj">
                         <div class="d-flex align-items-center">
                             <!-- 책 이미지 -->
                             <div class="mx-3">
@@ -174,9 +187,7 @@
                             </div>
                             <!-- 책 이름과 작가 이름 -->
                             <div style="max-width: 100%; vertical-align: middle">
-                                <p style="font-weight: bold; color: black; margin-bottom: 5px">
-                                    ${book.bookName}
-                                </p>
+                                ${bookNameElement.outerHTML}
                                 <p style="color: #4d5154">
                                     ${book.nickname}
                                 </p>
@@ -188,9 +199,9 @@
                 </li>
             `;
         }
+
+        updateButtonStyles()
     </script>
 </content>
 </body>
 </html>
-
-
