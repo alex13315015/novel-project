@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import java.util.UUID;
@@ -18,6 +19,8 @@ import java.util.UUID;
 public class SecurityConfig {
     private final CustomUserDetailsService customUserDetailsService;
     private final OAuth2DetailsService oAuth2DetailsService;
+    //로그인 실패 핸들러 의존성 주입
+    private final AuthenticationFailureHandler customFailureHandler;
     @Bean
     public SecurityFilterChain filterChain (HttpSecurity httpSecurity) throws Exception {
         httpSecurity
@@ -32,13 +35,14 @@ public class SecurityConfig {
                         .usernameParameter("userId")
                         .passwordParameter("password")
                         .loginProcessingUrl("/auth/login")
+                        .failureHandler(customFailureHandler) // 로그인 실패 핸들러
                         .defaultSuccessUrl("/",true)
                         .permitAll())
                 .logout((logout) -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/auth/logout"))
                         .logoutSuccessUrl("/auth/login")
-                        .deleteCookies("JSESSIONID") // 로그아웃 할 때. JSEESIONID 제거
                         .invalidateHttpSession(true) // 로그아웃 할 때, 세션 종료
+                        .deleteCookies("JSESSIONID") // 로그아웃 할 때. JSEESIONID 제거
                         .clearAuthentication(true)) // 로그아웃 할 때, 권한 제거
                 .oauth2Login((oauth2Login) -> oauth2Login
                         .loginPage("/auth/login")
