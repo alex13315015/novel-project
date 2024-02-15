@@ -55,6 +55,9 @@ public class Book extends BaseEntity{
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
     private List<Subscribe> subscribeList;
 
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
+
     private boolean isActive;
 
     @Builder
@@ -78,5 +81,9 @@ public class Book extends BaseEntity{
         this.bookIntro = bookIntro;
         this.bookGenre = bookGenre;
         this.ageRating = ageRating;
+    }
+
+    public void chapterUpdated() {
+        this.updatedAt = LocalDateTime.now();
     }
 }

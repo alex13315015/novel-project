@@ -49,7 +49,7 @@
                 </th:block>
             </ul>
             <div>
-                <button class="btn btn-outline-primary mt-5 btn-more">더보기</button>
+                <button th:unless="${bookInfo.chapterList.totalPages == 0}" class="btn btn-outline-primary mt-5 btn-more">더보기</button>
             </div>
         </div>
     </div>
@@ -61,13 +61,8 @@
         let sort = 'desc'
 
         $(".btn-more").on("click", function () {
-            console.log(loadPage)
-            if(loadPage>=totalPages) {
-                $(this).hide();
-            } else {
-                loadPage++; // 페이지 번호 증가
-                loadChapterList(bookId, loadPage);
-            }
+            loadPage++; // 페이지 번호 증가
+            loadChapterList(bookId, loadPage);
         });
 
         function loadChapterList(bookId, loadPage) {
@@ -83,6 +78,10 @@
                     // 챕터 목록 추가
                     for (let chapter of response.content) {
                         chapterUl.append(chapterToHtml(chapter));
+                    }
+
+                    if(response.last) {
+                        $('.btn-more').hide();
                     }
                 },
                 error: function (){

@@ -6,6 +6,8 @@ import com.project.novel.enums.AgeRating;
 import lombok.*;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
+
 @Getter
 @Builder(toBuilder = true)
 public class BookDto {
@@ -23,5 +25,6 @@ public class BookDto {
     private boolean subscribeState;
     private Page<ChapterDto> chapterList;
     private Long totalHits;
+    private List<Object> chapterIdList;
 
 }

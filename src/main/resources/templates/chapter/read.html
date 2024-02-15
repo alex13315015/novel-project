@@ -32,12 +32,14 @@
                         <span id="chapter-hits" th:text="${chapterDetailDto.hits}"></span>
                     </div>
                 </div>
-                <div class="mt-5" id="chapter-contents" th:utext="${chapterDetailDto.contents}"></div>
+                <div class="mt-5" id="chapter-contents" th:text="${chapterDetailDto.contents}"></div>
             </div>
         </div>
         <div class="border-bottom border-opacity-25 mt-5 mb-5"></div>
+        <a class="btn-sort-desc active">
+            최신순
+        </a>
         <a class="btn-sort">
-            <i class="bi bi-check-lg"></i>
             전체 댓글
         </a>
         <div class="review-list mt-5">
@@ -57,6 +59,9 @@
     <script th:inline="javascript">
         const loggedId = [[${#authentication.principal.loggedMember.id}]];
         const bookId = [[${chapterDetailDto.bookId}]];
+        const CHAPTER_NAVBAR = '#chapterNavbar';
+        const REVIEW_LIST = '#review';
+        const COMMENT_TEXT = '#commentText';
 
         let chapterId = [[${chapterDetailDto.chapterId}]];
         let loadPage = 0;
@@ -74,11 +79,16 @@
                     console.log(response);
 
                     totalPages = response.totalPages;
-                    let reviewUl = $('#review');
+                    let reviewUl = $(REVIEW_LIST);
 
                     // 댓글 목록 추가
                     for (let review of response.content) {
-                        reviewUl.append(reviewToHtml(review));
+                        let reviewItem = $(reviewToHtml(review));
+                        reviewUl.append(reviewItem);
+                    }
+
+                    if(response.last){
+                        $('.btn-more').hide();
                     }
 
                 },
@@ -89,7 +99,13 @@
         }
 
         $('.btn-comment').click(function () {
-            let commentText = $('#commentText').val();
+            let commentText = $(COMMENT_TEXT).val().trim();
+            if (!commentText) {
+                alert('댓글을 입력해주세요.');
+                return;
+            }
+            // HTML 태그를 이스케이프
+            commentText = encodeURIComponent(commentText);
             let sendData = {
                 comments: commentText
             };
@@ -100,33 +116,39 @@
                 data: sendData,
                 success: function (response) {
                     console.log(response);
-                    $('#commentText').val('');
-                    let reviewUl = $('#review');
-                    reviewUl.empty();
-                    loadReviewList(chapterId, 0);
+                    $(COMMENT_TEXT).val(''); // 댓글 입력창 비우기
+                    let reviewUl = $(REVIEW_LIST);
+                    reviewUl.empty(); // 댓글 목록 초기화
+                    loadPage = 0;
+                    loadReviewList(chapterId, 0); // 댓글 목록 다시 불러오기
+                    $('.btn-more').show(); // 더보기 버튼 보이기
                 },
                 error: function () {
-                    alert('리뷰 작성에 실패했습니다.');
+                    alert('댓글 작성에 실패했습니다.');
                 }
             })
         });
 
-        $('.btn-sort').click(function () {
+        $('.btn-sort, .btn-sort-desc').click(function () {
+            // 모든 버튼에서 'active' 클래스 제거
+            $('.btn-sort, .btn-sort-desc').removeClass('active');
+
+            // 클릭된 버튼에 'active' 클래스 추가
             $(this).addClass('active');
-            sort = 'asc'; // 정렬 방식을 오름차순으로 고정
-            loadPage = 0; // 페이지 번호를 초기화
-            let reviewUl = $('#review');
+
+            // 클릭된 버튼에 따라 정렬 방식 설정
+            sort = $(this).hasClass('btn-sort') ? 'asc' : 'desc';
+
+            // 페이지 번호 초기화 및 댓글 목록 업데이트
+            loadPage = 0;
+            let reviewUl = $(REVIEW_LIST);
             reviewUl.empty();
-            loadReviewList(chapterId, loadPage); // 변경된 정렬 방식에 따라 댓글을 다시 불러옴
+            loadReviewList(chapterId, loadPage);
         });
 
         $(".btn-more").on("click", function () {
-            if(loadPage+1>=totalPages) {
-                $(this).hide();
-            } else {
-                loadPage++;
-                loadReviewList(chapterId, loadPage);
-            }
+            loadPage++;
+            loadReviewList(chapterId, loadPage);
         });
 
         function reviewToHtml(review) {
@@ -134,20 +156,22 @@
             if (review.memberId === loggedId) {
                 deleteButton = '<button class="delete-review mt-2" data-id="'+review.id+'"><i class="bi bi-x-lg"></i></button>';
             }
-            return `
-                <li class="review-item border-bottom border-opacity-25 mt-2 mb-2">
-                    <div class="d-flex justify-content-between">
-                        <div class="d-flex flex-column">
-                            <span class="mt-2 me-2" style="font-weight: bold">${review.nickname}</span>
-                            <span class="mt-1">${review.comments}</span>
-                            <span class="mb-3" style="font-weight: lighter; color: #4d5154; font-size: small">${review.createdAt}</span>
-                        </div>
-                        <div>
-                            ${deleteButton}
-                        </div>
+            let li = document.createElement('li');
+            li.className = "review-item border-bottom border-opacity-25 mt-2 mb-2";
+            li.innerHTML = `
+                <div class="d-flex justify-content-between">
+                    <div class="d-flex flex-column">
+                        <span class="mt-2 me-2" style="font-weight: bold">${review.nickname}</span>
+                        <span class="mt-1"></span>
+                        <span class="mb-3" style="font-weight: lighter; color: #4d5154; font-size: small">${review.createdAt}</span>
                     </div>
-                </li>
+                    <div>
+                        ${deleteButton}
+                    </div>
+                </div>
             `;
+            li.querySelector('.mt-1').innerText = decodeURIComponent(review.comments);
+            return li.outerHTML;
         }
 
         $(document).on('click', '.delete-review', function() {
@@ -158,7 +182,7 @@
                     type: 'DELETE',
                     url: '/api/review/' + reviewId,
                     success: function() {
-                        let reviewUl = $('#review');
+                        let reviewUl = $(REVIEW_LIST);
                         reviewUl.empty();
                         loadReviewList(chapterId, 0);
                     },
@@ -169,44 +193,30 @@
             }
         });
 
+        function moveChapter(chapterId, apiUrl) {
+            $.ajax({
+                type: 'GET',
+                url: apiUrl,
+                success: function (response) {
+                    console.log(response);
+                    updateChapterDetails(response);
+                },
+                error: function (jqXHR) {
+                    if (jqXHR.status === 400) {
+                        alert('해당 장이 없습니다.');
+                    } else {
+                        alert('장을 불러오는데 실패했습니다.');
+                    }
+                }
+            });
+        }
+
         $('#nextChapter').click(function () {
             if (chapterId === undefined) {
                 alert("목록으로 이동 후 다시 시도해주세요.")
                 return;
             }
-            $.ajax({
-                type: 'GET',
-                url: '/api/book/'+bookId+'/chapter/'+chapterId+'/next',
-                success: function (response) {
-                    console.log(response);
-                    // 세부 정보 업데이트
-                    let chapterTitle = $('#chapter-title');
-                    chapterTitle.text(response.title);
-                    chapterTitle.attr('href', '/book/library/' + response.bookId + '?order=DESC');
-                    $('#chapter-createdAt').text(response.createdAt);
-                    $('#chapter-hits').text(response.hits);
-                    $('#chapter-contents').html(response.contents);
-
-                    chapterId = response.chapterId;
-                    chapterDetailDto = response;
-
-                    // 리뷰 목록 업데이트
-                    let reviewUl = $('#review');
-                    reviewUl.empty();
-                    loadReviewList(chapterId, 0);
-
-                    // 브라우저의 주소창 업데이트
-                    window.history.pushState({}, '', '/chapter/read/' + chapterId);
-
-                },
-                error: function (jqXHR) {
-                    if (jqXHR.status === 400) {
-                        alert('다음 장이 없습니다.');
-                    } else {
-                        alert('다음 장을 불러오는데 실패했습니다.');
-                    }
-                }
-            });
+            moveChapter(chapterId, '/api/book/'+bookId+'/chapter/'+chapterId+'/next');
         });
 
         $('#prevChapter').click(function () {
@@ -214,55 +224,73 @@
                 alert("목록으로 이동 후 다시 시도해주세요.")
                 return;
             }
-            $.ajax({
-                type: 'GET',
-                url: '/api/book/'+bookId+'/chapter/'+chapterId+'/prev',
-                success: function (response) {
-                    console.log(response);
-                    // 세부 정보 업데이트
-                    let chapterTitle = $('#chapter-title');
-                    chapterTitle.text(response.title);
-                    chapterTitle.attr('href', '/book/library/' + response.bookId + '?order=DESC');
-                    $('#chapter-createdAt').text(response.createdAt);
-                    $('#chapter-hits').text(response.hits);
-                    $('#chapter-contents').html(response.contents);
+            moveChapter(chapterId, '/api/book/'+bookId+'/chapter/'+chapterId+'/prev');
+        });
 
-                    chapterId = response.chapterId;
-                    chapterDetailDto = response;
+        function updateChapterDetails(response) {
+            let chapterTitle = $('#chapter-title');
+            chapterTitle.text(response.title);
+            chapterTitle.attr('href', '/book/library/' + response.bookId + '?order=DESC');
+            $('#chapter-createdAt').text(response.createdAt);
+            $('#chapter-hits').text(response.hits);
+            $('#chapter-contents').text(response.contents);
 
-                    // 리뷰 목록을 업데이트
-                    let reviewUl = $('#review');
-                    reviewUl.empty();
-                    loadReviewList(chapterId, 0);
+            chapterId = response.chapterId;
+            chapterDetailDto = response;
 
-                    // 브라우저의 주소창 업데이트
-                    window.history.pushState({}, '', '/chapter/read/' + chapterId);
-                },
-                error: function (jqXHR) {
-                    if (jqXHR.status === 400) {
-                        alert('이전 장이 없습니다.');
-                    } else {
-                        alert('이전 장을 불러오는데 실패했습니다.');
-                    }
-                }
-            });
+            $('.btn-sort, .btn-sort-desc').removeClass('active');
+            $('.btn-sort-desc').addClass('active');
+            sort = 'desc';
+
+            // 리뷰 목록 업데이트
+            let reviewUl = $('#review');
+            reviewUl.empty();
+            loadReviewList(chapterId, 0);
+
+            // 브라우저의 주소창 업데이트
+            window.history.pushState({}, '', '/chapter/read/' + chapterId);
+
+            $('#chapterNavbar').show();
+            navbarVisible = true;
+            setTimeout(function() {
+                $('#chapterNavbar').hide();
+                navbarVisible = false;
+            }, 3000);
+        }
+
+        // 뒤로 가기 이벤트 핸들러 설정
+        window.onpopstate = function(event) {
+            location.reload();
+        };
+
+        $(document).ready(function() {
+            // 페이지가 로드되면 네비게이션바를 표시
+            $(CHAPTER_NAVBAR).show();
+            navbarVisible = true;
+
+            // 3초 후에 네비게이션바를 숨김
+            setTimeout(function() {
+                $(CHAPTER_NAVBAR).hide();
+                navbarVisible = false;
+            }, 3000);
         });
 
         $(document).click(function(event) {
-            // 클릭한 요소가 네비게이션바나 챕터 내용이 아닐 경우
-            if (!$(event.target).closest('#navbar').length) {
+            // 클릭한 요소가 네비게이션바, 아닐 경우
+            if (!$(event.target).closest('.navbar, .btn-comment, #commentText, .btn-sort, .btn-sort-desc').length) {
                 if (navbarVisible) {
                     // 네비게이션바 숨기기
-                    $('#chapterNavbar').hide();
+                    $(CHAPTER_NAVBAR).hide();
                     navbarVisible = false;
                 } else {
                     // 네비게이션바 보이기
-                    $('#chapterNavbar').show();
+                    $(CHAPTER_NAVBAR).show();
                     navbarVisible = true;
                 }
             }
         });
     </script>
+
 </content>
 </body>
 </html>

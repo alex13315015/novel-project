@@ -37,7 +37,7 @@ public class ChapterService {
         Book book = bookRepository.findById(bookId).orElseThrow(
                 () -> new IllegalArgumentException("해당하는 책을 찾을 수 없습니다.")
         );
-//        book.chapterUpdated(); // 책의 최근 업데이트 날짜를 현재 시간으로 업데이트
+        book.chapterUpdated(); // 책의 최근 업데이트 날짜를 현재 시간으로 업데이트
         Chapter chapter = chapterUploadDto.toEntity(book);
         chapterRepository.save(chapter);
 
@@ -46,6 +46,17 @@ public class ChapterService {
         ChapterDetailDto chapterDetailDto = createChapterDetailDto(chapter);
         ValueOperations<String, Object> ops = redisTemplate.opsForValue();
         ops.set(chapterKey, chapterDetailDto, 1, TimeUnit.MINUTES); // 챕터 상세 정보를 Redis에 1분 동안 캐싱
+
+        // Redis에 저장된 챕터 리스트를 가져와 새로운 챕터의 ID를 추가
+        String bookKey = "book:chapters:" + bookId;
+        List<Object> chapterIdList = (List<Object>) ops.get(bookKey);
+        if (chapterIdList == null) {
+            chapterIdList = new ArrayList<>();
+        }
+        chapterIdList.add(chapter.getId());
+
+        // 업데이트된 챕터 리스트를 Redis에 저장
+        ops.set(bookKey, chapterIdList, 1, TimeUnit.MINUTES);
     }
 
 
