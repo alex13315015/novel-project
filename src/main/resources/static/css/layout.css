@@ -1,6 +1,4 @@
-.main {
-    height: 600px;
-}
+/*member*/
 .title {
     font-weight: bold;
     margin-top: 30px;
@@ -29,19 +27,13 @@
     font-size: 15px;
     color: red;
 }
-.error {
+.errors {
     font-size: 15px;
     color: red;
 }
 .gnb_li a {
     text-decoration: none;
 }
-
-.subj:hover {
-    text-decoration: underline;
-    text-decoration-color: black;
-}
-  
 .gnb_bdr {
     opacity: 0.1;
 }
@@ -54,75 +46,12 @@
     font-size: 17px;
     color: #b4b4b4;
 }
-.search-box {
-    width: 300px;
-    color: #b4b4b4;
-    font-size: 17px;
-}
-#searchKeyword {
-    width: 300px;
-    height: 43px;
-}
-.searchBtn {
-    height: 40px;
-}
-.section li {
-    list-style: none;
-}
-.default_msg {
-    font-size: 20px;
-    font-weight: bold;
-    color: black;
-}
-.section {
-    padding: 10px 0 0 0;
-}
-.sub_link {
-    padding: 9px 0 0 0;
-    text-decoration: none;
-}
-.sub_text {
-    display: block;
-    position: relative;
-    padding: 8px 14px;
-    background-color: yellowgreen;
-    border-radius: 36px;
-    font-size: 25px;
-    color: white; !important;
-}
-.recent_area li{
-    list-style: none;
-}
-.book_image {
-    display: inline-block;
-    width: 100px;
-    height: 100px;
-}
 .info_list {
     width: 300px;
     display: inline-block;
 }
 .info_list p {
     color: black;
-}
-.concern_book li {
-    list-style: none;
-}
-.book_list a {
-    text-decoration: none;
-}
-.novel_subject {
-    color: black;
-}
-.sub-title {
-    color: #b4b4b4;
-}
-.read {
-    color: #b4b4b4;
-}
-.naver_login{
-    height: 40px;
-    width: 300px;
 }
 .myId {
     border: 3px solid black;
@@ -133,180 +62,125 @@
     width: 200px;
     height: 40px;
 }
-
-
-.book-item {
-    width: calc(50% - 10px); /* 50% 너비에 양쪽 마진 10px을 뺀 값 */
-    position: relative;
-}
-
-#chapterNavbar {
-    background-color: black;
-    color: white;
-    height: 100px;
-}
-
-#chapterNavbar .bi {
-    color: white;
-}
-
-#chapterNavbar button {
-    background: none;
-    border: none;
-    color: white;
-    font-size: x-large;
-}
-
-#chapterNavbar button:hover {
-    color: #ddd;
-}
-
-.continue-reading-button {
-    text-decoration: none;
-    color: black;
-    font-size: 1.2em;
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%); /* 자신의 높이의 절반만큼 위로 이동하여 완벽하게 중앙에 위치하게 조정 */
-}
-
-.continue-reading-button:hover {
-    text-decoration: underline;
-    text-decoration-color: black;
-    font-weight: bold;
-}
-  
 .changePassword {
     width: 600px;
     height: 200px;
 }
-
-/*comment*/
-.comment-container {
-  margin-top: 20px;
-  border-top: 1px solid #ddd;
-  padding-top: 15px;
+.loginBtn {
+    height: 55px;
+    width: 350px;
 }
 
-.comment {
-  margin-bottom: 15px;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  background-color: #f9f9f9;
-}
-
-.comment-author {
-  font-weight: bold;
-  color: #000000;
-}
-
-.comment-content {
-  margin-top: 5px;
-  color: #333;
-}
-
-.comment-date {
-  font-size: 12px;
-  color: #777;
-}
-
-.comment-form {
-  margin-top: 20px;
-  padding: 15px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  background-color: #f9f9f9;
-}
-
-.comment-form textarea {
-  width: 100%;
-  resize: none;
-  margin-bottom: 10px;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 3px;
-}
-
-.comment-form button {
-  background-color: #000000;
-  color: #fff;
-  border: none;
-  padding: 8px 15px;
-  border-radius: 3px;
-  cursor: pointer;
-}
 
 /*board*/
 .main {
-  min-height: 500px;
+    min-height: 500px;
 }
-
 .main h2 {
-  margin: 30px 0;
+    margin: 30px 0;
 }
-
 .error {
-  font-size: 12px;
-  color: #f00;
-  margin-top: 10px;
+    font-size: 12px;
+    color: #f00;
+    margin-top: 10px;
 }
-
 #viewModal .modal-content {
-  white-space: pre-wrap;
+    white-space: pre-wrap;
 }
 
 .even td,.even th {
-  background-color: #ccc !important;
+    background-color: #ccc !important;
 }
 
 ul {
-  padding-left: 0;
+    padding-left: 0;
 }
-/*.comment {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding:5px 0;
-  border-bottom:1px solid #eee;
-}
-.comment .date {
-  font-size: 12px;
-}*/
+
 .btn-del {
-  cursor: pointer;
+    cursor: pointer;
 }
 .writerInfo{
-  padding: 10px;
-  background-color: #eee;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  align-self: flex-start;
-  font-size: 12px;
-  margin-left: 50px;
-  min-width: 120px;
+    padding: 10px;
+    background-color: #eee;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    align-self: flex-start;
+    font-size: 12px;
+    margin-left: 50px;
+    min-width: 120px;
 }
 .text-box{
-  width: 900px;
+    width: 900px;
 }
 
 .input-file-button{
-  padding: 6px 25px;
-  background-color:#FF6600;
-  border-radius: 4px;
-  color: white;
-  cursor: pointer;
+    padding: 6px 25px;
+    background-color:#FF6600;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
 }
 
-.gnb_li .nav-pills .gnb_myPage .gnb_txt {
-  color: black;
-
-  text-decoration: none !important;
+/*comment*/
+.comment-container {
+    margin-top: 20px;
+    border-top: 1px solid #ddd;
+    padding-top: 15px;
 }
+
+.comment {
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.comment-author {
+    font-weight: bold;
+    color: #000000;
+}
+
+.comment-content {
+    margin-top: 5px;
+    color: #333;
+}
+
+.comment-date {
+    font-size: 12px;
+    color: #777;
+}
+
+.comment-form {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.comment-form textarea {
+    width: 100%;
+    resize: none;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
+
+.comment-form button {
+    background-color: #000000;
+    color: #fff;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+/*권준*/
 
 .subj {
     text-decoration: none;
@@ -370,14 +244,14 @@ ul {
     text-decoration: underline;
 }
 
-a.btn-sort {
+a.btn-sort-asc {
     text-decoration: none;
     color: dimgrey;
     cursor: pointer;
     margin-top: 20px;
 }
 
-a.btn-sort.active {
+a.btn-sort-asc.active {
     text-decoration: none;
     font-size: 1.2em;
     font-weight: bold;
@@ -453,6 +327,14 @@ a.btn-sort-desc.active {
     font-weight: bold;
 }
 
-ul {
- list-style-type: none;
+.coin-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 200px;
+    margin-bottom: 10px;
+}
+
+.coin-item button {
+    width: 100px;
 }

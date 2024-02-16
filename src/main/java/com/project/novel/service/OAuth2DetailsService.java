@@ -44,15 +44,13 @@ public class OAuth2DetailsService extends DefaultOAuth2UserService {
 
         } else if(provider.equals("kakao")) {
             socialUserInfo = new KakaoUserInfo(oAuth2UserInfo);
-
-        } else if(provider.equals("github")) {
-            socialUserInfo = new GithubUserInfo(oAuth2UserInfo);
         }
+
 
         String email = socialUserInfo.getEmail();
         String nickname = socialUserInfo.getName();
         String userId = socialUserInfo.getProviderId();
-        Grade role = Grade.ROLE_USER;
+        String role = Grade.USER.getRole();
         String password = bCryptPasswordEncoder.encode(UUID.randomUUID().toString());
 
         Member returnMember = null;
@@ -70,6 +68,6 @@ public class OAuth2DetailsService extends DefaultOAuth2UserService {
                     .build();
             memberRepository.save(returnMember);
         }
-        return (OAuth2User) new CustomUserDetails(returnMember, oAuth2User.getAttributes());
+        return new CustomUserDetails(returnMember,oAuth2User.getAttributes());
     }
 }

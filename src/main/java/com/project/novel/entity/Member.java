@@ -1,9 +1,11 @@
 package com.project.novel.entity;
 
-import com.project.novel.constant.Grade;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -17,7 +19,7 @@ import java.time.LocalDateTime;
 @Builder
 @EntityListeners(AuditingEntityListener.class) // 자동으로 날짜를 생성
 public class Member {
-    @Id @Column(name = "member_id")
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -40,10 +42,9 @@ public class Member {
 
     private Integer coin;
 
-    @Column(name = "role")
-    @Enumerated(EnumType.STRING)
-    private Grade role;
+    private String role;
     // 등급에 따른 role 부여하는 컬럼
+
     private String profileImage;
 
     @CreatedDate

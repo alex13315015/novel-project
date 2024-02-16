@@ -22,10 +22,85 @@
 
       <div class="text-end">
         <span sec:authentication="name"></span>
-        <a href="/auth/login"><button type="button" class="btn btn-outline-dark me-2" sec:authorize="isAnonymous()">로그인</button></a>
-        <a href="/auth/join"><button type="button" class="btn btn-dark" sec:authorize="isAnonymous()">회원가입</button></a>
-        <a href="/member/myBookList"><button type="button" class="btn btn-outline-dark me-2" sec:authorize="isAuthenticated()">내정보</button></a>
-        <a href="/auth/logout"><button type="button" class="btn btn-outline-dark me-2" sec:authorize="isAuthenticated()">로그아웃</button></a>
+        <th:block sec:authorize="hasRole(T(com.project.novel.constant.Grade).ADMIN)">
+          <div class="gnb_li">
+            <ul class="nav nav-pills">
+              <li class="mx-2">
+                <a th:href="@{/member/memberInfo/{id}(id=${#authentication.principal.loggedMember.id})}" class="gnb_login">
+                  <i class="bi bi-person-circle memberProfileImg"></i>
+                  <span class="gnb_txt" th:text="${#authentication.principal.loggedMember.userName}"></span>
+                </a>
+              </li>
+              <li class="mx-3">
+                <a th:href="@{/admin/memberList}" class="gnb_logout">
+                  <span class="gnb_bg"></span>
+                  <span class="gnb-bdr"></span>
+                  <span class="gnb_txt">회원리스트</span>
+                </a>
+              </li>
+              <li class="mx-2">
+                <a href="/notice/list" class="gnb_login">
+                  <span class="gnb_bg"></span>
+                  <span class="gnb-bdr"></span>
+                  <span class="gnb_txt">공지사항</span>
+                </a>
+              </li>
+              <li class="mx-2">
+                <a href="/board/list" class="gnb_myPage">
+                  <span class="gnb_bg"></span>
+                  <span class="gnb-bdr"></span>
+                  <span class="gnb_txt">자유게시판</span>
+                </a>
+              </li>
+              <li class="mx-3">
+                <a th:href="@{/auth/logout}" class="gnb_logout">
+                  <span class="gnb_bg"></span>
+                  <span class="gnb-bdr"></span>
+                  <span class="gnb_txt">로그아웃</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </th:block>
+
+
+        <th:block sec:authorize="hasRole(T(com.project.novel.constant.Grade).USER)">
+          <div class="gnb_li">
+            <ul class="nav nav-pills">
+              <li class="mx-2">
+                <a th:href="@{/member/memberInfo/{id}(id=${#authentication.principal.loggedMember.id})}" class="gnb_login">
+                  <i class="bi bi-person-circle memberProfileImg"></i>
+                  <span class="gnb_txt" th:text="${#authentication.principal.loggedMember.userName}"></span>
+                </a>
+              </li>
+              <li class="mx-2">
+                <a href="/notice/list" class="gnb_login">
+                  <span class="gnb_bg"></span>
+                  <span class="gnb-bdr"></span>
+                  <span class="gnb_txt">공지사항</span>
+                </a>
+              </li>
+              <li class="mx-2">
+                <a href="/board/list" class="gnb_myPage">
+                  <span class="gnb_bg"></span>
+                  <span class="gnb-bdr"></span>
+                  <span class="gnb_txt">자유게시판</span>
+                </a>
+              </li>
+              <li class="mx-3">
+                <a th:href="@{/auth/logout}" class="gnb_logout">
+                  <span class="gnb_bg"></span>
+                  <span class="gnb-bdr"></span>
+                  <span class="gnb_txt">로그아웃</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </th:block>
+<!--        <a href="/auth/login"><button type="button" class="btn btn-outline-dark me-2" sec:authorize="isAnonymous()">로그인</button></a>-->
+<!--        <a href="/auth/join"><button type="button" class="btn btn-dark" sec:authorize="isAnonymous()">회원가입</button></a>-->
+<!--        <a href="/member/myBookList"><button type="button" class="btn btn-outline-dark me-2" sec:authorize="isAuthenticated()">내정보</button></a>-->
+<!--        <a href="/auth/logout"><button type="button" class="btn btn-outline-dark me-2" sec:authorize="isAuthenticated()">로그아웃</button></a>-->
 
       </div>
     </div>

@@ -1,11 +1,13 @@
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="layout/layout :: head(~{::title})">
     <meta charset="UTF-8">
     <title>home</title>
     <link rel="stylesheet" href="/css/bootstrap.min.css">
 </head>
 <body th:replace="layout/layout :: content(~{::content})">
-<content>
+<content class="main">
 <div class="container">
     <table class="table">
         <tr>

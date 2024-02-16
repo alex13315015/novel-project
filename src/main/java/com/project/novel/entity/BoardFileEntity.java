@@ -9,8 +9,7 @@ import lombok.Setter;
 @Setter
 @Table(name = "Board_file")
 public class BoardFileEntity extends TimeEntity{
-
-    @Id @Column(name = "board_file_id")
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -24,13 +23,25 @@ public class BoardFileEntity extends TimeEntity{
     @JoinColumn(name = "board_id")
     private BoardEntity boardEntity;
 
-     public static BoardFileEntity toBoardFileEntity(BoardEntity boardEntity, String originalFileName, String copyFileName){
-         BoardFileEntity boardFileEntity = new BoardFileEntity();
-         boardFileEntity.setOriginalFileName(originalFileName);
-         boardFileEntity.setCopyFileName(copyFileName);
-         boardFileEntity.setBoardEntity(boardEntity);
-         return boardFileEntity;
-     }
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "notice_id")
+    private NoticeEntity noticeEntity;
+
+    public static BoardFileEntity toBoardFileEntity(BoardEntity boardEntity, String originalFileName, String copyFileName){
+        BoardFileEntity boardFileEntity = new BoardFileEntity();
+        boardFileEntity.setOriginalFileName(originalFileName);
+        boardFileEntity.setCopyFileName(copyFileName);
+        boardFileEntity.setBoardEntity(boardEntity);
+        return boardFileEntity;
+    }
+
+    public static BoardFileEntity toNoticefileEntity(NoticeEntity noticeEntity, String originalFileName, String copyFileName){
+        BoardFileEntity boardFileEntity = new BoardFileEntity();
+        boardFileEntity.setOriginalFileName(originalFileName);
+        boardFileEntity.setCopyFileName(copyFileName);
+        boardFileEntity.setNoticeEntity(noticeEntity);
+        return boardFileEntity;
+    }
 
 }

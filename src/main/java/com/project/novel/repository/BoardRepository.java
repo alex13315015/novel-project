@@ -21,6 +21,9 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
     @Query("SELECT b FROM BoardEntity b ORDER BY b.id DESC")
     List<BoardEntity> findAllDesc();
 
+    @Query("SELECT b.memberId FROM BoardEntity b WHERE b.id = :id")
+    String findBoardWriterById(@Param("id") Long id);
+
 
     // 제목으로 검색
     Page<BoardEntity> findBySubjectContaining(String title, Pageable pageable);

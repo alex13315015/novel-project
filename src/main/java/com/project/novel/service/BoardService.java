@@ -1,5 +1,6 @@
 package com.project.novel.service;
 
+import com.project.novel.config.WebConfig;
 import com.project.novel.dto.BoardDto;
 import com.project.novel.entity.BoardEntity;
 import com.project.novel.entity.BoardFileEntity;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,6 +29,8 @@ public class BoardService {
 
     public final BoardFileRepository boardFileRepository;
 
+    private WebConfig webConfig;
+
 
     public void save(BoardDto boardDto) throws IOException {
         // 파일 첨부 여부에 따른 로직 분리
@@ -42,7 +46,7 @@ public class BoardService {
                 if (!boardFile.isEmpty()) {
                     String originalFileName = boardFile.getOriginalFilename();
                     String copyFileName = System.currentTimeMillis() + "_" + originalFileName;
-                    String savePath = "C:/novel_img/" + copyFileName;
+                    String savePath = "/Users/ijinmo/Desktop/novel-img/" + copyFileName;
                     boardFile.transferTo(new File(savePath));
 
                     // 리사이징 추가
@@ -50,7 +54,7 @@ public class BoardService {
                     int resizedHeight = 300;
 
                     // 리사이징된 이미지를 새로운 경로에 저장
-                    String resizedSavePath = "C:/novel_img/resized_" + copyFileName;
+                    String resizedSavePath = "/Users/ijinmo/Desktop/novel-img/resized_" + copyFileName;
 
                     // 이미지 리사이징
                     Thumbnails.of(savePath)
@@ -92,10 +96,23 @@ public class BoardService {
         }
     }
 
+    @Transactional
     public BoardDto modify(BoardDto boardDto) {
         BoardEntity boardEntity = BoardEntity.toModifyEntity(boardDto);
         boardRepository.save(boardEntity);
         return findById(boardDto.getId());
+    }
+
+    public void delete(Long id, String currentUsername) {
+        // 게시글 작성자 확인
+        String boardWriter = boardRepository.findBoardWriterById(id);
+
+        if (!currentUsername.equals(boardWriter)) {
+            // 현재 로그인한 사용자와 게시글 작성자가 다를 경우 예외 발생
+            throw new AccessDeniedException("삭제 권한이 없습니다.");
+        }
+
+        boardRepository.deleteById(id);
     }
 
     public void delete(Long id) {
@@ -116,6 +133,22 @@ public class BoardService {
             }
         }
         return boardRepository.findAll(pageable).map(BoardDto::toBoardDto);
+    }
+
+    public boolean checkDeletePermission(Long id, String username) {
+        // 게시글 작성자 확인
+        String boardWriter = boardRepository.findBoardWriterById(id);
+
+        // 현재 로그인한 사용자와 게시글 작성자가 일치하면 삭제 권한이 있다고 판단
+        return username.equals(boardWriter);
+    }
+
+    public boolean checkModifyPermission(Long id, String username) {
+        // 게시글 작성자 확인
+        String boardWriter = boardRepository.findBoardWriterById(id);
+
+        // 현재 로그인한 사용자와 게시글 작성자가 일치하면 수정 권한이 있다고 판단
+        return username.equals(boardWriter);
     }
 
 }

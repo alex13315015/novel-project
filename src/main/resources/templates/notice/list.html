@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="layout/layout :: head(~{::title})">
+    <meta charset="UTF-8">
+    <title>home</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+<body th:replace="layout/layout :: content(~{::content})">
+<content>
+    <div class="main">
+    <table class="table">
+        <tr>
+            <th>id</th>
+            <th>subject</th>
+            <th>writer</th>
+            <th>date</th>
+        </tr>
+        <tr th:each="notice: ${noticeList}">
+            <td th:text="${notice.id}"></td>
+            <td><a th:href="@{|/notice/${notice.id}|(page=${noticeList.number + 1})}" th:text="${notice.subject}"></a></td>
+            <td th:text="${notice.member_id}"></td>
+            <td th:text="*{#temporals.format(notice.createDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+        </tr>
+    </table>
+
+
+    <div class="container mt-5">
+        <form th:action="@{/notice/list}" method="get">
+            <div class="row">
+                <div class="col-4">
+                    <select class="form-select" name="category">
+                        <option value="title" th:selected="${category == 'title'}">제목</option>
+                        <option value="content" th:selected="${category == 'content'}">내용</option>
+                        <option value="writer" th:selected="${category == 'writer'}">아이디</option>
+                    </select>
+                </div>
+                <div class="col-6">
+                    <input type="text" class="form-control" name="keyword" placeholder="검색어를 입력해주세요."
+                           th:value="${param.keyword}">
+                </div>
+                <div class="col-2">
+                    <button type="submit" class="btn btn-dark text-light">검색</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!-- 'sec:authorize="hasRole('ADMIN')"'는 이 섹션(글쓰기 버튼)이 'ADMIN' 역할을 가진 사용자에게만 표시되도록 Spring Security와 Thymeleaf를 통해 제어 -->
+    <div class="mt-5 d-flex justify-content-center" sec:authorize="hasRole('ADMIN')">
+        <a href="/notice/write" class="btn btn-dark text-light">글쓰기</a>
+    </div>
+
+    <nav aria-label="Page navigation example" class="mt-5 d-flex justify-content-center">
+        <ul class="pagination">
+
+            <!-- 첫 페이지 링크 -->
+            <li class="page-item" th:classappend="${noticeList.isFirst() ? 'disabled' : ''}">
+                <a class="page-link" th:href="@{/notice/list(page=0, category=${category}, keyword=${keyword})}">&laquo;&laquo;</a>
+            </li>
+
+            <!-- 이전 페이지 링크 -->
+            <li class="page-item" th:classappend="${noticeList.isFirst() ? 'disabled' : ''}">
+                <a class="page-link"
+                   th:href="@{/notice/list(page=${currentPage - 2}, category=${category}, keyword=${keyword})}">&laquo;</a>
+            </li>
+
+            <!-- 페이지 번호 링크 -->
+            <span th:each="page : ${#numbers.sequence(startPage, endPage)}">
+            <li class="page-item" th:classappend="${page == currentPage ? 'active' : ''}">
+                <a class="page-link"
+                   th:href="@{/notice/list(page=${page - 1}, category=${category}, keyword=${keyword})}"
+                   th:text="${page}"></a>
+            </li>
+        </span>
+
+            <!-- 다음 페이지 링크 -->
+            <li class="page-item" th:classappend="${noticeList.isLast() ? 'disabled' : ''}">
+                <a class="page-link"
+                   th:href="@{/notice/list(page=${noticeList.number + 1}, category=${category}, keyword=${keyword})}">&raquo;</a>
+            </li>
+
+            <!-- 마지막 페이지 링크 -->
+            <li class="page-item" th:classappend="${noticeList.isLast() ? 'disabled' : ''}">
+                <a class="page-link"
+                   th:href="@{/notice/list(page=${noticeList.totalPages - 1}, category=${category}, keyword=${keyword})}">&raquo;&raquo;</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+</content>
+</body>
+</html>

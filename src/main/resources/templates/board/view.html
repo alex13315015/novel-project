@@ -1,4 +1,6 @@
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="layout/layout :: head(~{::title})">
     <meta charset="UTF-8">
     <title>home</title>
@@ -6,8 +8,7 @@
 </head>
 <body th:replace="layout/layout :: content(~{::content})">
 <content>
-<div class="container">
-    <div>
+    <div class="main">
         <table class="table">
             <tbody>
             <tr>
@@ -41,8 +42,8 @@
 
     <div class="mt-5 d-flex justify-content-center">
         <button onclick="listReq()" class="btn btn-dark text-light">목록</button>
-        <button onclick="modifyReq()" class="btn btn-dark text-light">수정</button>
-        <button onclick="deleteReq()" class="btn btn-dark text-light">삭제</button>
+        <button th:if="${permitModify}" onclick="modifyReq()" class="btn btn-dark text-light">수정</button>
+        <button th:if="${permitDelete || isAdmin}" onclick="deleteReq()" th:attr="data-board-id=${board.id}" class="btn btn-dark text-light">삭제</button>
     </div>
 
 
@@ -183,8 +184,11 @@
         }
         const deleteReq = () => {
             console.log("삭제 요청");
-            const id = [[${board.id}]];
-            location.href = "/board/delete/" + id;
+            const boardId = document.querySelector('[data-board-id]').getAttribute('data-board-id');
+
+            if (confirm('글을 삭제하시겠습니까?')) {
+                location.href = "/board/delete/" + boardId;
+            }
         }
     </script>
 </div>

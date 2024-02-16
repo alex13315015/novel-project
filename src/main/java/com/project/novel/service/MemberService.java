@@ -1,13 +1,13 @@
 package com.project.novel.service;
 
 import com.project.novel.dto.JoinDto;
-import com.project.novel.dto.MemberProfileDto;
 import com.project.novel.entity.Member;
 import com.project.novel.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,6 +26,7 @@ import java.util.UUID;
 @Slf4j
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     @Value("${file.path}")
     private String uploadFolder;
 
@@ -41,7 +42,7 @@ public class MemberService {
         // 해당 데이터가 존재해야한다.
         member.ifPresent(selectMember -> {
             selectMember.setUserName(joinDto.getUserName());
-            selectMember.setPassword(joinDto.getPassword());
+            selectMember.setPassword(bCryptPasswordEncoder.encode(joinDto.getPassword()));
             selectMember.setNickname(joinDto.getNickname());
             selectMember.setEmail(joinDto.getEmail());
             selectMember.setPhoneNumber(joinDto.getPhoneNumber());
@@ -70,15 +71,5 @@ public class MemberService {
         } else {
             throw new UsernameNotFoundException("등록되지 않은 회원입니다.");
         }
-    }
-    @Transactional
-    public MemberProfileDto getProfile(Long id) {
-        MemberProfileDto memberProfileDto = new MemberProfileDto();
-        Member memberInfo =
-                memberRepository.findById(id).orElseThrow(
-                        () -> new UsernameNotFoundException("등록되지 않은 회원입니다.")
-                );
-        memberProfileDto.setMember(memberInfo);
-        return memberProfileDto;
     }
 }

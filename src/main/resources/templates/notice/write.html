@@ -1,0 +1,44 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="layout/layout :: head(~{::title})">
+    <meta charset="UTF-8">
+    <title>home</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+<body th:replace="layout/layout :: content(~{::content})">
+<content>
+    <div class="main">
+    <div class="container">
+        <h2>WRITE</h2>
+        <form method="post" action="/notice/write" enctype="multipart/form-data">
+
+            <div class="mb-3">
+                <label for="subject" class="form-label">subject</label>
+                <input type="text" class="form-control" placeholder="subject" name="subject">
+            </div>
+
+            <div class="mb-3">
+                <label for="content" class="form-label">content</label>
+                <textarea class="form-control" rows="5" id="content" name="content"></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label">password</label>
+                <input type="password" class="form-control" placeholder="password" name="password">
+            </div>
+
+            <div>
+                <input type="file" name="file" multiple>
+            </div>
+
+
+
+            <div class="mt-5">
+                <button class="btn btn-primary" id="btnSubmit">submit</button>
+            </div>
+        </form>
+    </div>
+</div>
+</content>
+</body>
+</html>

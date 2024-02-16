@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="layout/layout :: head(~{::title})">
+    <meta charset="UTF-8">
+    <title>home</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+<body th:replace="layout/layout :: content(~{::content})">
+<content>
+    <div class="container">
+        <h2 class="title">회원정보</h2>
+        <table class="table memberInfo">
+            <colgroup>
+                <col style="width : 2%">
+                <col style="width : 10%">
+                <col style="width : 10%">
+                <col style="width : 15%">
+                <col style="width : 10%">
+                <col style="width : 10%">
+                <col style="width : 10%">
+            </colgroup>
+            <thead>
+            <tr>
+                <th>
+                    <label class="checkbox">
+                        <input type="checkbox" id="selectAll">
+                    </label>
+                </th>
+                <th scope="col">아이디</th>
+                <th scope="col">이름</th>
+                <th scope="col">닉네임</th>
+                <th scope="col">이메일</th>
+                <th scope="col">전화번호</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+                <th:block th:each="member : ${memberList}">
+                    <th:block th:if="${member.role.equals('ROLE_ADMIN')}" style="display:none">
+
+                    </th:block>
+                    <th:block th:unless="${member.role.equals('ROLE_ADMIN')}">
+                        <tr>
+                            <td>
+                                <label class="checkbox">
+                                    <input type="checkbox" class="selectSome" th:value="${member.id}">
+                                </label>
+                            </td>
+                            <td th:text="${member.userId}"></td>
+                            <td th:text="${member.userName}"></td>
+                            <td th:text="${member.nickname}"></td>
+                            <td th:text="${member.email}"></td>
+                            <td th:text="${member.phoneNumber}"></td>
+                            <td><button class="btn btn-danger btnDeleteMember" id="btnDeleteMember" th:data-idx="${member.id}">삭제</button></td>
+                        </tr>
+                    </th:block>
+                </th:block>
+            </tbody>
+        </table>
+        <div>
+            <button class="btn btn-dark" id="deleteSome">선택 삭제</button>
+        </div>
+    </div>
+    <script th:inline="javascript">
+        $("#btnDeleteMember").on("click",function (e) {
+            console.log("개별선택");
+            e.preventDefault();
+            const id=  $(this).data("idx");
+            $.ajax({
+                url : `/api/deleteOne/${id}`,
+                method : "DELETE",
+                success : function (response) {
+                    if(response.deleteMember === "OK") {
+                        $(this).closest("tr").fadeOut();
+                    }
+                }
+            })
+        });
+
+        const checkObj = $(".selectSome");
+        const rowCnt = checkObj.length;
+
+        $("#selectAll").on("click", function () {
+            let check_listArr = $(".selectSome");
+            for(let i = 0; i<check_listArr.length; i++) {
+                check_listArr[i].checked = this.checked;
+            }
+        });
+
+        $("input[class='selectSome']").on("click",function () {
+            $("#selectAll")[0].checked = $(".selectSome:checked").length === rowCnt;
+        });
+
+        $("#deleteSome").on("click",function (e) {
+            e.preventDefault();
+            console.log("선택삭제");
+            let url = "/api/deleteSelected";
+            let valueArr = [];
+            let list = $(".selectSome");
+            for(let i = 0; i < list.length; i++) {
+                if(list[i].checked) { //선택되어 있으면 배열에 값을 저장함
+                    valueArr.push(parseInt(list[i].value));
+                }
+            }
+            if( valueArr.length === 0) {
+                alert("선택된 글이 없습니다.");
+            } else {
+                let check = confirm("정말 삭제하시겠습니까?");
+                $.ajax({
+                    url : url,
+                    method: "DELETE",
+                    data : {
+                        valueArr : valueArr
+                    },
+                    success : function (data) {
+                        console.log(data);
+                        if(data.deleteSelected === "OK") {
+                            $(".memberInfo tbody tr").each(function() {
+                                if($(this).find("input[type='checkbox']").is(":checked")) {
+                                    $(this).fadeOut();
+                                }
+                            })
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</div>
+</content>
+</body>
+</html>

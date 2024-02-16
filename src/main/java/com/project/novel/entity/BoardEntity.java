@@ -12,7 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 @Table(name = "Board")
-public class BoardEntity extends TimeEntity{
+public class BoardEntity extends TimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -75,6 +75,5 @@ public class BoardEntity extends TimeEntity{
         boardEntity.setHit(boardDto.getHit());
         return boardEntity;
     }
-
 
 }

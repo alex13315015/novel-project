@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="layout/layout :: head(~{::title})">
+    <meta charset="UTF-8">
+    <title>home</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+<body th:replace="layout/layout :: content(~{::content})">
+<content>
+<div class="main">
+    <div class="container">
+        <h2>MODIFY</h2>
+        <form action="/notice/modify" method="post" name="modifyForm">
+
+            <input type="hidden" name="id" th:value="${noticeModify.id}">
+
+            <div class="mb-3">
+                <label for="member_id" class="form-label">writer</label>
+                <input type="text" class="form-control" placeholder="member_id" name="member_id"
+                       th:value="${noticeModify.member_id}" readonly>
+            </div>
+
+            <div class="mb-3">
+                <label for="subject" class="form-label">subject</label>
+                <input type="text" class="form-control" placeholder="subject" name="subject"
+                       th:value="${noticeModify.subject}">
+            </div>
+
+            <div class="mb-3">
+                <label for="content" class="form-label">content</label>
+                <textarea class="form-control" rows="5" id="content" name="content"
+                          th:text="${noticeModify.content}"></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label">password</label>
+                <input type="password" class="form-control" placeholder="password" name="password" id="password">
+            </div>
+
+            <input type="button" value="글수정" onclick="noticeModify()">
+
+        </form>
+    </div>
+</div>
+
+
+<script th:inline="javascript">
+    const noticeModify = () => {
+        const pass = [[${noticeModify.password}]];
+        const inputPass = document.getElementById("password").value;
+        if (pass === inputPass) {
+            document.modifyForm.submit();
+        } else {
+            alert("비밀번호가 일치하지 않습니다.");
+        }
+    }
+</script>
+</content>
+</body>
+</html>

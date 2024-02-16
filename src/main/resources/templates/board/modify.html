@@ -1,4 +1,6 @@
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="layout/layout :: head(~{::title})">
     <meta charset="UTF-8">
     <title>home</title>
@@ -6,6 +8,7 @@
 </head>
 <body th:replace="layout/layout :: content(~{::content})">
 <content>
+<div class="main">
     <div class="container">
         <h2>MODIFY</h2>
         <form action="/board/modify" method="post" name="modifyForm">

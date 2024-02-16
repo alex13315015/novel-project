@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="layout/layout :: head(~{::title})">
     <meta charset="UTF-8">
     <title>home</title>
@@ -7,7 +8,7 @@
 </head>
 <body th:replace="layout/layout :: content(~{::content})">
 <content>
-    <div class="container d-flex justify-content-center">
+        <div class="container d-flex justify-content-center">
             <div class="col-8" style="width: 400px">
                 <form th:action="@{/auth/login}" method="post">
                     <div class="mb-2">
@@ -26,12 +27,18 @@
                             <input type="password" name="password" id="password" class="form-control">
                         </div>
                     </div>
-                    <label for="remember">로그인 상태 유지</label>
-                    <input type="checkbox"  id="remember"/>
+                    <label for="rememberUser">로그인 상태 유지</label>
+                    <input type="checkbox"  id="rememberUser" name="rememberUser"/>
+                    <span>
+                    <th:block th:if="${error != null}">
+                        <p id="valid" class="alert alert-danger mt-3" th:text="${exception}"></p>
+                    </th:block>
+                </span>
                     <div class="d-grid mt-2">
                         <button class="btn btn-dark mt-4" id="btnLogin">로그인</button>
                     </div>
                 </form>
+
                 <div class="d-grid">
                     <a class="btn btn-dark mt-4 mb-3" href="/auth/join">회원가입</a>
                 </div>
@@ -41,16 +48,12 @@
                     <a class="findMember mt-2 mx-4" href="/auth/findPassword">비밀번호 찾기</a>
                 </div>
                 <div class="mt-3 d-grid justify-content-center">
-                    <a class="btn btn-outline-dark mt-2" href="/oauth2/authorization/google">구글로그인</a>
-                    <a class="mt-2" href="/oauth2/authorization/naver"><img class="naver_login" src="/images/naver_login.png" alt=""></a>
-                    <a class="mt-2" href="/oauth2/authorization/kakao"><img src="/images/kakao_login.png" alt=""></a>
-                    <a class="btn btn-outline-dark mt-2" href="/oauth2/authorization/github">깃허브로그인</a>
+                    <a class="mt-2" href="/oauth2/authorization/google"><img class="loginBtn" src="/images/google_Login.png" alt=""></a>
+                    <a class="mt-2" href="/oauth2/authorization/naver"><img class="loginBtn" src="/images/naver_Login.png" alt=""></a>
+                    <a class="mt-2" href="/oauth2/authorization/kakao"><img class="loginBtn" src="/images/kakao_Login.png" alt=""></a>
                 </div>
             </div>
-    </div>
-
-    <div class="test">
-        test
+        </div>
     </div>
 </content>
 </body>

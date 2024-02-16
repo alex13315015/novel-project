@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="layout/layout :: head(~{::title})">
+    <meta charset="UTF-8">
+    <title>home</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+<body th:replace="layout/layout :: content(~{::content})">
+<content>
+    <div class="container F_P">
+            <div class="row mt-5 mb-3 myId">
+                <p class="col-4">회원님의 아이디는</p>
+                <p class="col-3" th:text="${userId}"></p>
+            </div>
+            <div class="d-grid justify-content-center mt-2">
+                <a th:href="@{/auth/findPassword}">
+                    <button class="btn btn-dark authBtn mt-3">비밀번호 찾기</button>
+                </a>
+                <a th:href="@{/auth/login}">
+                    <button class="btn btn-dark authBtn mt-3" type="submit">로그인 하러가기</button>
+                </a>
+            </div>
+    </div>
+</div>
+</content>
+</body>
+</html>

@@ -21,32 +21,28 @@ import org.springframework.web.bind.annotation.*;
 public class MemberController {
     private final MemberService memberService;
     private final BookService bookService;
-
     @GetMapping("/my")
     public String myPage() {
         return "/member/my";
     }
-
     @GetMapping("/memberInfo/{id}")
     public String memberInfo(@PathVariable Long id, Model model) {
         JoinDto getMemberInfo = memberService.getMemberInfo(id);
-        log.info("==={}", getMemberInfo.toString());
+        log.info("==={}",getMemberInfo.toString());
         model.addAttribute("getMemberInfo", getMemberInfo);
         return "/member/memberInfo";
     }
-
     @GetMapping("/modify/{id}")
     public String modify(@PathVariable Long id, Model model) {
         JoinDto getMemberInfo = memberService.getMemberInfo(id);
-        log.info("==={}", getMemberInfo.toString());
+        log.info("==={}",getMemberInfo.toString());
         model.addAttribute("getMemberInfo", getMemberInfo);
         return "/member/modify";
     }
-
     @PostMapping("/modify/{id}")
     public String modifyProcess(@PathVariable Long id,
-                                @ModelAttribute JoinDto joinDto) {
-        memberService.updateMember(id, joinDto);
+                @ModelAttribute JoinDto joinDto) {
+            memberService.updateMember(id, joinDto);
         return "redirect:/auth/logout";
     }
 

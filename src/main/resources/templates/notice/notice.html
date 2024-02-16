@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="layout/layout :: head(~{::title})">
+    <meta charset="UTF-8">
+    <title>home</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+<body th:replace="layout/layout :: content(~{::content})">
+<content>
+    <div class="main">
+    <table class="table">
+        <tr>
+            <th>id</th>
+            <th>subject</th>
+            <th>writer</th>
+            <th>date</th>
+            <th>hit</th>
+        </tr>
+        <tbody>
+        <!-- Thymeleaf를 사용하여 데이터를 동적으로 표시 -->
+        <tr th:each="notice : ${notice}">
+            <td th:text="${notice.id}"></td>
+            <td th:text="${notice.subject}"></td>
+            <td th:text="${notice.writer}"></td>
+            <td th:text="${notice.date}"></td>
+            <td th:text="${notice.hit}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div sec:authorize="isAuthenticated()">
+        <div class="mt-5 d-flex justify-content-center" sec:authorize="hasRole(T(com.project.novel.constant.Grade).ADMIN)">
+            <!-- ADMIN 역할을 가진 경우에만 "글쓰기" 버튼 표시 -->
+            <a href="/admin/write" class="btn btn-dark text-light">글쓰기</a>
+        </div>
+    </div>
+</div>
+</content>
+</body>
+</html>
